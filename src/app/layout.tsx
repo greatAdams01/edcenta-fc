@@ -2,6 +2,8 @@ import { type Metadata } from 'next'
 import { DM_Sans, Inter } from 'next/font/google'
 import clsx from 'clsx'
 
+import Animation from '@/utils/Animation'
+
 import '@/styles/tailwind.css'
 
 const inter = Inter({
@@ -41,7 +43,9 @@ export default function RootLayout({
       )}
     >
       <body className="flex min-h-full">
+        <Animation>
         <div className="flex w-full flex-col">{children}</div>
+         </Animation>
       </body>
     </html>
   )

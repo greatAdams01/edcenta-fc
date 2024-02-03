@@ -28,68 +28,68 @@ import waylonHydenImage from '@/images/avatars/waylon-hyden.jpg'
 
 const days = [
   {
-    name: 'Step 1',
+    step: 'Step 1',
     date: 'Create account',
     dateTime: '',
     speakers: [
       {
-        name: '',
-        role: 'Designer at Globex Corporation',
-        image: stevenMchailImage,
+        name: 'Create Your EdCenta Account',
+        info: 'Start your journey by creating a personalized EdCenta account. This will be your gateway to a world of knowledge',
+        image: '/istockphoto-886934266-612x612.jpg',
       },
       {
-        name: 'Jaquelin Isch',
-        role: 'UX Design at InGen',
-        image: jaquelinIschImage,
+        name: 'Set Your Learning Preferences',
+        info: 'Tailor your learning experience by letting us know your interests. This step helps us recommend courses that align with your goals. ',
+        image: '/istockphoto-510398013-612x612.jpg',
       },
       {
-        name: 'Dianne Guilianelli',
-        role: 'General Manager at Initech',
-        image: dianneGuilianelliImage,
+        name: 'Receive Personalized Recommendations',
+        info: `Enjoy a tailored learning experience with content recommendations suited to your preferences.`,
+        image: '/istockphoto-1308840815-612x612.jpg',
       },
     ],
   },
   {
-    name: 'Step 2',
+    step: 'Step 2',
     date: 'Start learning',
     dateTime: '',
     speakers: [
       {
-        name: 'Damaris Kimura',
-        role: 'Senior Engineer at OCP',
-        image: damarisKimuraImage,
+        name: 'Explore and Start Learning',
+        info: `Now that your account is set up, it's time to dive into the world of learning resources.`,
+        image: '/istockphoto-1166892018-612x612.jpg',
       },
       {
-        name: 'Ibrahim Frasch',
-        role: 'Programmer at Umbrella Corp',
-        image: ibrahimFraschImage,
+        name: 'Engage in Interactive Learning',
+        info: 'Experience a dynamic and interactive learning environment. Immerse yourself in Live Workshops, Virtual Labs, Peer Collaborations',
+        image: '/istockphoto-1413666057-612x612.jpg',
       },
       {
-        name: 'Cathlene Burrage',
-        role: 'Frontend Developer at Buy n Large',
-        image: cathleneBurrageImage,
+        name: 'Stay Informed with Learning Insights',
+        info: 'Stay updated and informed with insights that enhance your learning journey.',
+        image: '/istockphoto-506102084-612x612.jpg',
       },
     ],
   },
   {
-    name: 'Step 3',
+    step: 'Step 3',
     date: 'Measure progress',
     dateTime: '',
     speakers: [
       {
-        name: 'Andrew Greene',
-        role: 'Frontend Developer at Ultratech',
-        image: andrewGreeneImage,
+        name: 'Measure Your Progress',
+        info: `As you progress through your learning journey, we'll help you keep track of your achievements.`,
+        image: '/istockphoto-1470159933-612x612.jpg',
       },
       {
-        name: 'Heather Terry',
-        role: 'Backend Developer at Xanatos Enterprises',
-        image: heatherTerryImage,
+        name: 'Stay Updated with Notifications',
+        info: 'Receive timely updates on new courses, events, and community activities.',
+        image: '/istockphoto-950603300-612x612.jpg',
       },
       {
-        name: 'Piers Wilkins',
-        role: 'Full stack Developer at BiffCo',
-        image: piersWilkinsImage,
+        name: 'Badges and Certificates',
+        info: ' Earn badges for completing courses and certificates for mastering skills.',
+        image: '/istockphoto-1284585970-612x612.jpg',
       },
     ],
   },
@@ -141,7 +141,7 @@ export function Learn() {
       aria-labelledby="speakers-title"
       className="py-20 sm:py-32"
     >
-      {/* <ImageClipPaths id={id} /> */}
+      <ImageClipPaths id={id} />
       <Container>
         <div className="mx-auto max-w-2xl lg:mx-0">
           <h2
@@ -185,7 +185,7 @@ export function Learn() {
                         >
                           <Tab className="ui-not-focus-visible:outline-none">
                             <span className="absolute inset-0" />
-                            {day.name}
+                            {day.step}
                           </Tab>
                         </div>
                         <time
@@ -225,20 +225,22 @@ export function Learn() {
                         className="absolute inset-0 bg-indigo-50"
                         style={{ clipPath: `url(#${id}-${speakerIndex % 3})` }}
                       >
-                        {/*<Image
+                        <Image
                           className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-110"
                           src={speaker.image}
+                          width={100}
+                          height={100}
                           alt=""
                           priority
                           sizes="(min-width: 1280px) 17.5rem, (min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
-                        />*/}
+                        />
                       </div>
                     </div>
                     <h3 className="mt-8 font-display text-xl font-bold tracking-tight text-slate-900">
                       {speaker.name}
                     </h3>
                     <p className="mt-1 text-base tracking-tight text-slate-500">
-                      {speaker.role}
+                      {speaker.info}
                     </p>
                   </div>
                 ))}
