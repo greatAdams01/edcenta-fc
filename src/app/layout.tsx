@@ -43,9 +43,9 @@ export default function RootLayout({
       )}
     >
       <body className="flex min-h-full">
-        <Animation>
+        {/* <Animation> */}
         <div className="flex w-full flex-col">{children}</div>
-         </Animation>
+         {/* </Animation> */}
       </body>
     </html>
   )

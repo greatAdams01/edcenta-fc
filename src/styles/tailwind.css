@@ -12,3 +12,8 @@
     }
   } */
   
+  .icon-wrapper svg {
+    width: 7rem; 
+    height: 7rem;
+  }
+  

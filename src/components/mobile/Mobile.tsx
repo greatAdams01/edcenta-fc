@@ -24,7 +24,7 @@ export function Mobile() {
     <header className={`block lg:hidden items-center w-[100%] z-50  ${bar ? 'h-full bg-[#0075BC] bg-opacity-30 backdrop-blur-md' : null} ${scroll ? 'fixed bg-[#0075BC] bg-opacity-30 backdrop-blur-md -mt-4 pb-6' : 'absolute'}`}>
       <Container className="flex flex-wrap items-center sm:justify-between ">
         <div className='flex items-center mt-10 w-full'>
-        <div className="flex items-center  w-full ml-14 sm:mt-2">
+        <div className="flex items-center  w-full ml-14 sm:-mt-6">
           <Image src="/logo.png" alt="Logo" width={100} height={100} className='w-10 ' />
           <h1 className=' hidden text-yellow-500 text-xl font-bold m-2 sm:block sm:text-purple-500 '>EdCenta</h1>
         </div>
