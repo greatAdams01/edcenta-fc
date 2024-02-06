@@ -1,5 +1,4 @@
 import { Container } from '@/components/Container'
-import { Logo } from '@/components/Logo'
 import Image from 'next/image'
 
 export function Footer() {

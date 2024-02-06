@@ -175,7 +175,6 @@ export function Pricing() {
                     </h3>
                     <ul className="mt-1 text-base tracking-tight text-slate-500">
                       {speaker.info.map((item, index) => (
-                        // Wrap each info point with an <li> tag and include the Dot icon
                         <li key={index} className="flex items-center">
                           <Dot className="mr-2" size="16" />
                           <span>{item}</span>
