@@ -304,7 +304,7 @@ function ScheduleStatic() {
   )
 }
 
-export function Schedule() {
+export function Tuition() {
   return (
     <section id="schedule" aria-label="Schedule" className="py-20 sm:py-32">
       <Container className="relative z-10">

@@ -1,6 +1,6 @@
 import { Hero } from '@/components/hero/Hero'
 import { Newsletter } from '@/components/Newsletter'
-import { Schedule } from '@/components/Schedule'
+import { Tuition } from '@/components/Tuition'
 import { Learn } from '@/components/Learn'
 import { Sponsors } from '@/components/Sponsors'
 
@@ -9,7 +9,7 @@ export default function Home() {
     <>
       <Hero />
       <Learn />
-      <Schedule />
+      <Tuition />
       <Sponsors />
       <Newsletter />
     </>

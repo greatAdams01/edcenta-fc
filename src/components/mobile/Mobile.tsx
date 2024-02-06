@@ -1,34 +1,48 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container } from '@/components/Container';
 import Image from 'next/image';
 import Button from '@/utils/button';
-import MobileNav from '@/components/mobile/MobileNav';
-import { X, AlignLeft  } from 'lucide-react';
-
+import { X, AlignLeft } from 'lucide-react';
+import MobileNav from '../mobile/MobileNav';
 export function Mobile() {
   const [bar, setBar] = useState<boolean>(false)
+  const [scroll, setScroll] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 500; 
+      setScroll(isScrolled);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
-    <header className={` block fixed w-[100%] h-[100svh] z-50 lg:hidden ${bar ? 'bg-[#0075BC] bg-opacity-30 backdrop-blur-md' : null }`}>
-      <Container className={`justify-center sm:justify-between ml-[-40rem] ${bar ? 'ml-6' : null}`}>
-        <div className='flex'>
-        <div className="flex items-center mt-10 w-full">
-          <Image src="/logo.png" alt="Logo" width={100} height={100} />
-          <h1 className='text-purple-500 text-xl font-bold m-2'>EdCenta</h1>
+    <header className={`block lg:hidden items-center w-[100%] z-50  ${bar ? 'h-full bg-[#0075BC] bg-opacity-30 backdrop-blur-md' : null} ${scroll ? 'fixed bg-[#0075BC] bg-opacity-30 backdrop-blur-md -mt-4 pb-6' : 'absolute'}`}>
+      <Container className="flex flex-wrap items-center sm:justify-between ">
+        <div className='flex items-center mt-10 w-full'>
+        <div className="flex items-center  w-full ml-14 sm:mt-2">
+          <Image src="/logo.png" alt="Logo" width={100} height={100} className='w-10 ' />
+          <h1 className=' hidden text-yellow-500 text-xl font-bold m-2 sm:block sm:text-purple-500 '>EdCenta</h1>
         </div>
-        <div className={`flex w-full justify-end mt-8 `}>
-        {bar ? (
-              <X className={`cursor-pointer block`} onClick={() => setBar(!bar)} />
-            ) : (
-              <AlignLeft className={`cursor-pointer block`} onClick={() => setBar(!bar)} />
-            )}
-      </div>
+        {
+          bar ?(
+            <X className={`block`} onClick={() => setBar(!bar)}/>
+          ) : (
+            <AlignLeft className={`block`} onClick={() => setBar(!bar)}/>
+            )
+        }
         </div>
-        <div className='flex ml-4 w-[60%]'>
-          <MobileNav />
+        <div className={`block  w-full flex flex-col justify-center -mt-[50rem] ${bar ? 'mt-0' : null}`}>
+        <MobileNav />
+        <div className='ml-10'>
+        <Button />
         </div>
-        <div className="sm:mt-10 sm:flex">
+        </div>
+        <div className={`hidden ${bar ? 'hover:text-white' : null}`}>
           <Button />
         </div>
       </Container>
