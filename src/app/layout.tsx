@@ -1,22 +1,20 @@
 import { type Metadata } from 'next'
-import { DM_Sans, Inter } from 'next/font/google'
-import clsx from 'clsx'
+import { Manrope, Dosis } from 'next/font/google'
 
 import Animation from '@/utils/Animation'
 
 import '@/styles/tailwind.css'
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-manrope',
 })
 
-const dmSans = DM_Sans({
+const dosis = Dosis({
   subsets: ['latin'],
-  weight: ['400', '500', '700'],
   display: 'swap',
-  variable: '--font-dm-sans',
+  variable: '--font-dosis',
 })
 
 export const metadata: Metadata = {
@@ -36,12 +34,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={clsx(
-        'h-full bg-white antialiased',
-        inter.variable,
-        dmSans.variable,
-      )}
+      className={`h-full bg-white antialiased ${manrope.variable} ${dosis.variable}`}
     >
+      <head>
+        <title>Edcenta</title>
+      </head>
       <body className="flex min-h-full">
         {/* <Animation> */}
         <div className="flex w-full flex-col">{children}</div>
