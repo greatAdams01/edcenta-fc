@@ -21,7 +21,7 @@ export function Mobile() {
   }, []);
 
   return (
-    <header className={`block lg:hidden items-center w-[100%] z-50  ${bar ? 'h-full bg-[#0075BC] bg-opacity-30 backdrop-blur-md' : null} ${scroll ? 'fixed bg-[#0075BC] bg-opacity-30 backdrop-blur-md -mt-4 pb-6' : 'absolute'}`}>
+    <header className={`block lg:hidden items-center w-[100%] z-50  ${bar ? 'h-full fixed bg-[#0075BC] bg-opacity-30 backdrop-blur-md' : null} ${scroll ? 'fixed bg-[#0075BC] bg-opacity-30 backdrop-blur-md pb-6' : 'absolute'}`}>
       <Container className="flex flex-wrap items-center sm:justify-between ">
         <div className='flex items-center mt-10 w-full'>
         <div className="flex items-center  w-full ml-14 sm:-mt-6">
@@ -36,7 +36,7 @@ export function Mobile() {
             )
         }
         </div>
-        <div className={`block  w-full flex flex-col justify-center -mt-[50rem] ${bar ? 'mt-0' : null}`}>
+        <div className={`block w-full flex flex-col justify-center -mt-[50rem] ${bar ? 'mt-0' : null}`}>
         <MobileNav />
         <div className='ml-10'>
         <Button />
