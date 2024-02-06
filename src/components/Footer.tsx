@@ -11,7 +11,7 @@ export function Footer() {
           <h1 className='text-yellow-500 text-xl font-bold m-2'>EdCenta</h1>
         </div>
         <p className="mt-6 text-base text-white md:mt-0">
-          Copyright &copy; {new Date().getFullYear()} DeceptiConf, LLC. All
+          Copyright &copy; {new Date().getFullYear()} EdCenta, LLC. All
           rights reserved.
         </p>
       </Container>
