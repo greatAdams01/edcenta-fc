@@ -4,7 +4,6 @@ import { Container } from '@/components/Container';
 import Image from 'next/image';
 import Button from '@/utils/button';
 import { X, AlignLeft } from 'lucide-react';
-import MobileNav from '../mobile/MobileNav';
 export function Mobile() {
   const [bar, setBar] = useState<boolean>(false)
   const [scroll, setScroll] = useState<boolean>(false);
@@ -37,7 +36,6 @@ export function Mobile() {
         }
         </div>
         <div className={`block w-full flex flex-col justify-center -mt-[50rem] ${bar ? 'mt-0' : null}`}>
-        <MobileNav />
         <div className='ml-10'>
         <Button />
         </div>

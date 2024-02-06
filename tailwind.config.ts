@@ -25,8 +25,9 @@ export default {
         '5xl': '2.5rem',
       },
       fontFamily: {
-        sans: 'var(--font-inter)',
+        sans: 'var(--font-manrope)',
         display: 'var(--font-dm-sans)',
+        dosis: 'var(--font-dosis)',
       },
       maxWidth: {
         '2xl': '40rem',
