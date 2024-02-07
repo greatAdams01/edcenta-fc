@@ -1,4 +1,4 @@
-import { Footer } from '@/components/Footer'
+import Footer from '@/components/Footer'
 import Header from '@/components/hero/Header'
 
 export function Layout({

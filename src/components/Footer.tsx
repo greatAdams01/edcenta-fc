@@ -2,88 +2,103 @@ import { Container } from '@/components/Container'
 import Image from 'next/image'
 import { Facebook, Linkedin, Instagram, Twitter, Youtube } from 'lucide-react'
 
-export function Footer() {
+const navigation = {
+  solutions: [
+    { name: 'Marketing', href: '#' },
+    { name: 'Analytics', href: '#' },
+    { name: 'Commerce', href: '#' },
+    { name: 'Insights', href: '#' },
+  ],
+  support: [
+    { name: 'Pricing', href: '#' },
+    { name: 'Documentation', href: '#' },
+    { name: 'Guides', href: '#' },
+    { name: 'API Status', href: '#' },
+  ],
+  company: [
+    { name: 'About', href: '#' },
+    { name: 'Blog', href: '#' },
+    { name: 'Jobs', href: '#' },
+    { name: 'Press', href: '#' },
+    { name: 'Partners', href: '#' },
+  ],
+  legal: [
+    { name: 'Claim', href: '#' },
+    { name: 'Privacy', href: '#' },
+    { name: 'Terms', href: '#' },
+  ],
+}
+
+export default function Footer() {
   return (
-    <footer className="w-full text-sm ">
-      
-      <Container className="grid grid-cols-[repeat(auto-fit,_minmax(10rem,_1fr))]  justify-between my-8  items-start md:items-end" >
-        <div className='mb-2'>
-        <div >
-          <Image src={'/Footerlogo.png'} alt='EdCenta' width={100} height={100} className='w-36 my-4'/>
-        </div>
-          <p className='font-bold'>Who we help</p>
-          <ul className='leading-loose'>
-            <li>School</li>
-            <li>Teachers</li>
-            <li>Parents</li>
-            <li>Students</li>
-          </ul>
-        </div>
-        <div className='mb-2'>
-          <p className='font-bold'>Company</p>
-          <ul className='leading-loose'>
-            <li>About EdCenta</li>
-            <li>Blog</li>
-            <li>Careers</li>
-            <li>Awards</li>
-            <li>Investors</li>
-            <li>Contact</li>
-          </ul>
-        </div>
-        <div className='mb-2'>
-        <p className='font-bold'>Socials</p>
-          <ul className='leading-loose'>
-            <li>Linkedin</li>
-            <li>Instagram</li>
-            <li>Facebook</li>
-            <li>Youtube</li>
-            <li>X (Twitter)</li>
-          </ul>
-        </div>
-        <div className='mb-2'>
-        <p className='font-bold'>Support</p>
-          <ul className='leading-loose'>
-            <li>Webinars</li>
-            <li>Classroom resources</li>
-            <li>Curicullum alignment</li>
-            <li>Partner support</li>
-            <li>Technical support</li>
-            <li>Blog</li>
-            <li>FAQs</li>
-          </ul>
-        </div>
-      </Container>
-      <Container className="lg:flex justify-center">
-        <div className='w-4/5 leading-loose'>
-          <hr />
-          <div className='block sm:flex justify-between items-center my-2'>
-            <div className='order-last w-full flex items-center justify-between mt-4 sm:mt-0 sm:w-2/6'>
-              <p>Follow us</p>
-              <div className='bg-[#0045BC] text-white p-1 lg:p-2 rounded-md cursor-pointer'>
-                <Facebook />
+    <footer className="bg-white" aria-labelledby="footer-heading">
+      <h2 id="footer-heading" className="sr-only">
+        Footer
+      </h2>
+      <div className="mx-auto max-w-7xl px-6 py-16 sm:py-24 lg:px-8 lg:py-32">
+        <div className="xl:grid xl:grid-cols-3 xl:gap-8">
+          <img
+            className="w-32 "
+            src="/Footerlogo.png"
+            alt="Company name"
+
+          />
+          <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
+            <div className="md:grid md:grid-cols-2 md:gap-8">
+              <div>
+                <h3 className="text-sm font-semibold leading-6 text-gray-900">Solutions</h3>
+                <ul role="list" className="mt-6 space-y-4">
+                  {navigation.solutions.map((item) => (
+                    <li key={item.name}>
+                      <a href={item.href} className="text-sm leading-6 text-gray-600 hover:text-gray-900">
+                        {item.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className='bg-[#0045BC] text-white p-1 lg:p-2 rounded-md cursor-pointer'>
-                <Linkedin />
-              </div>
-              <div className='bg-[#0045BC] text-white p-1 lg:p-2 rounded-md cursor-pointer'>
-                <Instagram />
-              </div>
-              <div className='bg-[#0045BC] text-white p-1 lg:-2 rounded-md cursor-pointer'>
-                <Twitter />
-              </div>
-              <div className='bg-[#0045BC] text-white p-1 lg:p-2 rounded-md cursor-pointer'>
-                <Youtube />
+              <div className="mt-10 md:mt-0">
+                <h3 className="text-sm font-semibold leading-6 text-gray-900">Support</h3>
+                <ul role="list" className="mt-6 space-y-4">
+                  {navigation.support.map((item) => (
+                    <li key={item.name}>
+                      <a href={item.href} className="text-sm leading-6 text-gray-600 hover:text-gray-900">
+                        {item.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
-            
-            <div className='order-first w-full flex justify-between sm:w-2/6'>
-              <p>Terms & Conditions</p>
-              <p>Privacy</p>
-              <p>Help</p>
+            <div className="md:grid md:grid-cols-2 md:gap-8">
+              <div>
+                <h3 className="text-sm font-semibold leading-6 text-gray-900">Company</h3>
+                <ul role="list" className="mt-6 space-y-4">
+                  {navigation.company.map((item) => (
+                    <li key={item.name}>
+                      <a href={item.href} className="text-sm leading-6 text-gray-600 hover:text-gray-900">
+                        {item.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="mt-10 md:mt-0">
+                <h3 className="text-sm font-semibold leading-6 text-gray-900">Legal</h3>
+                <ul role="list" className="mt-6 space-y-4">
+                  {navigation.legal.map((item) => (
+                    <li key={item.name}>
+                      <a href={item.href} className="text-sm leading-6 text-gray-600 hover:text-gray-900">
+                        {item.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
-      </Container>
+      </div>
     </footer>
   )
 }
