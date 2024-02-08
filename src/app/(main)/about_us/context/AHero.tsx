@@ -2,7 +2,7 @@ import { LifebuoyIcon, NewspaperIcon, PhoneIcon } from '@heroicons/react/20/soli
 
 const cards = [
   {
-    name: 'Sales',
+    name: 'Guide',
     description: 'Consectetur vel non. Rerum ut consequatur nobis unde. Enim est quo corrupti consequatur.',
     icon: PhoneIcon,
   },
@@ -48,14 +48,8 @@ export default function contact() {
         <div className="mx-auto max-w-2xl lg:mx-0">
           <h2 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">About Us</h2>
           <p className="mt-6 text-lg leading-8 text-gray-300">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
-            Ratione, eveniet soluta. Voluptate explicabo saepe autem numquam necessitatibus in, 
-            ab itaque temporibus minima harum, impedit officia ipsum laboriosam iusto ratione dolorum voluptatibus perspiciatis fuga. 
-            Error rerum commodi neque iusto necessitatibus quaerat molestias ullam. Eos voluptas rem voluptatibus quidem harum ut, 
-            nesciunt sequi! Laudantium, natus! Perferendis dicta mollitia similique fugiat tempore non totam repudiandae eos ipsam velit explicabo, 
-            dignissimos sit voluptatum, rem placeat accusamus voluptate earum maiores laborum quo. 
-            At numquam voluptatem ducimus molestiae officiis vero ipsa ipsum vel veniam quo exercitationem illo mollitia recusandae doloribus nam, 
-            nobis distinctio eos odit facilis.
+          We are dedicated to empowering individuals and institutions to unlock their full potential and shape a brighter future.
+           
           </p>
         </div>
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-6 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-8">
