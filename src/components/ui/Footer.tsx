@@ -1,4 +1,4 @@
-import { Container } from '@/components/Container'
+import { Container } from '@/components/ux/Container'
 import Image from 'next/image'
 import { Facebook, Linkedin, Instagram, Twitter, Youtube } from 'lucide-react'
 

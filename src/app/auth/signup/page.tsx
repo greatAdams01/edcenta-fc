@@ -8,6 +8,7 @@ export default function page() {
       <>
         <div className="w-full flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <Link href={'/'} className='cursor-pointer'>
             <Image
               className="mx-auto h-10 w-16"
               src="/logo.png"
@@ -15,6 +16,7 @@ export default function page() {
               width={100}
               height={100}
             />
+            </Link>
             <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
               Create Account
             </h2>
@@ -182,7 +184,7 @@ export default function page() {
   
             <p className="mt-10 text-center text-sm text-gray-500">
               Have an account?{''}
-              <Link href={'/auth/login'} className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+              <Link href={'/auth/login'} className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 ml-2">
                 Login
               </Link>
             </p>

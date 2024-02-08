@@ -1,6 +1,6 @@
-import { BackgroundImage } from '@/components/BackgroundImage'
-import { Button } from '@/components/Button'
-import { Container } from '@/components/Container'
+import { BackgroundImage } from '@/components/ux/BackgroundImage'
+import { Button } from '@/components/ux/Button'
+import { Container } from '@/components/ux/Container'
 import { Layout } from '@/components/Layout'
 
 export default function NotFound() {
