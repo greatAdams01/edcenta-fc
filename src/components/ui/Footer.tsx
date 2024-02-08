@@ -39,8 +39,8 @@ export default function Footer() {
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <img
             className="w-32 "
-            src="/Footerlogo.png"
-            alt="Company name"
+            src="/logo.png"
+            alt="EdCenta"
 
           />
           <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
