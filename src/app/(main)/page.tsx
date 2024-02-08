@@ -1,9 +1,9 @@
 import { Hero } from '@/components/hero/Hero'
-import { Newsletter } from '@/components/Newsletter'
-import { Tuition } from '@/components/Tuition'
-import { Learn } from '@/components/Learn'
-import { Pricing } from '@/components/Pricing'
-import { Sponsors } from '@/components/Sponsors'
+import { Newsletter } from '@/components/ui/Newsletter'
+import { Tuition } from '@/components/ui/Tuition'
+import { Learn } from '@/components/ui/Learn'
+import { Pricing } from '@/components/ui/Pricing'
+import { Sponsors } from '@/components/ui/Sponsors'
 
 export default function Home() {
   return (

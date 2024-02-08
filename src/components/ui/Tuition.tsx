@@ -1,4 +1,4 @@
-import { Container } from '@/components/Container';
+import { Container } from '@/components/ux/Container';
 import { GraduationCap, BookOpenCheck, ScrollText } from 'lucide-react';
 
 export function Tuition() {

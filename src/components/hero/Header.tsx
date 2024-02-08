@@ -10,6 +10,8 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon, RectangleGroupIcon } from '@heroicons/react/20/solid'
+import Image from 'next/image'
+import Link from 'next/link'
 
 const products = [
 
@@ -52,7 +54,9 @@ export default function Header() {
         <div className="flex lg:flex-1">
           <a href="#" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img className="h-16 w-auto" src="/logo.png" alt="" />
+            <Link href={'/'}>
+            <Image src="/logo.png" alt="" width={100} height={100} className="h-16 w-auto"/>
+            </Link>
           </a>
         </div>
         <div className="flex lg:hidden">
@@ -116,20 +120,20 @@ export default function Header() {
             </Transition>
           </Popover>
 
-          <a href="#" className="text-md font-semibold leading-6 text-gray-900">
-            Assess
-          </a>
-          <a href="#" className="text-md font-semibold leading-6 text-gray-900">
-            Revise
-          </a>
-          <a href="#" className="text-md font-semibold leading-6 text-gray-900">
-            Pricing
-          </a>
+          <Link href={'about_us'} className="text-md font-semibold leading-6 text-gray-900">
+            About Us
+          </Link>
+          <Link href={'/contact'} className="text-md font-semibold leading-6 text-gray-900">
+            Contact
+          </Link>
+          <Link href={'/faqs'} className="text-md font-semibold leading-6 text-gray-900">
+            FAQs
+          </Link>
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="#" className="text-md font-semibold leading-6 text-gray-900">
+          <Link href={'/auth/login'} className="text-md font-semibold leading-6 text-gray-900">
             Log in <span aria-hidden="true">&rarr;</span>
-          </a>
+          </Link>
         </div>
       </nav>
       <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
@@ -181,24 +185,24 @@ export default function Header() {
                     </>
                   )}
                 </Disclosure>
-                <a
-                  href="#"
+                <Link
+                  href={'about_us'}
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
-                  Features
-                </a>
-                <a
-                  href="#"
+                  About Us
+                </Link>
+                <Link
+                  href={'/contact'}
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
-                  Marketplace
-                </a>
-                <a
-                  href="#"
+                  Contact
+                </Link>
+                <Link
+                  href={'/faqs'}
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
-                  Company
-                </a>
+                  FAQs
+                </Link>
               </div>
               <div className="py-6">
                 <a
