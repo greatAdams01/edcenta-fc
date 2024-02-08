@@ -6,8 +6,8 @@ import { Tab } from '@headlessui/react'
 import { Dot } from 'lucide-react'; // Import the Dot icon component
 import clsx from 'clsx'
 
-import { Container } from '@/components/Container'
-import { DiamondIcon } from '@/components/DiamondIcon'
+import { Container } from '@/components/ux/Container'
+import { DiamondIcon } from '@/components/ux/DiamondIcon'
 // Import your avatar images
 
 const days = [
