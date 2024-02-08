@@ -123,11 +123,11 @@ export default function Header() {
           <Link href={'about_us'} className="text-md font-semibold leading-6 text-gray-900">
             About Us
           </Link>
-          <Link href={'/contact'} className="text-md font-semibold leading-6 text-gray-900">
-            Contact
-          </Link>
           <Link href={'/faqs'} className="text-md font-semibold leading-6 text-gray-900">
             FAQs
+          </Link>
+          <Link href={'/contact'} className="text-md font-semibold leading-6 text-gray-900">
+            Contact
           </Link>
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
@@ -192,16 +192,16 @@ export default function Header() {
                   About Us
                 </Link>
                 <Link
-                  href={'/contact'}
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Contact
-                </Link>
-                <Link
                   href={'/faqs'}
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   FAQs
+                </Link>
+                <Link
+                  href={'/contact'}
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                >
+                  Contact
                 </Link>
               </div>
               <div className="py-6">
