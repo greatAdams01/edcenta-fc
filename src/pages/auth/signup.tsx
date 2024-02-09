@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { inter } from '@/utils/font';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login() {
-  const [error, setError] = useState('');
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -19,33 +20,33 @@ export default function Login() {
 
     if (!firstName) {
       console.log('First Name field cannot empty');
-      setError('First Name field cannot be empty');
+      toast.error('First Name field cannot be empty');
       return;
     }
     if (!lastName) {
       console.log('Last Name field cannot be empty');
-      setError('Last Name field cannot be empty');
+      toast.error('Last Name field cannot be empty');
       return;
     }
     if (!email) {
       console.log('Email field cannot be empty');
-      setError('Email field cannot be empty');
+      toast.error('Email field cannot be empty');
       return;
     }
     if (!accountType) {
       console.log('Please select an Account type');
-      setError('Please select an Account type');
+      toast.error('Please select an Account type');
       return;
     }
     if (password !== conPassword) {
       console.log('Passwords do not match');
-      setError('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
 
     if (password.length < 8 || !/[A-Z]/.test(password)) {
       console.log('Password must be at least 8 characters long and contain at least one capital letter');
-      setError('Password must be at least 8 characters long and contain at least one capital letter');
+      toast.error('Password must be at least 8 characters long and contain at least one capital letter');
       return;
     }
 
@@ -242,6 +243,7 @@ export default function Login() {
             </Link>
           </p>
         </div>
+        <ToastContainer />
       </div>
     </>
   );

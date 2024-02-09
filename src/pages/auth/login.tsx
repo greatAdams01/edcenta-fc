@@ -4,20 +4,23 @@ import Image from 'next/image'
 import Link from 'next/link'
 import '@/styles/tailwind.css'
 import { inter } from '@/utils/font'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function Login() {
-  const [error, setError] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     if (!email || !password) {
       console.log('Incorrect Email or Password');
-      setError('Incorrect Email or Password');
+      toast.error('Incorrect Email or Password');
       return;
+    }else{
+        toast.success("Logged in Successfully")
     }
   };
 
@@ -152,6 +155,7 @@ export default function Login() {
               </Link>
             </p>
           </div>
+          <ToastContainer />
         </div>
       </>
     )
