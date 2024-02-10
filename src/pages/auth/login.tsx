@@ -1,26 +1,48 @@
 'use client'
-import React,{useState} from 'react'
+import {useState} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import '@/styles/tailwind.css'
+
 import { manrope } from '@/utils/font'
 import {message} from 'antd'
+// import { setCookie } from 'cookies-next'
+import { useMutation } from '@apollo/client'
+
+import { LOGIN } from '@/apollo/mutations/auth'
+
+
 
 
 export default function Login() {
+
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [password, setPassword] = useState('')  
+
+  const [login, { loading }] = useMutation(LOGIN, {
+    variables: {
+      email,
+      password
+    },
+    onCompleted: (data) => {
+      console.log(data)
+      // setCookie('token', data.login.token);
+      message.open({
+        type: 'success',
+        content: 'Logged in successfully!',
+      });
+    },
+    onError: (error) => {
+      message.open({
+        type: 'error',
+        content: error.message,
+      });
+    }
+  })
+
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!email || !password) {
-      console.log('Incorrect Email or Password');
-      message.error('Incorrect Email or Password');
-      return;
-    }else{
-        message.success("Logged in Successfully")
-    }
+    login()
   };
 
     return (
