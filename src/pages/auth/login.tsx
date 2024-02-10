@@ -3,9 +3,8 @@ import React,{useState} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import '@/styles/tailwind.css'
-import { inter } from '@/utils/font'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { manrope } from '@/utils/font'
+import {message} from 'antd'
 
 
 export default function Login() {
@@ -17,16 +16,16 @@ export default function Login() {
 
     if (!email || !password) {
       console.log('Incorrect Email or Password');
-      toast.error('Incorrect Email or Password');
+      message.error('Incorrect Email or Password');
       return;
     }else{
-        toast.success("Logged in Successfully")
+        message.success("Logged in Successfully")
     }
   };
 
     return (
       <>
-        <div className={`${inter.className} w-full flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8 `}>
+        <div className={`${manrope.className} w-full flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8 `}>
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
             <Link href={'/'} className='cursor-pointer'>
             <Image
@@ -57,7 +56,7 @@ export default function Login() {
                     value={email}
                     onChange={(event) => setEmail(event.target?.value)}
                     autoComplete="email"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
                   />
                 </div>
               </div>
@@ -74,7 +73,7 @@ export default function Login() {
                     value={password}
                     onChange={(event) => setPassword(event.target?.value)}
                     autoComplete="current-password"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
                   />
                 </div>
               </div>
@@ -102,7 +101,7 @@ export default function Login() {
                 <div>
                   <button
                     type="submit"
-                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 p2"
                   >
                     Sign in
                   </button>
@@ -122,7 +121,7 @@ export default function Login() {
                 <div className="mt-6 flex justify-center gap-4">
                   <a
                     href="#"
-                    className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:ring-transparent"
+                    className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                   >
                     <svg className="h-5 w-5" aria-hidden="true" viewBox="0 0 24 24">
                       <path
@@ -155,7 +154,6 @@ export default function Login() {
               </Link>
             </p>
           </div>
-          <ToastContainer />
         </div>
       </>
     )

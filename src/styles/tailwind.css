@@ -11,9 +11,27 @@
       -webkit-text-fill-color: #0075BC;
     }
   } */
+
+  @layer components {
+    input {
+     @apply outline-none
+    }
+
+  }
   
   .icon-wrapper svg {
     width: 7rem; 
     height: 7rem;
+  }
+  
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
   }
   
