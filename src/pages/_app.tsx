@@ -2,6 +2,7 @@ import '@/styles/tailwind.css';
 // import { FacebookProvider } from 'react-facebook';
 import { AppProps } from 'next/app'
 import Head from 'next/head'
+import { Manrope, Dosis } from 'next/font/google'
 // import { GoogleOAuthProvider } from '@react-oauth/google';
 // import { FacebookProvider } from 'react-facebook';
 import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
@@ -10,6 +11,18 @@ import { getCookie } from 'cookies-next';
 // import { Provider } from 'react-redux'
 // import { persistor, store } from '../store/store.js';
 // import { PersistGate } from 'redux-persist/integration/react';
+
+const manrope = Manrope({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-manrope',
+})
+
+const dosis = Dosis({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-dosis',
+})
 
 const token = getCookie('token')
 
@@ -41,7 +54,9 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
           {/* <PersistGate loading={null} persistor={persistor}> */}
             {/* <GoogleOAuthProvider clientId='1054832259017-7ud7lha28m8r3p9oa6fj6hsv0ndme7bb.apps.googleusercontent.com'>
               <FacebookProvider appId="171352182602769"> */}
-                <Component {...pageProps} />
+                <main className={`${manrope.variable} ${dosis.variable} font-sans`}>
+                  <Component {...pageProps} />
+                </main>
               {/* </FacebookProvider>
             </GoogleOAuthProvider> */}
           {/* </PersistGate> */}

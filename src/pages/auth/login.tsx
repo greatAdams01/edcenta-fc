@@ -3,12 +3,12 @@ import {useState} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { manrope } from '@/utils/font'
 import {message} from 'antd'
-// import { setCookie } from 'cookies-next'
+import { setCookie } from 'cookies-next'
 import { useMutation } from '@apollo/client'
 
 import { LOGIN } from '@/apollo/mutations/auth'
+import { manrope } from '@/utils/font'
 
 
 
@@ -17,6 +17,7 @@ export default function Login() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')  
+  // const [messageApi, contextHolder] = message.useMessage();
 
   const [login, { loading }] = useMutation(LOGIN, {
     variables: {
@@ -26,28 +27,29 @@ export default function Login() {
     onCompleted: (data) => {
       console.log(data)
       // setCookie('token', data.login.token);
-      message.open({
-        type: 'success',
-        content: 'Logged in successfully!',
-      });
+     
     },
     onError: (error) => {
-      message.open({
-        type: 'error',
-        content: error.message,
-      });
+      // message.open({
+      //   type: 'error',
+      //   content: error.message,
+      // });
     }
   })
 
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (email === '' || password === '') {
+      // message.error('Please fill in all fields')
+      return
+    }
     login()
   };
 
     return (
       <>
-        <div className={`${manrope.className} w-full flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8 `}>
+        <div className={` w-full flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8 `}>
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
             <Link href={'/'} className='cursor-pointer'>
             <Image
