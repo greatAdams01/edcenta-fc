@@ -3,7 +3,8 @@ import {useState} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import {message} from 'antd'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { setCookie } from 'cookies-next'
 import { useMutation } from '@apollo/client'
 
@@ -17,7 +18,6 @@ export default function Login() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')  
-  // const [messageApi, contextHolder] = message.useMessage();
 
   const [login, { loading }] = useMutation(LOGIN, {
     variables: {
@@ -30,10 +30,7 @@ export default function Login() {
      
     },
     onError: (error) => {
-      // message.open({
-      //   type: 'error',
-      //   content: error.message,
-      // });
+      toast.error(error.message);
     }
   })
 
@@ -41,7 +38,7 @@ export default function Login() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (email === '' || password === '') {
-      // message.error('Please fill in all fields')
+      toast.error('Please fill in all fields')
       return
     }
     login()
@@ -127,7 +124,7 @@ export default function Login() {
                     type="submit"
                     className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 p2"
                   >
-                    Sign in
+                    Login
                   </button>
                 </div>
               </form>
@@ -178,6 +175,7 @@ export default function Login() {
               </Link>
             </p>
           </div>
+            <ToastContainer />
         </div>
       </>
     )

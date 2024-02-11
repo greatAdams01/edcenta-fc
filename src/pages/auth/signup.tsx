@@ -2,17 +2,59 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { manrope } from '@/utils/font';
-import {message} from 'antd'
 
-export default function Login() {
+import { manrope } from '@/utils/font';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { setCookie } from 'cookies-next'
+import { useMutation } from '@apollo/client'
+
+import { SIGNUP } from '@/apollo/mutations/auth'
+import { Banknote } from 'lucide-react';
+
+export default function Signup() {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [conPassword, setConPassword] = useState('');
+  const [phone, setPhoneNumber] = useState('');
+  const [bName, setBName] = useState('');
+  const [bankName, setAccountName] = useState('')
+  const [acctNumber, setAcctNumber] = useState('');
+  const [bank, setBank] = useState('');
+  const [bankCode, setBankCode] = useState('');
+  const [occupation, setOccupation] = useState('');
   const [accountType, setAccountType] = useState('');
   const [password, setPassword] = useState('');
-  const [conPassword, setConPassword] = useState('');
+
+
+  const [signup, { loading }] = useMutation(SIGNUP, {
+    variables: {
+      input:{
+      firstName,
+      lastName,
+      email,
+      phone,
+      bName,
+      bankName,
+      acctNumber,
+      bank,
+      bankCode,
+      occupation,
+      accountType,
+      password
+      }
+    },
+    onCompleted: (data) => {
+      console.log(data)
+      // setCookie('token', data.login.token);
+     
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    }
+  })
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -20,37 +62,37 @@ export default function Login() {
 
     if (!firstName) {
 
-      console.log('First Name field cannot empty');
-      message.error('First Name field cannot be empty');
+      console.log('First name field cannot empty');
+      toast.error('First name field cannot be empty');
       return;
     }
     if (!lastName) {
-      console.log('Last Name field cannot be empty');
-      message.error('Last Name field cannot be empty');
+      console.log('Last name field cannot be empty');
+      toast.error('Last name field cannot be empty');
       return;
     }
     if (!email) {
       console.log('Email field cannot be empty');
-      message.error('Email field cannot be empty');
+      toast.error('Email field cannot be empty');
       return;
     }
     if (!accountType) {
       console.log('Please select an Account type');
-      message.error('Please select an Account type');
+      toast.error('Please select an Account type');
       return;
     }
     if (password !== conPassword) {
       console.log('Passwords do not match');
-      message.error('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
 
     if (password.length < 8 || !/[A-Z]/.test(password)) {
       console.log('Password must be at least 8 characters long and contain at least one capital letter');
-      message.error('Password must be at least 8 characters long and contain at least one capital letter');
+      toast.error('Password must be at least 8 characters long and contain at least one capital letter');
       return;
     }
-
+    signup()
   };
 
   return (
@@ -122,7 +164,126 @@ export default function Login() {
                   />
                 </div>
               </div>
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium leading-6 text-gray-900">
+                  Phone number
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="phone"
+                    value={phone}
+                    onChange={(event) => setPhoneNumber(event.target?.value)}
+                    autoComplete="phone"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
+                  />
+                </div>
+              </div>
 
+              <div>
+                <label htmlFor="bName" className="block text-sm font-medium leading-6 text-gray-900">
+                  Business name
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="bName"
+                    name="bName"
+                    type="bName"
+                    value={bName}
+                    onChange={(event) => setBName(event.target?.value)}
+                    autoComplete="bName"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="bankName" className="block text-sm font-medium leading-6 text-gray-900">
+                  Account name
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="bankName"
+                    name="bankName"
+                    type="bankName"
+                    value={bankName}
+                    placeholder='Mr. John Doe'
+                    onChange={(event) => setAccountName(event.target?.value)}
+                    autoComplete="bankName"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="acctName" className="block text-sm font-medium leading-6 text-gray-900">
+                  Account Number
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="acctNumber"
+                    name="acctNumber"
+                    type="acctNumber"
+                    value={acctNumber}
+                    onChange={(event) => setAcctNumber(event.target?.value)}
+                    autoComplete="acctNumber"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="bank" className="block text-sm font-medium leading-6 text-gray-900">
+                  Bank Name
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="bank"
+                    name="bank"
+                    type="bank"
+                    value={bank}
+                    onChange={(event) => setBank(event.target?.value)}
+                    autoComplete="bank"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="bankCode" className="block text-sm font-medium leading-6 text-gray-900">
+                  Bank Code
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="bankCode"
+                    name="bankCode"
+                    type="bankCode"
+                    value={bankCode}
+                    onChange={(event) => setBankCode(event.target?.value)}
+                    autoComplete="bankCode"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="occupation" className="block text-sm font-medium leading-6 text-gray-900">
+                  Occupation
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="occupation"
+                    name="occupation"
+                    type="occupation"
+                    value={occupation}
+                    onChange={(event) => setOccupation(event.target?.value)}
+                    autoComplete="occupation"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
+                  />
+                </div>
+              </div>
+              
               <div>
                 <label htmlFor="accountType" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
                   Sign up as
@@ -244,6 +405,7 @@ export default function Login() {
             </Link>
           </p>
         </div>
+          <ToastContainer />
       </div>
     </>
   );
