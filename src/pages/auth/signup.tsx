@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { manrope } from '@/utils/font';
 import { ToastContainer, toast } from 'react-toastify';
@@ -10,7 +11,6 @@ import { setCookie } from 'cookies-next'
 import { useMutation } from '@apollo/client'
 
 import { SIGNUP } from '@/apollo/mutations/auth'
-import { Banknote } from 'lucide-react';
 
 export default function Signup() {
 
@@ -28,6 +28,7 @@ export default function Signup() {
   const [accountType, setAccountType] = useState('');
   const [password, setPassword] = useState('');
 
+  const path = useRouter();
 
   const [signup, { loading }] = useMutation(SIGNUP, {
     variables: {
@@ -48,8 +49,11 @@ export default function Signup() {
     },
     onCompleted: (data) => {
       console.log(data)
+      toast.success('Account created successfully')
       // setCookie('token', data.login.token);
-     
+      setTimeout(() =>{
+        path.push('/auth/login')
+      },5000)
     },
     onError: (error) => {
       toast.error(error.message);
@@ -60,21 +64,49 @@ export default function Signup() {
     event.preventDefault();
 
 
-    if (!firstName) {
+    if (firstName === ''){
 
       console.log('First name field cannot empty');
       toast.error('First name field cannot be empty');
       return;
     }
-    if (!lastName) {
+    if (lastName === ''){
       console.log('Last name field cannot be empty');
       toast.error('Last name field cannot be empty');
       return;
     }
-    if (!email) {
-      console.log('Email field cannot be empty');
-      toast.error('Email field cannot be empty');
+    if (email === ''){
+      console.log('Enter a valid email address');
+      toast.error('Enter a valid email address');
       return;
+    }
+    if(phone === ''){
+      console.log('Enter a valid phone number')
+      toast.error('Enter a valid phone number')
+    }
+    if(bName === ''){
+        console.log('Enter a business name')
+        toast.error('Enter a business name')
+    }
+    if(bankName === ''){
+      console.log('Enter your account name')
+      toast.error('Enter your account name')
+    }
+    if(acctNumber === ''){
+      console.log('Add your account number')
+      toast.error('Add your account number')
+    }
+    if(bank === ''){
+      console.log('Bank name field cannot be empty')
+      toast.error('Bank name field cannot be empty')
+    }
+    if(bankCode === ''){
+      console.log('Enter a valid bank code')
+      toast.error('Enter a valid bank code')
+    }
+    if(occupation === ''){
+      console.log('Occupation is required')
+      toast.error('Occupation is required')
     }
     if (!accountType) {
       console.log('Please select an Account type');
