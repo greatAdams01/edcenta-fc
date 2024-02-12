@@ -38,7 +38,7 @@ export default function Login() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (email === '' || password === '') {
-      toast.error('Please fill in all fields')
+      toast.error('Invalid credentials')
       return
     }
     login()
