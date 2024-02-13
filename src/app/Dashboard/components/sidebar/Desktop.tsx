@@ -32,7 +32,7 @@ export default function Desktop() {
             <div className="flex h-16 shrink-0 items-center">
               <Image
                 className="h-8 w-auto"
-                src="/Logo.png"
+                src="/logo.png"
                 alt="EdCenta"
                 width={100}
                 height={100}
