@@ -5,6 +5,10 @@ import Animation from '@/utils/Animation'
 
 import '@/styles/tailwind.css'
 
+import Sidebar  from './components/sidebar/Desktop'
+import Mobile from './components/sidebar/Mobile'
+import Header from './components/header/page'
+
 const manrope = Manrope({
   subsets: ['latin'],
   display: 'swap',
@@ -34,15 +38,22 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`h-full bg-white antialiased ${manrope.variable} ${dosis.variable}`}
+      className={`${manrope.variable} ${dosis.variable}`}
     >
       <head>
         <title>Edcenta</title>
       </head>
-      <body className="">
-        {/* <Animation> */}
-        <div className="">{children}</div>
-         {/* </Animation> */}
+      <body className="flex min-h-full">
+        <div className="lg:flex w-full">
+          <div className=''>
+          <Sidebar />
+          <Mobile />
+          </div>
+          <div className='w-[100vw]'>
+            <Header />
+          {children}
+          </div>
+        </div>
       </body>
     </html>
   )
