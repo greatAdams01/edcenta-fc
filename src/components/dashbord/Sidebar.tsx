@@ -1,4 +1,17 @@
-'use client'
+/*
+  This example requires some changes to your config:
+  
+  ```
+  // tailwind.config.js
+  module.exports = {
+    // ...
+    plugins: [
+      // ...
+      require('@tailwindcss/forms'),
+    ],
+  }
+  ```
+*/
 import { Fragment, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
@@ -13,7 +26,6 @@ import {
   UsersIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import Image from 'next/image'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 
 const navigation = [
@@ -34,13 +46,25 @@ const userNavigation = [
   { name: 'Sign out', href: '#' },
 ]
 
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ')
+}
 
-export default function Mobile() {
+export default function Example() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
     <>
-      <div className='lg:hidden'>
+      {/*
+        This example requires updating your template:
+
+        ```
+        <html class="h-full bg-white">
+        <body class="h-full">
+        ```
+      */}
+      <div className='!font-dosis'>
+        {/* Mobile nav */}
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
             <Transition.Child
@@ -83,35 +107,34 @@ export default function Mobile() {
                     </div>
                   </Transition.Child>
                   {/* Sidebar component, swap this element with another sidebar if you like */}
-                  <div className="flex w-full grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
+                  <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
                     <div className="flex h-16 shrink-0 items-center">
-                      <Image
+                      <img
                         className="h-8 w-auto"
-                        src="/logo.png"
-                        alt="EdCenta"
-                        width={100}
-                        height={100}
+                        src="logo1.png"
+                        alt="Your Company"
                       />
                     </div>
-                    <nav className="flex flex-1 flex-col">
+                    <nav className="flex flex-1 flex-col !font-dosis">
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
                         <li>
-                          <ul role="list" className="-mx-2 space-y-1">
+                          <ul role="list" className="-mx-2  space-y-1">
                             {navigation.map((item) => (
                               <li key={item.name}>
                                 <a
                                   href={item.href}
-                                  className={`group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold
-                                    ${item.current
+                                  className={classNames(
+                                    item.current
                                       ? 'bg-gray-50 text-indigo-600'
-                                      : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'
-                                    }`}
+                                      : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
+                                    'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-dosis font-semibold'
+                                  )}
                                 >
                                   <item.icon
-                                    className={`h-6 w-6 shrink-0
-                                    ${
-                                      item.current ? 'text-indigo-600 2 text-sm leading-6 font-semibold' : 'text-gray-400 group-hover:text-indigo-600'
-                                    }`}
+                                    className={classNames(
+                                      item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
+                                      'h-6 w-6 shrink-0'
+                                    )}
                                     aria-hidden="true"
                                   />
                                   {item.name}
@@ -120,36 +143,7 @@ export default function Mobile() {
                             ))}
                           </ul>
                         </li>
-                        <li>
-                          <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
-                          <ul role="list" className="-mx-2 mt-2 space-y-1">
-                            {teams.map((team) => (
-                              <li key={team.name}>
-                                <a
-                                  href={team.href}
-                                  className={`group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold
-                                  ${
-                                    team.current
-                                      ? 'bg-gray-50 text-indigo-600'
-                                      : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'
-                                  }`}
-                                >
-                                  <span
-                                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white
-                                    ${
-                                      team.current
-                                        ? 'text-indigo-600 border-indigo-600'
-                                        : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600'
-                                    }`}
-                                  >
-                                    {team.initial}
-                                  </span>
-                                  <span className="truncate">{team.name}</span>
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        </li>
+                        <li>Hello</li>
                         <li className="mt-auto">
                           <a
                             href="#"
@@ -171,8 +165,66 @@ export default function Mobile() {
           </Dialog>
         </Transition.Root>
 
+        {/* Static sidebar for desktop */}
+        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+          {/* Sidebar component, swap this element with another sidebar if you like */}
+          <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
+            <div className="flex h-16 shrink-0 items-center">
+              <img
+                className="h-12 w-auto"
+                src="/logo1.png"
+                alt="Your Company"
+              />
+            </div>
+            <nav className="flex flex-1 flex-col">
+              <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                <li>
+                  <ul role="list" className="-mx-2 space-y-1">
+                    {navigation.map((item) => (
+                      <li key={item.name}>
+                        <a
+                          href={item.href}
+                          className={classNames(
+                            item.current
+                              ? 'bg-gray-50 text-indigo-600'
+                              : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
+                            'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                          )}
+                        >
+                          <item.icon
+                            className={classNames(
+                              item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
+                              'h-6 w-6 shrink-0'
+                            )}
+                            aria-hidden="true"
+                          />
+                          {item.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+                <li>
+                  
+                </li>
+                <li className="mt-auto">
+                  <a
+                    href="#"
+                    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+                  >
+                    <Cog6ToothIcon
+                      className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
+                      aria-hidden="true"
+                    />
+                    Settings
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
 
-        <div className="w-[100vw]">
+        <div className="lg:pl-72 font-dosis">
           <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
             <button type="button" className="-m-2.5 p-2.5 text-gray-700 lg:hidden" onClick={() => setSidebarOpen(true)}>
               <span className="sr-only">Open sidebar</span>
@@ -212,16 +264,14 @@ export default function Mobile() {
                 <Menu as="div" className="relative">
                   <Menu.Button className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    <Image
+                    <img
                       className="h-8 w-8 rounded-full bg-gray-50"
-                      src="/hero4.jpg"
+                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                       alt=""
-                      width={100}
-                      height={100}
                     />
                     <span className="hidden lg:flex lg:items-center">
                       <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
-                        User
+                        Tom Cook
                       </span>
                       <ChevronDownIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                     </span>
@@ -241,9 +291,10 @@ export default function Mobile() {
                           {({ active }) => (
                             <a
                               href={item.href}
-                              className={`${
-                                active ? 'bg-gray-50' : 'block px-3 py-1 text-sm leading-6 text-gray-900'
-                              }`}
+                              className={classNames(
+                                active ? 'bg-gray-50' : '',
+                                'block px-3 py-1 text-sm leading-6 text-gray-900'
+                              )}
                             >
                               {item.name}
                             </a>
