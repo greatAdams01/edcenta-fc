@@ -58,7 +58,7 @@ export default function Login() {
             />
             </Link>
             <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-              Login in to your account
+              Login to your account
             </h2>
           </div>
   
