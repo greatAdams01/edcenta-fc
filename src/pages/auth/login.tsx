@@ -9,7 +9,6 @@ import { setCookie } from 'cookies-next'
 import { useMutation } from '@apollo/client'
 
 import { LOGIN } from '@/apollo/mutations/auth'
-import { manrope } from '@/utils/font'
 
 
 
@@ -26,8 +25,10 @@ export default function Login() {
     },
     onCompleted: (data) => {
       console.log(data)
-      // setCookie('token', data.login.token);
-     
+      setCookie('token', data.login.token);
+     if(data.login.accountType === 'TUTOR'){
+      window.location.href = '/tutor/'
+    }
     },
     onError: (error) => {
       toast.error(error.message);
