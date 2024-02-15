@@ -16,3 +16,15 @@ export const SIGNUP = gql`
         accountType
       }
   }`
+
+export const REQUEST_RESET_PASSWORD = gql`
+    mutation ResetPasswordRequest($email: String!) {
+    resetPasswordRequest(email: $email)
+}
+`
+
+export const RESET = gql`
+mutation ResetPassword($otp: Float!, $password: String!) {
+  resetPassword(otp: $otp, password: $password)
+}
+`

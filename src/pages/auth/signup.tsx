@@ -83,30 +83,37 @@ export default function Signup() {
     if(phone === ''){
       console.log('Enter a valid phone number')
       toast.error('Enter a valid phone number')
+      return;
     }
     if(bName === ''){
         console.log('Enter a business name')
         toast.error('Enter a business name')
+        return;
     }
     if(bankName === ''){
       console.log('Enter your account name')
       toast.error('Enter your account name')
+      return;
     }
     if(acctNumber === ''){
       console.log('Add your account number')
       toast.error('Add your account number')
+      return;
     }
     if(bank === ''){
       console.log('Bank name field cannot be empty')
       toast.error('Bank name field cannot be empty')
+      return;
     }
     if(bankCode === ''){
       console.log('Enter a valid bank code')
       toast.error('Enter a valid bank code')
+      return;
     }
     if(occupation === ''){
       console.log('Occupation is required')
       toast.error('Occupation is required')
+      return;
     }
     if (!accountType) {
       console.log('Please select an Account type');
@@ -114,8 +121,8 @@ export default function Signup() {
       return;
     }
     if (password !== conPassword) {
-      console.log('Passwords do not match');
-      toast.error('Passwords do not match');
+      console.log('Passwords do not match. Re-enter your password');
+      toast.error('Passwords do not match. Re-enter your password');
       return;
     }
 
@@ -322,7 +329,7 @@ export default function Signup() {
                 </label>
                 <div className='flex justify-between w-3/5'>
                   <div className='flex'>
-                    <input type='radio' id='owner' name='accountType' value='OWNER' className='mr-2' onChange={(event) => setAccountType(event.target.value)} /> <p>Owner</p>
+                    <input type='radio' id='owner' name='accountType' value='OWNER' className='mr-2' onChange={(event) => setAccountType(event.target.value)} /> <p>School</p>
                   </div>
                   <div className='flex'>
                     <input type='radio' id='tutor' name='accountType' value='TUTOR' className='mr-2' onChange={(event) => setAccountType(event.target.value)} /> <p>Tutor</p>
