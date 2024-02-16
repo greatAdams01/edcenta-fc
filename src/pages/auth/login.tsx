@@ -135,7 +135,7 @@ export default function Login() {
                 </div>
 
                 <div className="text-sm leading-6">
-                  <a href={'/auth/reset_password'} className="font-semibold text-indigo-600 hover:text-indigo-500">
+                  <a href={'/auth/request_reset'} className="font-semibold text-indigo-600 hover:text-indigo-500">
                     Forgot password?
                   </a>
                 </div>

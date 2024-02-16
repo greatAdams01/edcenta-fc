@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { setCookie } from 'cookies-next'
 import { useMutation } from '@apollo/client'
+import { Eye, EyeOff } from 'lucide-react';
 
 import { SIGNUP } from '@/apollo/mutations/auth'
 
@@ -17,7 +18,6 @@ export default function Signup() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [conPassword, setConPassword] = useState('');
   const [phone, setPhoneNumber] = useState('');
   const [bName, setBName] = useState('');
   const [bankName, setAccountName] = useState('')
@@ -27,6 +27,9 @@ export default function Signup() {
   const [occupation, setOccupation] = useState('');
   const [accountType, setAccountType] = useState('');
   const [password, setPassword] = useState('');
+  const [conPassword, setConPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); 
+  const [conShowPassword, setConShowPassword] = useState(false); 
 
   const path = useRouter();
 
@@ -134,6 +137,12 @@ export default function Signup() {
     signup()
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const togglePasswordVisibility2 = () => {
+    setConShowPassword(!conShowPassword);
+  };
   return (
     <>
       <div className={`${manrope.className} w-full flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8`}>
@@ -221,109 +230,6 @@ export default function Signup() {
               </div>
 
               <div>
-                <label htmlFor="bName" className="block text-sm font-medium leading-6 text-gray-900">
-                  Business name
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="bName"
-                    name="bName"
-                    type="bName"
-                    value={bName}
-                    onChange={(event) => setBName(event.target?.value)}
-                    autoComplete="bName"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="bankName" className="block text-sm font-medium leading-6 text-gray-900">
-                  Account name
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="bankName"
-                    name="bankName"
-                    type="bankName"
-                    value={bankName}
-                    placeholder='Mr. John Doe'
-                    onChange={(event) => setAccountName(event.target?.value)}
-                    autoComplete="bankName"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="acctName" className="block text-sm font-medium leading-6 text-gray-900">
-                  Account Number
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="acctNumber"
-                    name="acctNumber"
-                    type="acctNumber"
-                    value={acctNumber}
-                    onChange={(event) => setAcctNumber(event.target?.value)}
-                    autoComplete="acctNumber"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="bank" className="block text-sm font-medium leading-6 text-gray-900">
-                  Bank Name
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="bank"
-                    name="bank"
-                    type="bank"
-                    value={bank}
-                    onChange={(event) => setBank(event.target?.value)}
-                    autoComplete="bank"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="bankCode" className="block text-sm font-medium leading-6 text-gray-900">
-                  Bank Code
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="bankCode"
-                    name="bankCode"
-                    type="bankCode"
-                    value={bankCode}
-                    onChange={(event) => setBankCode(event.target?.value)}
-                    autoComplete="bankCode"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="occupation" className="block text-sm font-medium leading-6 text-gray-900">
-                  Occupation
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="occupation"
-                    name="occupation"
-                    type="occupation"
-                    value={occupation}
-                    onChange={(event) => setOccupation(event.target?.value)}
-                    autoComplete="occupation"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
-                  />
-                </div>
-              </div>
-              
-              <div>
                 <label htmlFor="accountType" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
                   Sign up as
                 </label>
@@ -344,33 +250,48 @@ export default function Signup() {
                 <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                   Password
                 </label>
-                <div className="mt-2">
+                <div className="mt-2 relative">
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'} 
                     value={password}
                     onChange={(event) => setPassword(event.target?.value)}
                     autoComplete="current-password"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
                   />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-600 hover:text-gray-800 focus:outline-none"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? <Eye /> : <EyeOff />}
+                  </button>
                 </div>
               </div>
 
+
               <div>
-                <label htmlFor="conPassword" className="block text-sm font-medium leading-6 text-gray-900">
+                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                   Confirm Password
                 </label>
-                <div className="mt-2">
+                <div className="mt-2 relative">
                   <input
-                    id="conPassword"
-                    name="conPassword"
-                    type="password"
+                    id="password"
+                    name="password"
+                    type={conShowPassword ? 'text' : 'password'} 
                     value={conPassword}
                     onChange={(event) => setConPassword(event.target?.value)}
                     autoComplete="current-password"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
                   />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-600 hover:text-gray-800 focus:outline-none"
+                    onClick={togglePasswordVisibility2}
+                  >
+                    {showPassword ? <Eye /> : <EyeOff />}
+                  </button>
                 </div>
               </div>
 

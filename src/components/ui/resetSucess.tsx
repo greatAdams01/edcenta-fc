@@ -3,6 +3,8 @@ import { Dialog, Transition } from '@headlessui/react'
 import Link from 'next/link'
 import { CheckIcon } from '@heroicons/react/24/outline'
 
+import {manrope} from '@/utils/font'
+
 
 export default function Sucess() {
   const [open, setOpen] = useState(true)
@@ -22,7 +24,7 @@ export default function Sucess() {
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div className={`${manrope.className}fixed inset-0 z-10 w-screen overflow-y-auto`}>
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
             <Transition.Child
               as={Fragment}
@@ -52,7 +54,7 @@ export default function Sucess() {
                 <div className="mt-5 sm:mt-6">
                   <Link
                     href={'/auth/login'}
-                    className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 ml-2"
                   >
                     Proceed to Login
                   </Link>

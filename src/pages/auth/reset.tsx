@@ -1,5 +1,7 @@
 'use client'
 import { useRef, useState } from 'react';
+import Link from 'next/link'
+import Image from 'next/image'
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,6 +17,7 @@ const Reset = () => {
   const [password, setNewPassword] = useState('');
   const [conPassword, setConNewPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false); 
+  const [conShowPassword, setConShowPassword] = useState(false); 
   const [showSucess, setShowSucess] = useState(false); 
   const [inputs, setInputs] = useState<Array<string>>(['', '', '', '']);
   const inputRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)];
@@ -67,11 +70,30 @@ const Reset = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  const togglePasswordVisibility2 = () => {
+    setConShowPassword(!conShowPassword);
+  };
 
   return (
-    <div className='w-full flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8 '>
-      <div className="p-4 mt-20 sm:mx-auto sm:w-3/6">
-        <h1 className='text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 mb-6'>Create a new password</h1>
+    <div className={` w-full flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8 `}>
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+         <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <Link href={'/'} className='cursor-pointer'>
+            <Image
+              className="mx-auto h-10 w-16"
+              src="/logo.png"
+              alt="EdCenta"
+              width={100}
+              height={100}
+            />
+          </Link>
+          <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            Create a new password
+          </h2>
+        </div>
+
+        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
+          <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
         <form className="space-y-2" onSubmit={handleSubmit}>
 
         <div className="mt-2 flex items-center space-x-2">
@@ -122,7 +144,7 @@ const Reset = () => {
                   <input
                     id="password"
                     name="conPassword"
-                    type={showPassword ? 'text' : 'password'} 
+                    type={conShowPassword ? 'text' : 'password'} 
                     value={conPassword}
                     onChange={(event) => setConNewPassword(event.target?.value)}
                     autoComplete="current-password"
@@ -131,7 +153,7 @@ const Reset = () => {
                   <button
                     type="button"
                     className="absolute inset-y-0 right-0 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-600 hover:text-gray-800 focus:outline-none"
-                    onClick={togglePasswordVisibility}
+                    onClick={togglePasswordVisibility2}
                   >
                     {showPassword ? <Eye /> : <EyeOff />}
                   </button>
@@ -143,6 +165,8 @@ const Reset = () => {
             className="mt-4 flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 p2"
           >Create new password</button>
         </form>
+      </div>  
+      </div>
       </div>
       <ToastContainer />
       {showSucess && <Sucess />}
