@@ -155,7 +155,7 @@ const Reset = () => {
                     className="absolute inset-y-0 right-0 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-600 hover:text-gray-800 focus:outline-none"
                     onClick={togglePasswordVisibility2}
                   >
-                    {showPassword ? <Eye /> : <EyeOff />}
+                    {conShowPassword ? <Eye /> : <EyeOff />}
                   </button>
                 </div>
               </div>

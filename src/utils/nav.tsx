@@ -1,22 +1,14 @@
 import {
-    Bars3Icon,
-    BellIcon,
     CalendarIcon,
-    ChartPieIcon,
-    Cog6ToothIcon,
-    DocumentDuplicateIcon,
-    FolderIcon,
-    HomeIcon,
     UsersIcon,
-    XMarkIcon,
+    ClipboardDocumentCheckIcon
   } from '@heroicons/react/24/outline'
-  import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 
   export const navigation = [
     { 
       name: 'ACTIVITIES', 
       href: '#', 
-      icon: HomeIcon,
+      icon: CalendarIcon,
       children: [
         { name: 'Brouse and Assign', href: '#' },
         { name: 'Preview assigned', href: '#' },
@@ -26,7 +18,7 @@ import {
     { 
       name: 'PROGRESS', 
       href: '#', 
-      icon: UsersIcon,
+      icon: ClipboardDocumentCheckIcon,
       children: [
         { name: 'Score', href: '#' },
         { name: 'Reward', href: '#' },
@@ -36,7 +28,7 @@ import {
     { 
       name: 'ACCOUNTS', 
       href: '#', 
-      icon: FolderIcon, 
+      icon: UsersIcon, 
       current: false,
       children: [
         { name: 'My Accounts', href: '#' },
@@ -54,6 +46,7 @@ import {
     { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
     { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
   ]
+  
   export const userNavigation = [
     { name: 'Your profile', href: '#' },
     { name: 'Sign out', href: '#' },
