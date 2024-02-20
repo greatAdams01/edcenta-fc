@@ -1,5 +1,5 @@
-'use client'
 import { Fragment, useState } from 'react'
+import Image from 'next/image'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
@@ -11,36 +11,26 @@ import {
   FolderIcon,
   HomeIcon,
   UsersIcon,
+  UserIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import Image from 'next/image'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 
-const navigation = [
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Team', href: '#', icon: UsersIcon, current: false },
-  { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-  { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Documents', href: '#', icon: DocumentDuplicateIcon, current: false },
-  { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
-]
-const teams = [
-  { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
-  { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
-  { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
-]
-const userNavigation = [
-  { name: 'Your profile', href: '#' },
-  { name: 'Sign out', href: '#' },
-]
+import {dosis} from '@/utils/font'
+import { navigation } from '@/utils/nav'
+import { userNavigation } from '@/utils/nav'
 
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ')
+}
 
-export default function Mobile() {
+export default function Tutor() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
     <>
-      <div className='lg:hidden'>
+      <div className={``}>
+        {/* Mobile nav */}
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
             <Transition.Child
@@ -83,77 +73,61 @@ export default function Mobile() {
                     </div>
                   </Transition.Child>
                   {/* Sidebar component, swap this element with another sidebar if you like */}
-                  <div className="flex w-full grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-                    <div className="flex h-16 shrink-0 items-center">
+                  <div className={`${dosis.className} flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4`}>
+                    <div className="flex items-center h-16 mt-4 shrink-0 items-center">
                       <Image
-                        className="h-8 w-auto"
-                        src="/logo.png"
-                        alt="EdCenta"
-                        width={100}
+                        width={200}
                         height={100}
+                        className="h-16 w-auto "
+                        src={'/logo1.png'}
+                        alt="EdCenta"
                       />
+                      <h1 className='ml-2 text-xl font-bold'>EdCenta</h1>
                     </div>
                     <nav className="flex flex-1 flex-col">
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
                         <li>
-                          <ul role="list" className="-mx-2 space-y-1">
-                            {navigation.map((item) => (
-                              <li key={item.name}>
-                                <a
-                                  href={item.href}
-                                  className={`group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold
-                                    ${item.current
-                                      ? 'bg-gray-50 text-indigo-600'
-                                      : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'
-                                    }`}
-                                >
-                                  <item.icon
-                                    className={`h-6 w-6 shrink-0
-                                    ${
-                                      item.current ? 'text-indigo-600 2 text-sm leading-6 font-semibold' : 'text-gray-400 group-hover:text-indigo-600'
-                                    }`}
-                                    aria-hidden="true"
-                                  />
-                                  {item.name}
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        </li>
-                        <li>
-                          <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
-                          <ul role="list" className="-mx-2 mt-2 space-y-1">
-                            {teams.map((team) => (
-                              <li key={team.name}>
-                                <a
-                                  href={team.href}
-                                  className={`group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold
-                                  ${
-                                    team.current
-                                      ? 'bg-gray-50 text-indigo-600'
-                                      : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'
-                                  }`}
-                                >
-                                  <span
-                                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white
-                                    ${
-                                      team.current
-                                        ? 'text-indigo-600 border-indigo-600'
-                                        : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600'
-                                    }`}
-                                  >
-                                    {team.initial}
-                                  </span>
-                                  <span className="truncate">{team.name}</span>
-                                </a>
-                              </li>
-                            ))}
+                          <ul role="list" className="-mx-2  space-y-1">
+                        {navigation.map((item) => (
+                          <li key={item.name}>
+                            <a
+                              href={item.href}
+                              className={classNames(
+                                item.current
+                                  ? 'bg-gray-50 text-indigo-600 font-semibold'
+                                  : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
+                                'bg-[#8B53FF] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
+                              )}
+                            >
+                              <item.icon
+                                className={classNames(
+                                  item.current ? ' text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
+                                  'h-6 w-6 shrink-0'
+                                )}
+                                aria-hidden="true"
+                              />
+                              {item.name}
+                            </a>
+
+                            {item.children && (
+                              <ul className="pl-4 my-2">
+                                {item.children.map((subItem) => (
+                                  <li key={subItem.name}>
+                                    <a href={subItem.href} className="ml-6 space-y-4 hover:text-gray-600">
+                                      {subItem.name}
+                                    </a>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </li>
+                        ))}
                           </ul>
                         </li>
                         <li className="mt-auto">
                           <a
                             href="#"
-                            className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+                            className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                           >
                             <Cog6ToothIcon
                               className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
@@ -171,8 +145,81 @@ export default function Mobile() {
           </Dialog>
         </Transition.Root>
 
+        {/* Static sidebar for desktop */}
+        <div className={`${dosis.className} hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col`}>
+          {/* Sidebar component, swap this element with another sidebar if you like */}
+          <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
+          <div className="flex items-center h-16 shrink-0 items-center">
+                      <Image
+                        width={200}
+                        height={100}
+                        className="h-14 w-auto"
+                        src={'/logo1.png'}
+                        alt="EdCenta"
+                      />
+                      <h1 className='ml-2 text-xl font-bold'>EdCenta</h1>
+                    </div>
+            <nav className="flex flex-1 flex-col">
+              <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                <li>
+                  <ul role="list" className="-mx-2 space-y-1">
+                  {navigation.map((item) => (
+                          <li key={item.name}>
+                            <a
+                              href={item.href}
+                              className={classNames(
+                                item.current
+                                  ? 'bg-gray-50 text-indigo-600 font-semibold'
+                                  : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
+                                'bg-[#8B53FF] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
+                              )}
+                            >
+                              <item.icon
+                                className={classNames(
+                                  item.current ? ' text-indigo-600' : ' group-hover:text-indigo-600',
+                                  'h-6 w-6 shrink-0'
+                                )}
+                                aria-hidden="true"
+                              />
+                              {item.name}
+                            </a>
 
-        <div className="w-[100vw]">
+                            {item.children && (
+                              <ul className="pl-4 my-2">
+                                {item.children.map((subItem) => (
+                                  <li key={subItem.name}>
+                                    <a href={subItem.href} className="ml-6 space-y-4 hover:text-gray-600 font-semibold">
+                                      {subItem.name}
+                                    </a>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </li>
+                        ))}
+                  </ul>
+                </li>
+                <li>
+                  
+                </li>
+                <li className="mt-auto">
+                  <a
+                    href="#"
+                    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+                  >
+                    <Cog6ToothIcon
+                      className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
+                      aria-hidden="true"
+                    />
+                    Settings
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+
+        <div className="lg:pl-72">
           <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
             <button type="button" className="-m-2.5 p-2.5 text-gray-700 lg:hidden" onClick={() => setSidebarOpen(true)}>
               <span className="sr-only">Open sidebar</span>
@@ -210,18 +257,14 @@ export default function Mobile() {
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative">
-                  <Menu.Button className="-m-1.5 flex items-center p-1.5">
+                  <Menu.Button className="-m-1.5 flex items-center  p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    <Image
-                      className="h-8 w-8 rounded-full bg-gray-50"
-                      src="/hero4.jpg"
-                      alt=""
-                      width={100}
-                      height={100}
-                    />
+                    {/* {user.image} */}
+                    <UserIcon className='h-8 w-8 rounded-full bg-gray-50' />
                     <span className="hidden lg:flex lg:items-center">
-                      <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
-                        User
+                      <span className="ml-4 text-sm  leading-6 text-gray-900" aria-hidden="true">
+                        User Name
+                        {/* {user.name} */}
                       </span>
                       <ChevronDownIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                     </span>
@@ -241,9 +284,10 @@ export default function Mobile() {
                           {({ active }) => (
                             <a
                               href={item.href}
-                              className={`${
-                                active ? 'bg-gray-50' : 'block px-3 py-1 text-sm leading-6 text-gray-900'
-                              }`}
+                              className={classNames(
+                                active ? 'bg-gray-50' : '',
+                                'block px-3 py-1 text-sm leading-6 text-gray-900'
+                              )}
                             >
                               {item.name}
                             </a>

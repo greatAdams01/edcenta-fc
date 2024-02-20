@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { setCookie } from 'cookies-next'
 import { useMutation } from '@apollo/client'
+import { Eye, EyeOff } from 'lucide-react';
 
 import { SIGNUP } from '@/apollo/mutations/auth'
 
@@ -17,7 +18,6 @@ export default function Signup() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [conPassword, setConPassword] = useState('');
   const [phone, setPhoneNumber] = useState('');
   const [bName, setBName] = useState('');
   const [bankName, setAccountName] = useState('')
@@ -27,6 +27,9 @@ export default function Signup() {
   const [occupation, setOccupation] = useState('');
   const [accountType, setAccountType] = useState('');
   const [password, setPassword] = useState('');
+  const [conPassword, setConPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); 
+  const [conShowPassword, setConShowPassword] = useState(false); 
 
   const path = useRouter();
 
@@ -37,12 +40,6 @@ export default function Signup() {
       lastName,
       email,
       phone,
-      bName,
-      bankName,
-      acctNumber,
-      bank,
-      bankCode,
-      occupation,
       accountType,
       password
       }
@@ -83,39 +80,46 @@ export default function Signup() {
     if(phone === ''){
       console.log('Enter a valid phone number')
       toast.error('Enter a valid phone number')
+      return;
     }
-    if(bName === ''){
-        console.log('Enter a business name')
-        toast.error('Enter a business name')
-    }
-    if(bankName === ''){
-      console.log('Enter your account name')
-      toast.error('Enter your account name')
-    }
-    if(acctNumber === ''){
-      console.log('Add your account number')
-      toast.error('Add your account number')
-    }
-    if(bank === ''){
-      console.log('Bank name field cannot be empty')
-      toast.error('Bank name field cannot be empty')
-    }
-    if(bankCode === ''){
-      console.log('Enter a valid bank code')
-      toast.error('Enter a valid bank code')
-    }
-    if(occupation === ''){
-      console.log('Occupation is required')
-      toast.error('Occupation is required')
-    }
+    // if(bName === ''){
+    //     console.log('Enter a business name')
+    //     toast.error('Enter a business name')
+    //     return;
+    // }
+    // if(bankName === ''){
+    //   console.log('Enter your account name')
+    //   toast.error('Enter your account name')
+    //   return;
+    // }
+    // if(acctNumber === ''){
+    //   console.log('Add your account number')
+    //   toast.error('Add your account number')
+    //   return;
+    // }
+    // if(bank === ''){
+    //   console.log('Bank name field cannot be empty')
+    //   toast.error('Bank name field cannot be empty')
+    //   return;
+    // }
+    // if(bankCode === ''){
+    //   console.log('Enter a valid bank code')
+    //   toast.error('Enter a valid bank code')
+    //   return;
+    // }
+    // if(occupation === ''){
+    //   console.log('Occupation is required')
+    //   toast.error('Occupation is required')
+    //   return;
+    // }
     if (!accountType) {
       console.log('Please select an Account type');
       toast.error('Please select an Account type');
       return;
     }
     if (password !== conPassword) {
-      console.log('Passwords do not match');
-      toast.error('Passwords do not match');
+      console.log('Passwords do not match. Re-enter your password');
+      toast.error('Passwords do not match. Re-enter your password');
       return;
     }
 
@@ -127,6 +131,12 @@ export default function Signup() {
     signup()
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const togglePasswordVisibility2 = () => {
+    setConShowPassword(!conShowPassword);
+  };
   return (
     <>
       <div className={`${manrope.className} w-full flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8`}>
@@ -214,121 +224,19 @@ export default function Signup() {
               </div>
 
               <div>
-                <label htmlFor="bName" className="block text-sm font-medium leading-6 text-gray-900">
-                  Business name
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="bName"
-                    name="bName"
-                    type="bName"
-                    value={bName}
-                    onChange={(event) => setBName(event.target?.value)}
-                    autoComplete="bName"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="bankName" className="block text-sm font-medium leading-6 text-gray-900">
-                  Account name
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="bankName"
-                    name="bankName"
-                    type="bankName"
-                    value={bankName}
-                    placeholder='Mr. John Doe'
-                    onChange={(event) => setAccountName(event.target?.value)}
-                    autoComplete="bankName"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="acctName" className="block text-sm font-medium leading-6 text-gray-900">
-                  Account Number
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="acctNumber"
-                    name="acctNumber"
-                    type="acctNumber"
-                    value={acctNumber}
-                    onChange={(event) => setAcctNumber(event.target?.value)}
-                    autoComplete="acctNumber"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="bank" className="block text-sm font-medium leading-6 text-gray-900">
-                  Bank Name
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="bank"
-                    name="bank"
-                    type="bank"
-                    value={bank}
-                    onChange={(event) => setBank(event.target?.value)}
-                    autoComplete="bank"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="bankCode" className="block text-sm font-medium leading-6 text-gray-900">
-                  Bank Code
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="bankCode"
-                    name="bankCode"
-                    type="bankCode"
-                    value={bankCode}
-                    onChange={(event) => setBankCode(event.target?.value)}
-                    autoComplete="bankCode"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="occupation" className="block text-sm font-medium leading-6 text-gray-900">
-                  Occupation
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="occupation"
-                    name="occupation"
-                    type="occupation"
-                    value={occupation}
-                    onChange={(event) => setOccupation(event.target?.value)}
-                    autoComplete="occupation"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
-                  />
-                </div>
-              </div>
-              
-              <div>
                 <label htmlFor="accountType" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
                   Sign up as
                 </label>
                 <div className='flex justify-between w-3/5'>
                   <div className='flex'>
-                    <input type='radio' id='owner' name='accountType' value='OWNER' className='mr-2' onChange={(event) => setAccountType(event.target.value)} /> <p>Owner</p>
+                  <input type='radio' id='owner' name='accountType' value='OWNER' className='mr-2' onChange={(event) => setAccountType(event.target.value)} />
+                    <label htmlFor="owner">School</label>
                   </div>
                   <div className='flex'>
-                    <input type='radio' id='tutor' name='accountType' value='TUTOR' className='mr-2' onChange={(event) => setAccountType(event.target.value)} /> <p>Tutor</p>
+                    <input type='radio' id='tutor' name='accountType' value='TUTOR' className='mr-2' onChange={(event) => setAccountType(event.target.value)} /> <label htmlFor='tutor'>Tutor</label>
                   </div>
                   <div className='flex'>
-                    <input type='radio' id='parent' name='accountType' value='PARENT' className='mr-2' onChange={(event) => setAccountType(event.target.value)} /> <p>Parent</p>
+                    <input type='radio' id='parent' name='accountType' value='PARENT' className='mr-2' onChange={(event) => setAccountType(event.target.value)} /> <label htmlFor='parent'>Parent</label>
                   </div>
                 </div>
               </div>
@@ -337,33 +245,48 @@ export default function Signup() {
                 <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                   Password
                 </label>
-                <div className="mt-2">
+                <div className="mt-2 relative">
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'} 
                     value={password}
                     onChange={(event) => setPassword(event.target?.value)}
                     autoComplete="current-password"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
                   />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-600 hover:text-gray-800 focus:outline-none"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? <Eye /> : <EyeOff />}
+                  </button>
                 </div>
               </div>
 
+
               <div>
-                <label htmlFor="conPassword" className="block text-sm font-medium leading-6 text-gray-900">
+                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                   Confirm Password
                 </label>
-                <div className="mt-2">
+                <div className="mt-2 relative">
                   <input
-                    id="conPassword"
-                    name="conPassword"
-                    type="password"
+                    id="password"
+                    name="password"
+                    type={conShowPassword ? 'text' : 'password'} 
                     value={conPassword}
                     onChange={(event) => setConPassword(event.target?.value)}
                     autoComplete="current-password"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 p-2"
                   />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-600 hover:text-gray-800 focus:outline-none"
+                    onClick={togglePasswordVisibility2}
+                  >
+                    {conShowPassword ? <Eye /> : <EyeOff />}
+                  </button>
                 </div>
               </div>
 
