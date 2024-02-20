@@ -40,12 +40,6 @@ export default function Signup() {
       lastName,
       email,
       phone,
-      bName,
-      bankName,
-      acctNumber,
-      bank,
-      bankCode,
-      occupation,
       accountType,
       password
       }
@@ -88,36 +82,36 @@ export default function Signup() {
       toast.error('Enter a valid phone number')
       return;
     }
-    if(bName === ''){
-        console.log('Enter a business name')
-        toast.error('Enter a business name')
-        return;
-    }
-    if(bankName === ''){
-      console.log('Enter your account name')
-      toast.error('Enter your account name')
-      return;
-    }
-    if(acctNumber === ''){
-      console.log('Add your account number')
-      toast.error('Add your account number')
-      return;
-    }
-    if(bank === ''){
-      console.log('Bank name field cannot be empty')
-      toast.error('Bank name field cannot be empty')
-      return;
-    }
-    if(bankCode === ''){
-      console.log('Enter a valid bank code')
-      toast.error('Enter a valid bank code')
-      return;
-    }
-    if(occupation === ''){
-      console.log('Occupation is required')
-      toast.error('Occupation is required')
-      return;
-    }
+    // if(bName === ''){
+    //     console.log('Enter a business name')
+    //     toast.error('Enter a business name')
+    //     return;
+    // }
+    // if(bankName === ''){
+    //   console.log('Enter your account name')
+    //   toast.error('Enter your account name')
+    //   return;
+    // }
+    // if(acctNumber === ''){
+    //   console.log('Add your account number')
+    //   toast.error('Add your account number')
+    //   return;
+    // }
+    // if(bank === ''){
+    //   console.log('Bank name field cannot be empty')
+    //   toast.error('Bank name field cannot be empty')
+    //   return;
+    // }
+    // if(bankCode === ''){
+    //   console.log('Enter a valid bank code')
+    //   toast.error('Enter a valid bank code')
+    //   return;
+    // }
+    // if(occupation === ''){
+    //   console.log('Occupation is required')
+    //   toast.error('Occupation is required')
+    //   return;
+    // }
     if (!accountType) {
       console.log('Please select an Account type');
       toast.error('Please select an Account type');
@@ -235,13 +229,14 @@ export default function Signup() {
                 </label>
                 <div className='flex justify-between w-3/5'>
                   <div className='flex'>
-                    <input type='radio' id='owner' name='accountType' value='OWNER' className='mr-2' onChange={(event) => setAccountType(event.target.value)} /> <p>School</p>
+                  <input type='radio' id='owner' name='accountType' value='OWNER' className='mr-2' onChange={(event) => setAccountType(event.target.value)} />
+                    <label htmlFor="owner">School</label>
                   </div>
                   <div className='flex'>
-                    <input type='radio' id='tutor' name='accountType' value='TUTOR' className='mr-2' onChange={(event) => setAccountType(event.target.value)} /> <p>Tutor</p>
+                    <input type='radio' id='tutor' name='accountType' value='TUTOR' className='mr-2' onChange={(event) => setAccountType(event.target.value)} /> <label htmlFor='tutor'>Tutor</label>
                   </div>
                   <div className='flex'>
-                    <input type='radio' id='parent' name='accountType' value='PARENT' className='mr-2' onChange={(event) => setAccountType(event.target.value)} /> <p>Parent</p>
+                    <input type='radio' id='parent' name='accountType' value='PARENT' className='mr-2' onChange={(event) => setAccountType(event.target.value)} /> <label htmlFor='parent'>Parent</label>
                   </div>
                 </div>
               </div>
