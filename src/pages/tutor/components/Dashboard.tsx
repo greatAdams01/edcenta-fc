@@ -106,7 +106,7 @@ export default function Example() {
                       'border-t border-white/5 py-6 px-4 sm:px-6 lg:px-8'
                     )}
                   >
-                    <p className="text-sm font-medium leading-6 text-gray-400">{stat.name}</p>
+                    <p className="text-sm font-medium leading-6 text-purple-400">{stat.name}</p>
                     <p className="mt-2 flex items-baseline gap-x-2">
                       <span className="text-4xl font-semibold tracking-tight">{stat.value}</span>
                     </p>
