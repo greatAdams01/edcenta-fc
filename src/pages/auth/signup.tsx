@@ -40,12 +40,6 @@ export default function Signup() {
       lastName,
       email,
       phone,
-      bName,
-      bankName,
-      acctNumber,
-      bank,
-      bankCode,
-      occupation,
       accountType,
       password
       }
@@ -86,36 +80,6 @@ export default function Signup() {
     if(phone === ''){
       console.log('Enter a valid phone number')
       toast.error('Enter a valid phone number')
-      return;
-    }
-    if(bName === ''){
-        console.log('Enter a business name')
-        toast.error('Enter a business name')
-        return;
-    }
-    if(bankName === ''){
-      console.log('Enter your account name')
-      toast.error('Enter your account name')
-      return;
-    }
-    if(acctNumber === ''){
-      console.log('Add your account number')
-      toast.error('Add your account number')
-      return;
-    }
-    if(bank === ''){
-      console.log('Bank name field cannot be empty')
-      toast.error('Bank name field cannot be empty')
-      return;
-    }
-    if(bankCode === ''){
-      console.log('Enter a valid bank code')
-      toast.error('Enter a valid bank code')
-      return;
-    }
-    if(occupation === ''){
-      console.log('Occupation is required')
-      toast.error('Occupation is required')
       return;
     }
     if (!accountType) {
