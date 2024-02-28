@@ -16,7 +16,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { useRouter } from 'next/router'; 
-import { usePathname } from 'next/navigation'
+// import { usePathname } from 'next/navigation'
 
 import {dosis} from '@/utils/font'
 import { navigation } from '@/utils/nav'
@@ -28,10 +28,9 @@ function classNames(...classes: string[]) {
 
 
 export default function Tutor() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  // const router = useRouter();
-  // const { pathname } = router;
-const pathname = usePathname()
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+  const pathname = router.pathname;
   return (
     <>
       <div className={``}>
@@ -93,18 +92,20 @@ const pathname = usePathname()
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
                         <li>
                           <ul role="list" className="-mx-2  space-y-1">
-                        {navigation.map((item) => (
+                          {navigation.map((item) => (
                           <li key={item.name}>
                             <a
                               href={item.href}
                               className={classNames(
-                                item.href === pathname ? 'bg-red-500 text-indigo-600   font-semibold' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
+                                item.href === pathname
+                                  ? 'bg-gray-500 text-indigo-600 font-semibold'
+                                  : 'text-gray-700 hover:text-indigo-600',
                                 'bg-[#8B53FF] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
                               )}
                             >
                               <item.icon
                                 className={classNames(
-                                  item.current ? ' text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
+                                  item.href === pathname ?  ' text-indigo-500' : ' group-hover:text-indigo-600',
                                   'h-6 w-6 shrink-0'
                                 )}
                                 aria-hidden="true"
@@ -116,12 +117,11 @@ const pathname = usePathname()
                               <ul className="pl-4 my-2">
                                 {item.children.map((subItem) => (
                                   <li key={subItem.name}>
-                                    <a href={subItem.href} 
-                                    className={classNames(
-                                      item.href === pathname ? 'bg-red-500 text-indigo-600 font-semibold' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                                      'bg-[#8B53FF] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
-                                    )}>
-                                    {/* // className="ml-6 space-y-4 hover:text-gray-600"> */}
+                                    <a href={subItem.href} className={classNames( subItem.href === pathname 
+                                      ? 'text-indigo-500' 
+                                      : 'hover:text-gray-600', 
+                                      'ml-8 space-y-4 font-semibold'
+                                      )}>
                                       {subItem.name}
                                     </a>
                                   </li>
@@ -177,15 +177,15 @@ const pathname = usePathname()
                             <a
                               href={item.href}
                               className={classNames(
-                                item.current
-                                  ? 'bg-gray-50 text-indigo-600 font-semibold'
+                                item.href === pathname
+                                  ? 'bg-gray-500 text-indigo-600 font-semibold'
                                   : 'text-gray-700 hover:text-indigo-600',
                                 'bg-[#8B53FF] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
                               )}
                             >
                               <item.icon
                                 className={classNames(
-                                  item.current ? ' text-indigo-600' : ' group-hover:text-indigo-600',
+                                  item.href === pathname ?  ' text-indigo-500' : ' group-hover:text-indigo-600',
                                   'h-6 w-6 shrink-0'
                                 )}
                                 aria-hidden="true"
@@ -197,7 +197,11 @@ const pathname = usePathname()
                               <ul className="pl-4 my-2">
                                 {item.children.map((subItem) => (
                                   <li key={subItem.name}>
-                                    <a href={subItem.href} className="ml-6 space-y-4 hover:text-gray-600 font-semibold">
+                                    <a href={subItem.href} className={classNames( subItem.href === pathname 
+                                      ? 'text-indigo-500' 
+                                      : 'hover:text-gray-600', 
+                                      'ml-8 space-y-4 font-semibold'
+                                      )}>
                                       {subItem.name}
                                     </a>
                                   </li>

@@ -53,7 +53,6 @@ const activityItems = [
       reward: '6',
     },],
   },
-  // More items...
 ]
 
 function classNames(...classes: string[]) {
@@ -189,7 +188,7 @@ export default function Example() {
                         <tr>
                           <td colSpan={6}>
                             <table className="w-full border-collapse border-gray-300">
-                              <thead>
+                              <thead className='bg-gray-200'>
                                 <tr>
                                   <th className="px-4 py-2">Name</th>
                                   <th className="px-4 py-2">Assigned</th>
