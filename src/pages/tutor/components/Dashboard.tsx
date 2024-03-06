@@ -40,7 +40,7 @@ const activityItems = [
   {
     class: 'Basic 2',
     code: '1329wqc2',
-    status: 'Incompleted',
+    status: 'Incomplete',
     topics: '85',
     student: '32',
     students:[{
