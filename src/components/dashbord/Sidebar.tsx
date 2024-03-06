@@ -16,7 +16,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { useRouter } from 'next/router'; 
-// import { usePathname } from 'next/navigation'
+
 
 import {dosis} from '@/utils/font'
 import { navigation } from '@/utils/nav'
@@ -31,6 +31,7 @@ export default function Tutor() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   const pathname = router.pathname;
+
   return (
     <>
       <div className={``}>

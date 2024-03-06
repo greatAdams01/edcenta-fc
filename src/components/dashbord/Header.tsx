@@ -9,15 +9,15 @@ import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { userNavigation } from '@/utils/nav'
 import { USER } from '@/apollo/queries/auth'
 import { useQuery } from '@apollo/client'
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function Tutor() {
-    // const { data } = useQuery(USER);
-    // const { firstName } = data.user;
-    
+  const { data: session } = useSession();
+  
   return (
     <>
       <div className={`hidden lg:grid w-[80vw]`}>
@@ -57,12 +57,30 @@ export default function Tutor() {
                 <Menu as="div" className="relative">
                   <Menu.Button className="-m-1.5 flex items-center  p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    {/* {user.image} */}
-                    <UserIcon className='h-8 w-8 rounded-full bg-gray-50' />
+                    { session ? (
+                      <>
+                        <img
+                          className="inline-block h-8 w-8 rounded-full"
+                          src={session?.user?.image as string}
+                          alt={session?.user?.name as string}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <UserIcon className='h-8 w-8 rounded-full bg-gray-50' />
+                      </>
+                    )}
+                    
                     <span className="hidden lg:flex lg:items-center">
                       <span className="ml-4 text-sm  leading-6 text-gray-900" aria-hidden="true">
-                        User Name
-                        {/* {firstName} */}
+                
+                        {session ? (
+                          <>
+                            {session?.user?.name as string}
+                          </>
+                        ) : (
+                          <p>User Name</p>
+                        )}
                       </span>
                       <ChevronDownIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                     </span>

@@ -11,7 +11,7 @@ import {
       icon: CalendarIcon,
       children: [
         { name: 'My Dashboard', href: '/tutor' },
-        { name: 'Brouse and Assign', href: '/tutor/components/Assign' },
+        { name: 'Brouse and Assign', href: '/tutor/Assign' },
         { name: 'Preview assigned', href: '#' },
         { name: 'Review completed', href: '#' },
       ]

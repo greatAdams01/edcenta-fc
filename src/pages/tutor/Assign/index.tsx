@@ -1,4 +1,4 @@
-import AppLayout from '../../../../../layout/AppLayout';
+import AppLayout from '../../../../layout/AppLayout';
 
 const classes = [
   { stage: '1', 
@@ -13,7 +13,6 @@ const classes = [
 
 export default function Assign() {
   return (
-    <AppLayout>
       <div className="lg:-mt-60 px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
@@ -80,6 +79,5 @@ export default function Assign() {
           </div>
         </div>
       </div>
-    </AppLayout>
   );
 }
