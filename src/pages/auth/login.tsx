@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { useSession, signIn, signOut } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { setCookie } from 'cookies-next';
@@ -12,6 +13,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { LOGIN } from '@/apollo/mutations/auth';
 
 export default function Login() {
+  const { data: session } = useSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false); 
@@ -45,6 +47,10 @@ export default function Login() {
       toast.error(error.message);
     },
   });
+
+  if(session){
+    window.location.href = '/tutor/';
+  }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -184,7 +190,7 @@ export default function Login() {
                       fill="#34A853"
                     />
                   </svg>
-                  <span className="text-sm font-semibold leading-6">Google</span>
+                  <span onClick={() => signIn()} className="text-sm font-semibold leading-6">Google</span>
                 </a>
               </div>
             </div>

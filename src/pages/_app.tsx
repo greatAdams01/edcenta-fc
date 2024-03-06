@@ -13,6 +13,7 @@ import { getCookie } from 'cookies-next';
 // import { PersistGate } from 'redux-persist/integration/react';
 
 import { SessionProvider } from "next-auth/react";
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 import AppLayout from '../../layout/AppLayout'
 
@@ -60,8 +61,20 @@ export default function App({  Component, pageProps: {session, ...pageProps} }: 
               <FacebookProvider appId="171352182602769"> */}
                 <SessionProvider session={session}>
                 <main className={`${manrope.variable} ${dosis.variable} font-sans`}>
+                {/* {session ? (
+                  <>
                   <AppLayout>
-                  <Component {...pageProps} />
+                    <Component {...pageProps} />
+                  </AppLayout>
+                  </>
+                ) : (
+                  <>
+                    <Component {...pageProps} />
+                  </>
+                )} */}
+
+                  <AppLayout>
+                    <Component {...pageProps} />
                   </AppLayout>
                 </main>
                 </SessionProvider>
