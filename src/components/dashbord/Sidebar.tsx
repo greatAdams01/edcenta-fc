@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Children, Fragment, useState } from 'react'
 import Image from 'next/image'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
@@ -15,6 +15,8 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+import { useRouter } from 'next/router'; 
+
 
 import {dosis} from '@/utils/font'
 import { navigation } from '@/utils/nav'
@@ -24,8 +26,11 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
+
 export default function Tutor() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+  const pathname = router.pathname;
 
   return (
     <>
@@ -73,7 +78,7 @@ export default function Tutor() {
                     </div>
                   </Transition.Child>
                   {/* Sidebar component, swap this element with another sidebar if you like */}
-                  <div className={`${dosis.className} flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4`}>
+                  <div className={`${dosis.className} bg-white flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-4`}>
                     <div className="flex items-center h-16 mt-4 shrink-0 items-center">
                       <Image
                         width={200}
@@ -88,20 +93,20 @@ export default function Tutor() {
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
                         <li>
                           <ul role="list" className="-mx-2  space-y-1">
-                        {navigation.map((item) => (
+                          {navigation.map((item) => (
                           <li key={item.name}>
                             <a
                               href={item.href}
                               className={classNames(
-                                item.current
-                                  ? 'bg-gray-50 text-indigo-600 font-semibold'
-                                  : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
+                                item.href === pathname
+                                  ? 'bg-gray-500 text-indigo-600 font-semibold'
+                                  : 'text-gray-700 hover:text-indigo-600',
                                 'bg-[#8B53FF] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
                               )}
                             >
                               <item.icon
                                 className={classNames(
-                                  item.current ? ' text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
+                                  item.href === pathname ?  ' text-indigo-500' : ' group-hover:text-indigo-600',
                                   'h-6 w-6 shrink-0'
                                 )}
                                 aria-hidden="true"
@@ -113,7 +118,11 @@ export default function Tutor() {
                               <ul className="pl-4 my-2">
                                 {item.children.map((subItem) => (
                                   <li key={subItem.name}>
-                                    <a href={subItem.href} className="ml-6 space-y-4 hover:text-gray-600">
+                                    <a href={subItem.href} className={classNames( subItem.href === pathname 
+                                      ? 'text-indigo-500' 
+                                      : 'hover:text-gray-600', 
+                                      'ml-8 space-y-4 font-semibold'
+                                      )}>
                                       {subItem.name}
                                     </a>
                                   </li>
@@ -145,10 +154,11 @@ export default function Tutor() {
           </Dialog>
         </Transition.Root>
 
+
         {/* Static sidebar for desktop */}
-        <div className={`${dosis.className} hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col`}>
+        <div className={`${dosis.className} hidden lg:block lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col`}>
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
+          <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200  px-6 pb-4">
           <div className="flex items-center h-16 shrink-0 items-center">
                       <Image
                         width={200}
@@ -168,15 +178,15 @@ export default function Tutor() {
                             <a
                               href={item.href}
                               className={classNames(
-                                item.current
-                                  ? 'bg-gray-50 text-indigo-600 font-semibold'
-                                  : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
+                                item.href === pathname
+                                  ? 'bg-gray-500 text-indigo-600 font-semibold'
+                                  : 'text-gray-700 hover:text-indigo-600',
                                 'bg-[#8B53FF] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
                               )}
                             >
                               <item.icon
                                 className={classNames(
-                                  item.current ? ' text-indigo-600' : ' group-hover:text-indigo-600',
+                                  item.href === pathname ?  ' text-indigo-500' : ' group-hover:text-indigo-600',
                                   'h-6 w-6 shrink-0'
                                 )}
                                 aria-hidden="true"
@@ -188,7 +198,11 @@ export default function Tutor() {
                               <ul className="pl-4 my-2">
                                 {item.children.map((subItem) => (
                                   <li key={subItem.name}>
-                                    <a href={subItem.href} className="ml-6 space-y-4 hover:text-gray-600 font-semibold">
+                                    <a href={subItem.href} className={classNames( subItem.href === pathname 
+                                      ? 'text-indigo-500' 
+                                      : 'hover:text-gray-600', 
+                                      'ml-8 space-y-4 font-semibold'
+                                      )}>
                                       {subItem.name}
                                     </a>
                                   </li>
@@ -219,8 +233,8 @@ export default function Tutor() {
           </div>
         </div>
 
-        <div className="lg:pl-72">
-          <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+        <div className="lg:pl-72 lg:hidden ">
+          <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200  px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
             <button type="button" className="-m-2.5 p-2.5 text-gray-700 lg:hidden" onClick={() => setSidebarOpen(true)}>
               <span className="sr-only">Open sidebar</span>
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
@@ -278,7 +292,7 @@ export default function Tutor() {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
+                    <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md  py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => (
@@ -300,10 +314,6 @@ export default function Tutor() {
               </div>
             </div>
           </div>
-
-          <main className="py-10">
-            <div className="px-4 sm:px-6 lg:px-8">{/* Your content */}</div>
-          </main>
         </div>
       </div>
     </>

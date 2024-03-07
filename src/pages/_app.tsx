@@ -12,6 +12,11 @@ import { getCookie } from 'cookies-next';
 // import { persistor, store } from '../store/store.js';
 // import { PersistGate } from 'redux-persist/integration/react';
 
+import { SessionProvider } from "next-auth/react";
+import { useSession, signIn, signOut } from 'next-auth/react';
+
+import AppLayout from '../../layout/AppLayout'
+
 const manrope = Manrope({
   subsets: ['latin'],
   display: 'swap',
@@ -39,7 +44,7 @@ const client = new ApolloClient({
 axios.defaults.baseURL = SERVER_URL;
 axios.defaults.headers.common['Authorization'] = "Bearer" + token;
 
-export default function App({ Component, pageProps }: AppProps): JSX.Element {
+export default function App({  Component, pageProps: {session, ...pageProps} }: AppProps): JSX.Element {
 
   return (
     <>
@@ -54,9 +59,25 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
           {/* <PersistGate loading={null} persistor={persistor}> */}
             {/* <GoogleOAuthProvider clientId='1054832259017-7ud7lha28m8r3p9oa6fj6hsv0ndme7bb.apps.googleusercontent.com'>
               <FacebookProvider appId="171352182602769"> */}
+                <SessionProvider session={session}>
                 <main className={`${manrope.variable} ${dosis.variable} font-sans`}>
-                  <Component {...pageProps} />
+                {/* {session ? (
+                  <>
+                  <AppLayout>
+                    <Component {...pageProps} />
+                  </AppLayout>
+                  </>
+                ) : (
+                  <>
+                    <Component {...pageProps} />
+                  </>
+                )} */}
+
+                  <AppLayout>
+                    <Component {...pageProps} />
+                  </AppLayout>
                 </main>
+                </SessionProvider>
               {/* </FacebookProvider>
             </GoogleOAuthProvider> */}
           {/* </PersistGate> */}

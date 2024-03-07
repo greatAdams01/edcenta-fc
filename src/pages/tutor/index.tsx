@@ -1,12 +1,11 @@
 import React from 'react'
-import AppLayout from '../../../layout/AppLayout'
+import Dashboard from './components'
 
 function Tutor() {
   return (
-    <AppLayout>
-
-      <div>Tutor</div>
-    </AppLayout>
+      <div className=''>
+        <Dashboard />
+      </div>
   )
 }
 

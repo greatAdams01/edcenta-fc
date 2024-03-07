@@ -1,4 +1,5 @@
 import Sidebar from "@/components/dashbord/Sidebar";
+import Header from "@/components/dashbord/Header"
 
 type LayoutProps = {
   children: React.ReactNode,
@@ -6,9 +7,12 @@ type LayoutProps = {
 
 function AppLayout({ children }: LayoutProps) {
   return (
-    <main>
+    <main className="grid lg:flex">
       <Sidebar />
+      <div className="grid">
+      <Header />
       { children }
+      </div>
     </main>
   )
 }
