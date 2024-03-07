@@ -4,7 +4,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { getCookie } from 'cookies-next';
 
-import AppLayout from '../../../layout/AppLayout'
+import AppLayout from '../../layout/AppLayout'
 
 const stats = [
   { name: 'Account setup', value: '90%' },

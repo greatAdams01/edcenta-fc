@@ -9,9 +9,13 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+import { deleteCookie } from 'cookies-next';
+import { useQuery } from '@apollo/client';
+
 
 import { navigation } from '@/utils/nav'
 import { userNavigation } from '@/utils/nav'
+import { USER_FULLNAME } from '@/apollo/queries/auth'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -19,9 +23,24 @@ function classNames(...classes: string[]) {
 
 export default function Wrapper({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-
+  const [fullName, setFullName] = useState('');
   const router = useRouter();
   const pathname = router.pathname;
+
+  const logOut = () => {
+    // remove token and Authdata from cookies
+    deleteCookie('token');
+    deleteCookie('Authdata');
+    window.location.href = '/auth/login';
+  }
+
+  useQuery(USER_FULLNAME, {
+    onCompleted: (data) => {
+      console.log(data)
+      setFullName(`${data.user.firstName} ${data.user.lastName}`)
+      // dispatch(setUser(data.user))
+    }
+  })
 
   return (
     <>
@@ -273,14 +292,9 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                 <Menu as="div" className="relative">
                   <Menu.Button className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    <img
-                      className="h-8 w-8 rounded-full bg-gray-50"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      alt=""
-                    />
                     <span className="hidden lg:flex lg:items-center">
                       <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
-                        Tom Cook
+                        {fullName}
                       </span>
                       <ChevronDownIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                     </span>
@@ -304,6 +318,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                                 active ? 'bg-gray-50' : '',
                                 'block px-3 py-1 text-sm leading-6 text-gray-900'
                               )}
+                              onClick={item.name === 'Sign out' ? logOut : () => { }}
                             >
                               {item.name}
                             </a>

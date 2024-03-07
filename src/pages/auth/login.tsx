@@ -25,6 +25,7 @@ export default function Login() {
     },
     onCompleted: (data) => {
       console.log(data);
+      setCookie('token', data.login.token);
       setCookie('Authdata', data.login);
       // If role is ADMIN, SUPERADMIN and MODERATOR redirect to /admin
       if(data.login.role === 'ADMIN' || data.login.role === 'SUPERADMIN' || data.login.role === 'MODERATOR'){
