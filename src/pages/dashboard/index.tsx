@@ -1,7 +1,10 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import {
   PlusIcon,
 } from '@heroicons/react/24/outline'
+import { getCookie } from 'cookies-next';
+
+import AppLayout from '../../../layout/AppLayout'
 
 const stats = [
   { name: 'Account setup', value: '90%' },
@@ -52,15 +55,27 @@ function classNames(...classes: string[]) {
 
 export default function Tutor() {
   const [openSubtables, setOpenSubtables] = useState(Array(activityItems.length).fill(false));
+  const [accountType, setAccountType] = useState('' as string);
 
   const toggleDropdown = (index: number) => {
     const newOpenSubtables = [...openSubtables];
     newOpenSubtables[index] = !newOpenSubtables[index];
     setOpenSubtables(newOpenSubtables);
   };
+
+  // Get Authdata from Cookies
+  const authData: any = getCookie('Authdata');
+
+  useEffect(() => {
+    if (!authData) {
+      window.location.href = '/auth/login';
+    }
+    console.log(JSON.parse(authData).accountType);
+    setAccountType(JSON.parse(authData).accountType);
+  }, [])
   
   return (
-    <>
+    <AppLayout>
       <div>
             <header>
               {/* Heading */}
@@ -69,7 +84,7 @@ export default function Tutor() {
                   <div className="flex items-center gap-x-3">
                    
                     <h1 className="flex gap-x-3 text-base leading-7">
-                      <span className="font-semibold">Tutor</span>
+                      <span className="font-semibold">{ accountType }</span>
                       <span className="text-gray-600">/</span>
                       <span className="font-semibold">Dashboard</span>
                     </h1>
@@ -212,6 +227,6 @@ export default function Tutor() {
               </table>
             </div>
       </div>
-    </>
+    </AppLayout>
   )
 }
