@@ -7,12 +7,9 @@ type LayoutProps = {
 
 function AppLayout({ children }: LayoutProps) {
   return (
-    <main className="grid lg:flex">
+    <main className="grid lg:flex lg:justify-center">
       <Sidebar />
-      <div className="grid">
-      <Header />
       { children }
-      </div>
     </main>
   )
 }

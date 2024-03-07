@@ -79,7 +79,7 @@ export default function Tutor() {
                   </Transition.Child>
                   {/* Sidebar component, swap this element with another sidebar if you like */}
                   <div className={`${dosis.className} bg-white flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-4`}>
-                    <div className="flex items-center h-16 mt-4 shrink-0 items-center">
+                    <div className="flex h-16 mt-4 shrink-0 items-center">
                       <Image
                         width={200}
                         height={100}
@@ -101,7 +101,7 @@ export default function Tutor() {
                                 item.href === pathname
                                   ? 'bg-gray-500 text-indigo-600 font-semibold'
                                   : 'text-gray-700 hover:text-indigo-600',
-                                'bg-[#8B53FF] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
+                                'bg-green bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
                               )}
                             >
                               <item.icon
@@ -158,7 +158,7 @@ export default function Tutor() {
         {/* Static sidebar for desktop */}
         <div className={`${dosis.className} hidden lg:block lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col`}>
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200  px-6 pb-4">
+          <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 h-[100vh]  px-6 pb-4">
           <div className="flex items-center h-16 shrink-0 items-center">
                       <Image
                         width={200}
@@ -181,7 +181,7 @@ export default function Tutor() {
                                 item.href === pathname
                                   ? 'bg-gray-500 text-indigo-600 font-semibold'
                                   : 'text-gray-700 hover:text-indigo-600',
-                                'bg-[#8B53FF] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
+                                'bg-green bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
                               )}
                             >
                               <item.icon
@@ -314,6 +314,7 @@ export default function Tutor() {
               </div>
             </div>
           </div>
+          {/* <p className="py-10">Hello</p> */}
         </div>
       </div>
     </>
