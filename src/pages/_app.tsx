@@ -15,8 +15,6 @@ import { getCookie } from 'cookies-next';
 import { SessionProvider } from "next-auth/react";
 import { useSession, signIn, signOut } from 'next-auth/react';
 
-import AppLayout from '../../layout/AppLayout'
-
 const manrope = Manrope({
   subsets: ['latin'],
   display: 'swap',
@@ -73,9 +71,7 @@ export default function App({  Component, pageProps: {session, ...pageProps} }: 
                   </>
                 )} */}
 
-                  <AppLayout>
                     <Component {...pageProps} />
-                  </AppLayout>
                 </main>
                 </SessionProvider>
               {/* </FacebookProvider>

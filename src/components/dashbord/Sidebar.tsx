@@ -99,7 +99,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                                       item.href === pathname
                                         ? 'bg-gray-500 text-indigo-600 font-semibold'
                                         : 'text-gray-700 hover:text-indigo-600',
-                                      'bg-green bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
+                                      'bg-[#00AE9A] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
                                     )}
                                   >
                                     <item.icon
@@ -181,7 +181,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                                       item.href === pathname
                                         ? 'bg-gray-500 text-indigo-600 font-semibold'
                                         : 'text-gray-700 hover:text-indigo-600',
-                                      'bg-green bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
+                                      'bg-[#00AE9A] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
                                     )}
                                   >
                                     <item.icon

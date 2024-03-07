@@ -1,5 +1,4 @@
 import Sidebar from "@/components/dashbord/Sidebar";
-import Header from "@/components/dashbord/Header"
 
 type LayoutProps = {
   children: React.ReactNode,
