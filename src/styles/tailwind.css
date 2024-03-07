@@ -16,8 +16,12 @@
     input {
      @apply outline-none
     }
-
   }
+
+
+  /* * {
+    border: 1px solid red;
+  } */
   
   .icon-wrapper svg {
     width: 7rem; 
