@@ -8,8 +8,9 @@ type LayoutProps = {
 function AppLayout({ children }: LayoutProps) {
   return (
     <main className="">
-      <Sidebar />
-      {/* { children } */}
+      <Sidebar>
+      { children }
+      </Sidebar>
     </main>
   )
 }
