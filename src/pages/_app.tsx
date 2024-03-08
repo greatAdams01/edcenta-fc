@@ -14,7 +14,6 @@ import { getCookie } from 'cookies-next';
 
 import { SessionProvider } from "next-auth/react";
 import { useSession, signIn, signOut } from 'next-auth/react';
-import { useRouter } from 'next/router';
 
 import AppLayout from '../../layout/AppLayout'
 
@@ -77,13 +76,9 @@ export default function App({  Component, pageProps: {session, ...pageProps} }: 
                   </>
                 )} */}
 
-            {isLoginPage ? (
-              <Component {...pageProps} />
-            ) : (
-              <AppLayout>
-                <Component {...pageProps} />
-              </AppLayout>
-            )}
+                  <AppLayout>
+                    <Component {...pageProps} />
+                  </AppLayout>
                 </main>
                 </SessionProvider>
               {/* </FacebookProvider>

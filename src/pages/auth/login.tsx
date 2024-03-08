@@ -26,22 +26,12 @@ export default function Login() {
     onCompleted: (data) => {
       console.log(data);
       setCookie('token', data.login.token);
-      if (data.login.accountType === 'TUTOR') {
-        window.location.href = '/tutor/';
-        return;
+      setCookie('Authdata', data.login);
+      // If role is ADMIN, SUPERADMIN and MODERATOR redirect to /admin
+      if(data.login.role === 'ADMIN' || data.login.role === 'SUPERADMIN' || data.login.role === 'MODERATOR'){
+        window.location.href = '/admin/';
       }
-      if (data.login.accountType === 'OWNER') {
-        window.location.href = '//';
-        return;
-      }
-      if (data.login.accountType === 'PARENT') {
-        window.location.href = '//';
-        return;
-      }
-      if (data.login.accountType === 'STUDENT') {
-        window.location.href = '//';
-        return;
-      }
+      window.location.href = '/dashboard/';
     },
     onError: (error) => {
       toast.error(error.message);

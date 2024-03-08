@@ -7,11 +7,11 @@ import {
   export const navigation = [
     { 
       name: 'ACTIVITIES', 
-      href: '/tutor', 
+      href: '/dashboard', 
       icon: CalendarIcon,
       children: [
-        { name: 'My Dashboard', href: '/tutor' },
-        { name: 'Brouse and Assign', href: '/tutor/Assign' },
+        { name: 'My Dashboard', href: '/dashboard' },
+        { name: 'Browse and Assign', href: '/dashboard/assign' },
         { name: 'Preview assigned', href: '#' },
         { name: 'Review completed', href: '#' },
       ]

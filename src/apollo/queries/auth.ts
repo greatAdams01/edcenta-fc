@@ -26,3 +26,11 @@ query Query {
     occupation
   }
 }`
+
+export const USER_FULLNAME = gql`
+query Query {
+  user {
+    firstName
+    lastName
+  }
+}`

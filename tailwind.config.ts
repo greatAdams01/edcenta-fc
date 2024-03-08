@@ -4,6 +4,12 @@ import { type Config } from 'tailwindcss'
 export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
+    // colors: {
+    //   'green-tm': '#00AE9A',
+    //   'blue-tm': '#0075BC',
+    //   'orange-tm': '#FFDE59',
+    //   'purple-tm': '#8B53FF',
+    // },
     fontSize: {
       xs: ['0.75rem', { lineHeight: '1rem' }],
       sm: ['0.875rem', { lineHeight: '1.5rem' }],
