@@ -15,8 +15,6 @@ import { getCookie } from 'cookies-next';
 import { SessionProvider } from "next-auth/react";
 import { useSession, signIn, signOut } from 'next-auth/react';
 
-import AppLayout from '../../layout/AppLayout'
-
 const manrope = Manrope({
   subsets: ['latin'],
   display: 'swap',
@@ -45,9 +43,6 @@ axios.defaults.baseURL = SERVER_URL;
 axios.defaults.headers.common['Authorization'] = "Bearer" + token;
 
 export default function App({  Component, pageProps: {session, ...pageProps} }: AppProps): JSX.Element {
-  const router = useRouter();
-  const isLoginPage = router.asPath === '/auth/login' || router.asPath === '/auth/signup';
-
 
   return (
     <>
@@ -64,21 +59,7 @@ export default function App({  Component, pageProps: {session, ...pageProps} }: 
               <FacebookProvider appId="171352182602769"> */}
                 <SessionProvider session={session}>
                 <main className={`${manrope.variable} ${dosis.variable} font-sans`}>
-                {/* {session ? (
-                  <>
-                  <AppLayout>
                     <Component {...pageProps} />
-                  </AppLayout>
-                  </>
-                ) : (
-                  <>
-                    <Component {...pageProps} />
-                  </>
-                )} */}
-
-                  <AppLayout>
-                    <Component {...pageProps} />
-                  </AppLayout>
                 </main>
                 </SessionProvider>
               {/* </FacebookProvider>
@@ -89,4 +70,3 @@ export default function App({  Component, pageProps: {session, ...pageProps} }: 
     </>
   )
 }
-
