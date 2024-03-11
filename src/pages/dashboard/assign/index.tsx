@@ -1,9 +1,27 @@
+import { useState } from 'react';
+import { useQuery } from '@apollo/client';
+
+
 import AppLayout from '../../../layout/AppLayout';
 import { classes } from '@/utils/nav';
 import Link from 'next/link';
+import { SchoolGrades } from '@/apollo/queries/dashboard';
 
 export default function Assign() {
+  const [subjects, setSubjects] = useState([]);
+  const [schoolGrades, setSchoolGrades] = useState([]);
   const Subjects = Array.from(new Set(classes.flatMap(Class => Class.subjects.map(subject => subject.name))));
+
+  useQuery(SchoolGrades, {
+    onCompleted: (data) => {
+      console.log(data.schoolGrades)
+      setSchoolGrades(data.schoolGrades)
+      setSubjects(Array.from(new Set(data.schoolGrades.flatMap((grade:any) => grade.subjects.map((subject: any) => subject.name)))));
+      console.log(data.schoolGrades.map((grade:any) => grade.subjects.map((subject: any) => subject.name)))
+      // setFullName(`${data.user.firstName} ${data.user.lastName}`)
+      // dispatch(setUser(data.user))
+    }
+  })
   return (
     <AppLayout>
       <div className="px-4 sm:px-6 lg:px-8">
