@@ -3,6 +3,8 @@ import { GetServerSideProps } from 'next';
 import { classes } from '@/utils/nav';
 import Link  from 'next/link';
 
+import SubLayout from '../../../layout/SubLayout';
+
 interface ClassData {
   subjects: {
     _id: string;
@@ -27,6 +29,9 @@ const editAssign = ({ data }: { data: ClassData }) => {
   const subjectYear = subjects.map(subject => subject.year);
 
   return (
+    <SubLayout>
+
+    
     <div className='p-4'>
       <form>
         <div className='flex w-full'>
@@ -88,6 +93,7 @@ const editAssign = ({ data }: { data: ClassData }) => {
         </div>
       </form>
     </div>
+    </SubLayout>
   );
 };
 

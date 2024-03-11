@@ -66,13 +66,13 @@ export default function Tutor() {
   // Get Authdata from Cookies
   const authData: any = getCookie('Authdata');
 
-  // useEffect(() => {
-  //   if (!authData) {
-  //     window.location.href = '/auth/login';
-  //   }
-  //   console.log(JSON.parse(authData).accountType);
-  //   setAccountType(JSON.parse(authData).accountType);
-  // }, [])
+  useEffect(() => {
+    if (!authData) {
+      window.location.href = '/auth/login';
+    }
+    console.log(JSON.parse(authData).accountType);
+    setAccountType(JSON.parse(authData).accountType);
+  }, [])
   
   return (
     <AppLayout>
