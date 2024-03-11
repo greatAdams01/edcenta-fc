@@ -53,7 +53,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Tutor() {
+export default function Dashboard() {
   const [openSubtables, setOpenSubtables] = useState(Array(activityItems.length).fill(false));
   const [accountType, setAccountType] = useState('' as string);
 

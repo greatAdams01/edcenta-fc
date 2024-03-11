@@ -53,3 +53,546 @@ import {
     { name: 'Sign out', href: '#' },
   ]
 
+
+export const classes = [
+  {
+    _id: '1',
+    stage: '1',
+    year: '1',
+    ages: '5-6',
+    subjects: [
+      {
+        _id: '11',
+        year: '1',
+        name: 'Mathematics',
+        Topic: [
+          {
+          name: 'Addition',
+          worksheet: '2',
+          assessment: '1',
+        },
+        {
+          name: 'Subtraction',
+          worksheet: '1',
+          assessment: '4',
+        },
+        {
+          name: 'Multiplication',
+          worksheet: '11',
+          assessment: '5',
+        }
+      ],
+        worksheet:[
+          {
+            number: '123',
+            topics: '11',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '290',
+            topics: '9',
+          }
+        ],
+
+      },
+      {
+        _id: '21',
+        year: '1',
+        name: 'English',
+        Topic: [
+          {
+          name: 'Parts of Speach',
+          worksheet: '11',
+          assessment: '1',
+        },
+        {
+          name: 'Comprehension',
+          worksheet: '4',
+          assessment: '3',
+        },
+      ],
+        worksheet:[
+          {
+            number: '12',
+            topics: '1',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '189',
+            topics: '3',
+          }
+        ],
+
+      },
+      {
+        _id: '31',
+        year: '1',
+        name: 'Biology',
+        Topic: [
+          {
+          name: 'Protozoa',
+          worksheet: '2',
+          assessment: '6',
+        },
+        {
+          name: 'Parasites (Endo and Exo)',
+          worksheet: '1',
+          assessment: '3',
+        },
+        {
+          name: 'The Human Skeleton',
+          worksheet: '9',
+          assessment: '6',
+        },
+      ],
+        worksheet:[
+          {
+            number: '123',
+            topics: '11',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '290',
+            topics: '9',
+          },
+        ],
+
+      }
+    ]
+  },
+  {
+    _id: '1',
+    stage: '1',
+    year: '1',
+    ages: '5-6',
+    subjects: [
+      {
+        _id: '11',
+        year: '1',
+        name: 'Mathematics',
+        Topic: [
+          {
+          name: 'Addition',
+          worksheet: '2',
+          assessment: '1',
+        },
+        {
+          name: 'Subtraction',
+          worksheet: '1',
+          assessment: '4',
+        },
+        {
+          name: 'Multiplication',
+          worksheet: '11',
+          assessment: '5',
+        }
+      ],
+        worksheet:[
+          {
+            number: '123',
+            topics: '11',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '290',
+            topics: '9',
+          }
+        ],
+
+      },
+      {
+        _id: '21',
+        year: '1',
+        name: 'English',
+        Topic: [
+          {
+          name: 'Parts of Speach',
+          worksheet: '11',
+          assessment: '1',
+        },
+        {
+          name: 'Comprehension',
+          worksheet: '4',
+          assessment: '3',
+        },
+      ],
+        worksheet:[
+          {
+            number: '12',
+            topics: '1',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '189',
+            topics: '3',
+          }
+        ],
+
+      },
+      {
+        _id: '31',
+        year: '1',
+        name: 'Biology',
+        Topic: [
+          {
+          name: 'Protozoa',
+          worksheet: '2',
+          assessment: '6',
+        },
+        {
+          name: 'Parasites (Endo and Exo)',
+          worksheet: '1',
+          assessment: '3',
+        },
+        {
+          name: 'The Human Skeleton',
+          worksheet: '9',
+          assessment: '6',
+        },
+      ],
+        worksheet:[
+          {
+            number: '123',
+            topics: '11',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '290',
+            topics: '9',
+          },
+        ],
+
+      }
+    ]
+  },
+  {
+    _id: '1',
+    stage: '1',
+    year: '1',
+    ages: '5-6',
+    subjects: [
+      {
+        _id: '11',
+        year: '1',
+        name: 'Mathematics',
+        Topic: [
+          {
+          name: 'Addition',
+          worksheet: '2',
+          assessment: '1',
+        },
+        {
+          name: 'Subtraction',
+          worksheet: '1',
+          assessment: '4',
+        },
+        {
+          name: 'Multiplication',
+          worksheet: '11',
+          assessment: '5',
+        }
+      ],
+        worksheet:[
+          {
+            number: '123',
+            topics: '11',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '290',
+            topics: '9',
+          }
+        ],
+
+      },
+      {
+        _id: '21',
+        year: '1',
+        name: 'English',
+        Topic: [
+          {
+          name: 'Parts of Speach',
+          worksheet: '11',
+          assessment: '1',
+        },
+        {
+          name: 'Comprehension',
+          worksheet: '4',
+          assessment: '3',
+        },
+      ],
+        worksheet:[
+          {
+            number: '12',
+            topics: '1',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '189',
+            topics: '3',
+          }
+        ],
+
+      },
+      {
+        _id: '31',
+        year: '1',
+        name: 'Biology',
+        Topic: [
+          {
+          name: 'Protozoa',
+          worksheet: '2',
+          assessment: '6',
+        },
+        {
+          name: 'Parasites (Endo and Exo)',
+          worksheet: '1',
+          assessment: '3',
+        },
+        {
+          name: 'The Human Skeleton',
+          worksheet: '9',
+          assessment: '6',
+        },
+      ],
+        worksheet:[
+          {
+            number: '123',
+            topics: '11',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '290',
+            topics: '9',
+          },
+        ],
+
+      }
+    ]
+  },
+  {
+    _id: '1',
+    stage: '1',
+    year: '1',
+    ages: '5-6',
+    subjects: [
+      {
+        _id: '11',
+        year: '1',
+        name: 'Mathematics',
+        Topic: [
+          {
+          name: 'Addition',
+          worksheet: '2',
+          assessment: '1',
+        },
+        {
+          name: 'Subtraction',
+          worksheet: '1',
+          assessment: '4',
+        },
+        {
+          name: 'Multiplication',
+          worksheet: '11',
+          assessment: '5',
+        }
+      ],
+        worksheet:[
+          {
+            number: '123',
+            topics: '11',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '290',
+            topics: '9',
+          }
+        ],
+
+      },
+      {
+        _id: '21',
+        year: '1',
+        name: 'English',
+        Topic: [
+          {
+          name: 'Parts of Speach',
+          worksheet: '11',
+          assessment: '1',
+        },
+        {
+          name: 'Comprehension',
+          worksheet: '4',
+          assessment: '3',
+        },
+      ],
+        worksheet:[
+          {
+            number: '12',
+            topics: '1',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '189',
+            topics: '3',
+          }
+        ],
+
+      },
+      {
+        _id: '31',
+        year: '1',
+        name: 'Biology',
+        Topic: [
+          {
+          name: 'Protozoa',
+          worksheet: '2',
+          assessment: '6',
+        },
+        {
+          name: 'Parasites (Endo and Exo)',
+          worksheet: '1',
+          assessment: '3',
+        },
+        {
+          name: 'The Human Skeleton',
+          worksheet: '9',
+          assessment: '6',
+        },
+      ],
+        worksheet:[
+          {
+            number: '123',
+            topics: '11',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '290',
+            topics: '9',
+          },
+        ],
+
+      }
+    ]
+  },
+  {
+    _id: '1',
+    stage: '1',
+    year: '1',
+    ages: '5-6',
+    subjects: [
+      {
+        _id: '11',
+        year: '1',
+        name: 'Mathematics',
+        Topic: [
+          {
+          name: 'Addition',
+          worksheet: '2',
+          assessment: '1',
+        },
+        {
+          name: 'Subtraction',
+          worksheet: '1',
+          assessment: '4',
+        },
+        {
+          name: 'Multiplication',
+          worksheet: '11',
+          assessment: '5',
+        }
+      ],
+        worksheet:[
+          {
+            number: '123',
+            topics: '11',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '290',
+            topics: '9',
+          }
+        ],
+
+      },
+      {
+        _id: '21',
+        year: '1',
+        name: 'English',
+        Topic: [
+          {
+          name: 'Parts of Speach',
+          worksheet: '11',
+          assessment: '1',
+        },
+        {
+          name: 'Comprehension',
+          worksheet: '4',
+          assessment: '3',
+        },
+      ],
+        worksheet:[
+          {
+            number: '12',
+            topics: '1',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '189',
+            topics: '3',
+          }
+        ],
+
+      },
+      {
+        _id: '31',
+        year: '1',
+        name: 'Biology',
+        Topic: [
+          {
+          name: 'Protozoa',
+          worksheet: '2',
+          assessment: '6',
+        },
+        {
+          name: 'Parasites (Endo and Exo)',
+          worksheet: '1',
+          assessment: '3',
+        },
+        {
+          name: 'The Human Skeleton',
+          worksheet: '9',
+          assessment: '6',
+        },
+      ],
+        worksheet:[
+          {
+            number: '123',
+            topics: '11',
+          }
+        ] ,
+        assessment: [
+          {
+            number: '290',
+            topics: '9',
+          },
+        ],
+
+      }
+    ]
+  },
+]

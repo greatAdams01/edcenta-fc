@@ -59,18 +59,6 @@ export default function App({  Component, pageProps: {session, ...pageProps} }: 
               <FacebookProvider appId="171352182602769"> */}
                 <SessionProvider session={session}>
                 <main className={`${manrope.variable} ${dosis.variable} font-sans`}>
-                {/* {session ? (
-                  <>
-                  <AppLayout>
-                    <Component {...pageProps} />
-                  </AppLayout>
-                  </>
-                ) : (
-                  <>
-                    <Component {...pageProps} />
-                  </>
-                )} */}
-
                     <Component {...pageProps} />
                 </main>
                 </SessionProvider>
@@ -82,4 +70,3 @@ export default function App({  Component, pageProps: {session, ...pageProps} }: 
     </>
   )
 }
-

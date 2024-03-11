@@ -21,7 +21,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Wrapper({ children }: { children: React.ReactNode }) {
+export default function SubWrapper({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [fullName, setFullName] = useState('');
   const router = useRouter();
