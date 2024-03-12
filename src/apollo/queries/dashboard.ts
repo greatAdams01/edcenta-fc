@@ -4,17 +4,22 @@ export const SchoolGrades = gql`
 query SchoolGrades {
   schoolGrades {
     _id
-    ages
     stage
+    ages
     year
     subject {
       _id
       name
-      topics {
-        _id
-      }
       worksheet {
         _id
+        title
+        levelId
+      }
+      topics {
+        _id
+        name
+        slug
+        levelId
       }
     }
   }
