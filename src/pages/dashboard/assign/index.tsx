@@ -101,15 +101,15 @@ export default function Assign() {
                         >
                           {selectedCategory === 'worksheet' && subject.worksheet.length > 0 ? ( 
                             <Link href={`/dashboard/assign/${subject._id}`}>
-                              <a>
+                              <p>
                                 <span><p className='mr-2'>Worksheet:</p>{subject.worksheet[0].levelId}</span> 
-                              </a>
+                              </p>
                             </Link>
                           ) : selectedCategory === 'assessment' && subject.topics.length > 0 ? (
                             <Link href={`/dashboard/assign/${subject._id}`}> 
-                              <a>
+                              <p>
                                 <span><p className='mr-2'>Assessment:</p>{subject.topics[0].levelId}</span>
-                              </a>
+                              </p>
                             </Link>
                           ) : (
                             <span>No {selectedCategory} available</span>
