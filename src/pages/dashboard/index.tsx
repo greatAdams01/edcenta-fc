@@ -72,7 +72,7 @@ export default function Dashboard() {
     }
     console.log(JSON.parse(authData).accountType);
     setAccountType(JSON.parse(authData).accountType);
-  }, [])
+  }, [authData])
   
   return (
     <AppLayout>
