@@ -24,5 +24,12 @@ query SchoolGrades {
     }
   }
 }
-
 `
+// export const SingleGrade = gql`
+// schoolGrade(id: $schoolGradeId) {
+//   _id
+//   stage
+//   ages
+//   year
+// }
+// `
