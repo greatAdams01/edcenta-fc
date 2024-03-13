@@ -1,9 +1,9 @@
 import React from 'react';
 import { Fragment, useState } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
 import Link from 'next/link';
 
-import { ExclamationTriangleIcon, XMarkIcon, PlusIcon, } from '@heroicons/react/24/outline'
+import { Dialog, Transition } from '@headlessui/react'
+import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'
 
 import { SchoolGrades } from '@/apollo/queries/dashboard';
 import SubLayout from '../../../../layout/SubLayout';
@@ -114,11 +114,11 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
                     <input type='checkbox' />
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-bold text-gray-900">
-                    <button 
-                    onClick={() => setShowClass(true)}
-                    className='bg-[#00AE9A] bg-opacity-20 hover:bg-opacity-50 font-bold px-3 py-3 text-left text-sm text-gray-900 rounded-md'>
-                    Assign Selected
-                    </button>
+                    {schoolGrades ? (
+                      <button onClick={() => setShowClass(true)} className='bg-[#00AE9A] bg-opacity-20 hover:bg-opacity-50 font-bold px-3 py-3 text-left text-sm text-gray-900 rounded-md'>
+                        Assign Selected
+                      </button>
+                    ) : null}
                   </th>
                 </tr>
               </thead>
@@ -167,7 +167,7 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
                   <button
                     type="button"
                     className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={() => setOpen(false)}
+                    onClick={() => setShowClass(false)}
                   >
                     <span className="sr-only">Close</span>
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
@@ -236,7 +236,7 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:ml-3 sm:w-auto"
-                    onClick={() => setOpen(false)}
+                    onClick={() => setShowClass(false)}
                   >
                     Confirm
                   </button>
