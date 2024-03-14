@@ -55,7 +55,6 @@ function classNames(...classes: string[]) {
 
 export default function Dashboard() {
   const [openSubtables, setOpenSubtables] = useState(Array(activityItems.length).fill(false));
-  const [accountType, setAccountType] = useState('' as string);
 
   const toggleDropdown = (index: number) => {
     const newOpenSubtables = [...openSubtables];
@@ -65,14 +64,6 @@ export default function Dashboard() {
 
   // Get Authdata from Cookies
   const authData: any = getCookie('Authdata');
-
-  useEffect(() => {
-    if (!authData) {
-      window.location.href = '/auth/login';
-    }
-    console.log(JSON.parse(authData).accountType);
-    setAccountType(JSON.parse(authData).accountType);
-  }, [authData])
   
   return (
     <AppLayout>
