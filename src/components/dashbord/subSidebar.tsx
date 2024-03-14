@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Dialog, Menu, Transition } from '@headlessui/react'
@@ -10,6 +10,7 @@ import {
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { deleteCookie } from 'cookies-next';
 import { useQuery } from '@apollo/client';
+import { getCookie } from 'cookies-next';
 
 
 import { subNavigation } from '@/utils/nav'
@@ -40,6 +41,17 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
       // dispatch(setUser(data.user))
     }
   })
+
+  const [accountType, setAccountType] = useState('' as string);
+  const authData: any = getCookie('Authdata');
+
+  useEffect(() => {
+    if (!authData) {
+      window.location.href = '/auth/login';
+    }
+    console.log(JSON.parse(authData).accountType);
+    setAccountType(JSON.parse(authData).accountType);
+  }, [authData])
 
   return (
     <>

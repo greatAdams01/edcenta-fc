@@ -46,7 +46,7 @@ const Reset = () => {
       }
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(error.message + ". Check your Internet connection and try again.");
     },
   });
 

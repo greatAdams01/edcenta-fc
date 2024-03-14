@@ -137,8 +137,8 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
           </div>
 
  {showClass && <div>
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={setOpen}>
+    <Transition.Root show={showClass} as={Fragment}>
+      <Dialog as="div" className="relative z-10" onClose={setShowClass}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
