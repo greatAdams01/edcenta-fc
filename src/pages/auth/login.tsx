@@ -34,7 +34,7 @@ export default function Login() {
       window.location.href = '/dashboard/';
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(error.message + ". Check your Internet connection and try again.");
     },
   });
 

@@ -52,12 +52,6 @@ export default function Assign() {
                 <option value="assessment">Assessment</option>
               </select> 
             </div>
-            <button
-              type="button"
-              className="block rounded-md bg-purple-600 hover:bg-purple-400 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Add Class
-            </button>
           </div>
         </div>
         <div className="mt-8 flow-root">
@@ -95,20 +89,21 @@ export default function Assign() {
                       <td className="text-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">{grade.ages}</td>
                       {grade.subject.map((subject, index) => (
                         <td key={subject._id} 
-                          className={`text-center px-3 py-3.5 text-left text-sm font-semibold ${
+                          className={`text-center px-3 py-3.5 text-sm font-semibold ${
                             index === 0 ? 'bg-yellow-500 hover:bg-yellow-800 hover:text-white' : index === 1 ? 'bg-green-500 hover:bg-green-900 hover:text-white' : index === 2 ? 'bg-blue-500 hover:bg-blue-900 hover:text-white' : 'bg-orange-500 hover:bg-orange-900 hover:text-white'
                           }`}
                         >
                           {selectedCategory === 'worksheet' && subject.worksheet.length > 0 ? ( 
-                            <Link href={`/dashboard/assign/${subject._id}`}>
+                            <Link href={`/dashboard/assign/worksheet/${subject._id}`}>
                               <p>
-                                <span><p className='mr-2'>Worksheet:</p>{subject.worksheet[0].levelId}</span> 
+                                <p className='mr-2'>Worksheet: {subject.worksheet.length}</p>
+                                <p className='mr-2'>Topic: {subject.topics.length}</p>
                               </p>
                             </Link>
                           ) : selectedCategory === 'assessment' && subject.topics.length > 0 ? (
-                            <Link href={`/dashboard/assign/${subject._id}`}> 
+                            <Link href={`/dashboard/assign/assessment/${subject._id}`}> 
                               <p>
-                                <span><p className='mr-2'>Assessment:</p>{subject.topics[0].levelId}</span>
+                                <span><p className='mr-2'>Assessment:</p>{subject.topics.length}</span>
                               </p>
                             </Link>
                           ) : (

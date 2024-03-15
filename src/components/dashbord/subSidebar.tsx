@@ -1,19 +1,19 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
   BellIcon,
-  Cog6ToothIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { deleteCookie } from 'cookies-next';
 import { useQuery } from '@apollo/client';
+import { getCookie } from 'cookies-next';
 
 
-import { navigation } from '@/utils/nav'
+import { subNavigation } from '@/utils/nav'
 import { userNavigation } from '@/utils/nav'
 import { USER_FULLNAME } from '@/apollo/queries/auth'
 
@@ -21,7 +21,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function SubWrapper({ children }: { children: React.ReactNode }) {
+export default function Wrapper({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [fullName, setFullName] = useState('');
   const router = useRouter();
@@ -41,6 +41,17 @@ export default function SubWrapper({ children }: { children: React.ReactNode }) 
       // dispatch(setUser(data.user))
     }
   })
+
+  const [accountType, setAccountType] = useState('' as string);
+  const authData: any = getCookie('Authdata');
+
+  useEffect(() => {
+    if (!authData) {
+      window.location.href = '/auth/login';
+    }
+    console.log(JSON.parse(authData).accountType);
+    setAccountType(JSON.parse(authData).accountType);
+  }, [authData])
 
   return (
     <>
@@ -102,7 +113,7 @@ export default function SubWrapper({ children }: { children: React.ReactNode }) 
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                       <li>
                         <ul role="list" className="-mx-2 space-y-1">
-                        {navigation.map((item) => (
+                        {subNavigation.map((item) => (
                                 <li key={item.name}>
                                   <a
                                     href={item.href}
@@ -113,13 +124,6 @@ export default function SubWrapper({ children }: { children: React.ReactNode }) 
                                       'bg-[#00AE9A] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
                                     )}
                                   >
-                                    <item.icon
-                                      className={classNames(
-                                        item.href === pathname ?  ' text-indigo-500' : ' group-hover:text-indigo-600',
-                                        'h-6 w-6 shrink-0'
-                                      )}
-                                      aria-hidden="true"
-                                    />
                                     {item.name}
                                   </a>
 
@@ -144,18 +148,6 @@ export default function SubWrapper({ children }: { children: React.ReactNode }) 
                       </li>
                       <li>
                         
-                      </li>
-                      <li className="mt-auto">
-                        <a
-                          href="#"
-                          className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
-                        >
-                          <Cog6ToothIcon
-                            className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
-                            aria-hidden="true"
-                          />
-                          Settings
-                        </a>
                       </li>
                     </ul>
                   </nav>
@@ -184,7 +176,7 @@ export default function SubWrapper({ children }: { children: React.ReactNode }) 
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                       <li>
                         <ul role="list" className="-mx-2 space-y-1">
-                        {navigation.map((item) => (
+                        {subNavigation.map((item) => (
                                 <li key={item.name}>
                                   <a
                                     href={item.href}
@@ -195,13 +187,6 @@ export default function SubWrapper({ children }: { children: React.ReactNode }) 
                                       'bg-[#00AE9A] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
                                     )}
                                   >
-                                    <item.icon
-                                      className={classNames(
-                                        item.href === pathname ?  ' text-indigo-500' : ' group-hover:text-indigo-600',
-                                        'h-6 w-6 shrink-0'
-                                      )}
-                                      aria-hidden="true"
-                                    />
                                     {item.name}
                                   </a>
 
@@ -226,18 +211,6 @@ export default function SubWrapper({ children }: { children: React.ReactNode }) 
                       </li>
                       <li>
                         
-                      </li>
-                      <li className="mt-auto">
-                        <a
-                          href="#"
-                          className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
-                        >
-                          <Cog6ToothIcon
-                            className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
-                            aria-hidden="true"
-                          />
-                          Settings
-                        </a>
                       </li>
                     </ul>
                   </nav>
