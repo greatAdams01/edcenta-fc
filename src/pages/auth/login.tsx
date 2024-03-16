@@ -19,7 +19,6 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   
-  const [accountType, setAccountType] = useState('' as string);
   const authData: any = getCookie('Authdata');
 
   const [login, { loading }] = useMutation(LOGIN, {
