@@ -12,8 +12,8 @@ import {
       children: [
         { name: 'My Dashboard', href: '/dashboard' },
         { name: 'Browse and Assign', href: '/dashboard/assign' },
-        { name: 'Preview assigned', href: '#' },
-        { name: 'Review completed', href: '#' },
+        { name: 'Preview assigned', href: '/dashboard/preview' },
+        { name: 'Review completed', href: '/dashboard/review' },
       ]
     },
     { 

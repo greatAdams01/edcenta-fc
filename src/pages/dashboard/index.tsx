@@ -69,6 +69,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (!authData) {
       window.location.href = '/auth/login';
+      return;
     }
     console.log(JSON.parse(authData).accountType);
     setAccountType(JSON.parse(authData).accountType);
