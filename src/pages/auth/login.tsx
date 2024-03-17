@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -7,6 +7,7 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { setCookie } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 import { useMutation } from '@apollo/client';
 import { Eye, EyeOff } from 'lucide-react';
 
@@ -16,7 +17,9 @@ export default function Login() {
   const { data: session } = useSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
+  
+  const authData: any = getCookie('Authdata');
 
   const [login, { loading }] = useMutation(LOGIN, {
     variables: {
@@ -37,6 +40,11 @@ export default function Login() {
       toast.error(error.message + ". Check your Internet connection and try again.");
     },
   });
+
+  if (authData) {
+    window.location.href = '/dashboard';
+    return;
+  }
 
   if(session){
     window.location.href = '/tutor/';

@@ -48,6 +48,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!authData) {
       window.location.href = '/auth/login';
+      return;
     }
     console.log(JSON.parse(authData).accountType);
     setAccountType(JSON.parse(authData).accountType);
