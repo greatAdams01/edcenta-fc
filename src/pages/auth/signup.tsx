@@ -11,6 +11,8 @@ import { setCookie } from 'cookies-next'
 import { useMutation } from '@apollo/client'
 import { Eye, EyeOff } from 'lucide-react';
 
+import '@/styles/tailwind.css'
+
 import { SIGNUP } from '@/apollo/mutations/auth'
 
 export default function Signup() {
@@ -30,6 +32,8 @@ export default function Signup() {
   const [conPassword, setConPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false); 
   const [conShowPassword, setConShowPassword] = useState(false); 
+
+  const [Loading, setLoading] = useState(false);
 
   const path = useRouter();
 
@@ -54,6 +58,7 @@ export default function Signup() {
     },
     onError: (error) => {
       toast.error(error.message + ". Check your Internet connection and try again.");
+      setLoading(false);
     }
   })
 
@@ -82,36 +87,7 @@ export default function Signup() {
       toast.error('Enter a valid phone number')
       return;
     }
-    // if(bName === ''){
-    //     console.log('Enter a business name')
-    //     toast.error('Enter a business name')
-    //     return;
-    // }
-    // if(bankName === ''){
-    //   console.log('Enter your account name')
-    //   toast.error('Enter your account name')
-    //   return;
-    // }
-    // if(acctNumber === ''){
-    //   console.log('Add your account number')
-    //   toast.error('Add your account number')
-    //   return;
-    // }
-    // if(bank === ''){
-    //   console.log('Bank name field cannot be empty')
-    //   toast.error('Bank name field cannot be empty')
-    //   return;
-    // }
-    // if(bankCode === ''){
-    //   console.log('Enter a valid bank code')
-    //   toast.error('Enter a valid bank code')
-    //   return;
-    // }
-    // if(occupation === ''){
-    //   console.log('Occupation is required')
-    //   toast.error('Occupation is required')
-    //   return;
-    // }
+   
     if (!accountType) {
       console.log('Please select an Account type');
       toast.error('Please select an Account type');
@@ -128,6 +104,7 @@ export default function Signup() {
       toast.error('Password must be at least 8 characters long and contain at least one capital letter');
       return;
     }
+    setLoading(true);
     signup()
   };
 
@@ -305,12 +282,19 @@ export default function Signup() {
               </div>
 
               <div>
-              <button
-                  type="submit"
-                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 p-2"
-                >
-                  Sign up
-                </button>
+              {Loading ? (
+                <div className="flex w-full justify-center rounded-md border-2 border-indigo-600  px-3 py-1 text-sm font-semibold leading-6 text-white shadow-sm  cursor-progress">
+                  <img src="/loader.gif" alt="loader" className="w-6 rotating-loader" />
+
+                </div>
+                ) : (
+                  <button
+                    type="submit"
+                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 p2"
+                  >
+                    Sign up
+                  </button>
+                )}
               </div>
             </form>
 
