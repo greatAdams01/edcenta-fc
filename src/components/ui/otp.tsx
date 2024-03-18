@@ -46,8 +46,9 @@ export default function OTP() {
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                        <strong>Success!</strong> An OTP has been sent to your email address. Please check your inbox (and spam/junk folder, just in case) for the email from us. If you don&apos;t receive it within a few minutes, please click on the &apos;Resend OTP&apos; button left below.
+                        <strong>Success!</strong> An OTP has been sent to your email address. Please check your inbox (and spam/junk folder, just in case) for the email from us. If you don&apos;t receive it within a few minutes, please click on the &apos;Resend OTP&apos; button below.
                       </p>
+                      <p className='text-sm text-red-500 font-bold'> Please wait to receive the One-Time Password (OTP) before proceeding.</p>
                     </div>
                   </div>
                 </div>
