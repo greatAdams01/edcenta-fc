@@ -39,3 +39,15 @@
     -moz-appearance: textfield;
   }
   
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rotating-loader {
+  animation: rotate 1s linear infinite;
+}

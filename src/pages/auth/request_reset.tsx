@@ -8,6 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 
+import '@/styles/tailwind.css'
+
 import { REQUEST_RESET_PASSWORD } from '@/apollo/mutations/auth';
 import OTP from '@/components/ui/otp';
 
@@ -15,6 +17,7 @@ const Reset_password = () => {
   const route = useRouter();
   const [email, setEmail] = useState('');
   const [showOTP, setShowOTP] = useState(false); 
+  const [Loading, setLoading] = useState(false);
 
   const [sendOTP, { loading }] = useMutation(REQUEST_RESET_PASSWORD, {
     variables: {
@@ -26,7 +29,8 @@ const Reset_password = () => {
       }
     },
     onError: (error) => {
-      toast.error(error.message + ". Check your Internet connection and try again.");
+      toast.error(error.message);
+      setLoading(false);
     },
   });
 
@@ -37,6 +41,7 @@ const Reset_password = () => {
         toast.error('Inpute a valid email')
         return;
     }
+    setLoading(true);
     sendOTP();
   };
 
@@ -80,12 +85,19 @@ const Reset_password = () => {
               </div>
 
             <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 p2"
-              >
-                Send OTP
-              </button>
+            {Loading ? (
+                <div className="flex w-full justify-center rounded-md border-2 border-indigo-600  px-3 py-1 text-sm font-semibold leading-6 text-white shadow-sm  cursor-progress">
+                  <img src="/loader.gif" alt="loader" className="w-6 rotating-loader" />
+
+                </div>
+                ) : (
+                  <button
+                    type="submit"
+                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 p2"
+                  >
+                    Send OTP
+                  </button>
+                )}
             </div>
           </form>
           <ToastContainer />

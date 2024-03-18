@@ -9,6 +9,8 @@ import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { Eye, EyeOff } from 'lucide-react';
 
+import '@/styles/tailwind.css'
+
 import { RESET } from '@/apollo/mutations/auth';
 import Sucess from '@/components/ui/resetSucess'
 
@@ -21,6 +23,7 @@ const Reset = () => {
   const [showSucess, setShowSucess] = useState(false); 
   const [inputs, setInputs] = useState<Array<string>>(['', '', '', '']);
   const inputRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)];
+  const [Loading, setLoading] = useState(false);
 
   const handleInputChange = (index: number, value: string) => {
     if (!isNaN(Number(value))) {
@@ -46,7 +49,8 @@ const Reset = () => {
       }
     },
     onError: (error) => {
-      toast.error(error.message + ". Check your Internet connection and try again.");
+      toast.error(error.message);
+      setLoading(false);
     },
   });
 
@@ -63,6 +67,7 @@ const Reset = () => {
         toast.error('Passwords do not match')
         return;
     }
+    setLoading(true);
     newPassword();
   };
 
@@ -160,10 +165,20 @@ const Reset = () => {
                 </div>
               </div>
 
-          <button
-            type="submit"
-            className="mt-4 flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 p2"
-          >Create new password</button>
+              {Loading ? (
+                <div className="flex w-full justify-center rounded-md border-2 border-indigo-600  px-3 py-1 text-sm font-semibold leading-6 text-white shadow-sm  cursor-progress">
+                  <img src="/loader.gif" alt="loader" className="w-6 rotating-loader" />
+
+                </div>
+                ) : (
+                  <button
+                    type="submit"
+                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 p2"
+                  >
+                    Create new password
+                  </button>
+                )}
+          
         </form>
       </div>  
       </div>

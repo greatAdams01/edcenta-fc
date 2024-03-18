@@ -11,6 +11,8 @@ import { getCookie } from 'cookies-next';
 import { useMutation } from '@apollo/client';
 import { Eye, EyeOff } from 'lucide-react';
 
+import '@/styles/tailwind.css'
+
 import { LOGIN } from '@/apollo/mutations/auth';
 
 export default function Login() {
@@ -18,6 +20,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [Loading, setLoading] = useState(false);
   
   const authData: any = getCookie('Authdata');
 
@@ -37,7 +40,8 @@ export default function Login() {
       window.location.href = '/dashboard/';
     },
     onError: (error) => {
-      toast.error(error.message + ". Check your Internet connection and try again.");
+      toast.error(error.message);
+      setLoading(false);
     },
   });
 
@@ -56,7 +60,9 @@ export default function Login() {
       toast.error('Invalid credentials');
       return;
     }
+    setLoading(true);
     login();
+
   };
 
   const togglePasswordVisibility = () => {
@@ -146,12 +152,19 @@ export default function Login() {
               </div>
 
               <div>
-                <button
-                  type="submit"
-                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 p2"
-                >
-                  Login
-                </button>
+              {Loading ? (
+                <div className="flex w-full justify-center rounded-md border-2 border-indigo-600  px-3 py-1 text-sm font-semibold leading-6 text-white shadow-sm  cursor-progress">
+                  <img src="/loader.gif" alt="loader" className="w-6 rotating-loader" />
+
+                </div>
+                ) : (
+                  <button
+                    type="submit"
+                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 p2"
+                  >
+                    Login
+                  </button>
+                )}
               </div>
             </form>
 
