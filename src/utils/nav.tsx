@@ -32,7 +32,7 @@ import {
       icon: UsersIcon, 
       current: false,
       children: [
-        { name: 'My Accounts', href: '#' },
+        { name: 'My Accounts', href: '/dashboard/account' },
         { name: 'My Details', href: '#' },
         { name: 'My Subscriptions', href: '#' },
         { name: 'Manage students', href: '#' },
@@ -42,48 +42,7 @@ import {
     }
   ];
 
-  export const subNavigation = [
-    { 
-      name: 'Key Stage 1', 
-      href: '/dashboard', 
-      icon: CalendarIcon,
-      children: [
-        { name: 'Year 1 (5 - 6)', href: '#' },
-        { name: 'Year 2 (6 - 7)', href: '#' },
-      ]
-    },
-    { 
-      name: 'Key Stage 2', 
-      href: '#', 
-      icon: ClipboardDocumentCheckIcon,
-      children: [
-        { name: 'Year 3 (7 - 8)', href: '#' },
-        { name: 'Year 4 (8 - 9)', href: '#' },
-        { name: 'Year 5 (9 - 10)', href: '#' },
-        { name: 'Year 6 (10 - 11)', href: '#' },
-      ]
-    },
-    { 
-      name: 'Key Stage 3', 
-      href: '#', 
-      icon: UsersIcon, 
-      current: false,
-      children: [
-        { name: 'Year 7 (11 - 12)', href: '#' },
-        { name: 'Year 8 (12 - 13)', href: '#' },
-        { name: 'Year 9 (13 - 14)', href: '#' },
-      ]
-    },
-    { 
-      name: 'Key Stage 4', 
-      href: '#', 
-      icon: UsersIcon, 
-      current: false,
-      children: [
-        { name: 'GCSE', href: '#' },
-      ]
-    }
-  ];
+  
   
   export const teams = [
     { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },

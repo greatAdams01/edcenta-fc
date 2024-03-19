@@ -39,3 +39,23 @@ query SchoolGrades {
   }
 }
 `
+
+export const USER = gql`
+query User {
+  user {
+    _id
+    firstName
+    lastName
+    email
+    phone
+    address
+    city
+    accountType
+    updatedAt
+    bName
+    bankName
+    acctNumber
+    occupation
+  }
+}
+`
