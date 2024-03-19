@@ -14,6 +14,10 @@ query SchoolGrades {
         _id
         title
         levelId
+        questions {
+          _id
+          title
+        }
       }
       topics {
         _id
@@ -25,11 +29,13 @@ query SchoolGrades {
   }
 }
 `
-// export const SingleGrade = gql`
-// schoolGrade(id: $schoolGradeId) {
-//   _id
-//   stage
-//   ages
-//   year
-// }
-// `
+
+export const STAGES = gql`
+query SchoolGrades {
+  schoolGrades {
+    _id
+    stage
+    year
+  }
+}
+`

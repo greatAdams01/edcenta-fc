@@ -16,6 +16,7 @@ interface Grade {
       _id: string;
       title: string;
       levelId: string; 
+      questions: string;
     }[];
     topics: {
       _id: string;
@@ -96,10 +97,11 @@ export default function Assign() {
                           {selectedCategory === 'worksheet' && subject.worksheet.length > 0 ? ( 
                             <Link href={`/dashboard/assign/worksheet/${subject._id}`}>
                                 <p className='mr-2'>Worksheet: {subject.worksheet.length}</p>
+                                <p className='mr-2'>Topics: {subject.topics.length}</p>
                             </Link>
                           ) : selectedCategory === 'assessment' && subject.topics.length > 0 ? (
                             <Link href={`/dashboard/assign/assessment/${subject._id}`}> 
-                                <p className='mr-2'>Assessment: {subject.topics.length}</p>
+                                <p className='mr-2'>Assessment: {subject.worksheet[0].questions.length}</p>
                             </Link>
                           ) : (
                             <span>No {selectedCategory} available</span>
