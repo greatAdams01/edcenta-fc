@@ -83,17 +83,17 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
     <SubLayout>
       <div className='p-4'>
         <form onSubmit={handleSubmit}>
-          <div className='flex w-full'>
+          <div className='flex w-full items-center'>
             <div className='flex px-3 w-full py-3.5 bg-[#00AE9A] bg-opacity-70 text-white font-bold'>
               {schoolGrades.length > 0 && schoolGrades[0].subject.length > 0 && (
                 schoolGrades[0].subject[0].name
               )}
             </div>
-            <div className="flex mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+            <div className="ml-6 sm:ml-16 sm:mt-0 sm:flex-none">
               <Link
                 href={'/dashboard/assign'}
                 type="button"
-                className="flex items-center justify-center rounded-md bg-red-600 hover:bg-red-400 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 mr-4"
+                className="flex items-center justify-center rounded-md bg-red-600 hover:bg-red-400 px-3 py-3.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 mr-4"
               >
                 Cancel
               </Link>
