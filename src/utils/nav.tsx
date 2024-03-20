@@ -28,12 +28,11 @@ import {
     },
     { 
       name: 'ACCOUNTS', 
-      href: '#', 
+      href: '/dashboard/details', 
       icon: UsersIcon, 
       current: false,
       children: [
-        { name: 'My Accounts', href: '/dashboard/account' },
-        { name: 'My Details', href: '#' },
+        { name: 'My Details', href: '/dashboard/details' },
         { name: 'My Subscriptions', href: '#' },
         { name: 'Manage students', href: '#' },
         { name: 'Manage groups', href: '#' },
