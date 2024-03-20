@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
 
-
 export const SIGNUP = gql`
     mutation Register($input: SignInput!){
   register(input: $input) {
@@ -28,3 +27,4 @@ mutation ResetPassword($otp: Float!, $password: String!) {
   resetPassword(otp: $otp, password: $password)
 }
 `
+
