@@ -21,12 +21,6 @@ export default function Signup() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhoneNumber] = useState('');
-  const [bName, setBName] = useState('');
-  const [bankName, setAccountName] = useState('')
-  const [acctNumber, setAcctNumber] = useState('');
-  const [bank, setBank] = useState('');
-  const [bankCode, setBankCode] = useState('');
-  const [occupation, setOccupation] = useState('');
   const [accountType, setAccountType] = useState('');
   const [password, setPassword] = useState('');
   const [conPassword, setConPassword] = useState('');

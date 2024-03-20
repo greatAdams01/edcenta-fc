@@ -33,7 +33,7 @@ import {
       current: false,
       children: [
         { name: 'My Details', href: '/dashboard/details' },
-        { name: 'My Subscriptions', href: '#' },
+        { name: 'My Subscriptions', href: '/dashboard/subscription' },
         { name: 'Manage students', href: '#' },
         { name: 'Manage groups', href: '#' },
         { name: 'Notifications', href: '#' },
@@ -53,5 +53,4 @@ import {
     { name: 'Your profile', href: '#' },
     { name: 'Sign out', href: '#' },
   ]
-
 
