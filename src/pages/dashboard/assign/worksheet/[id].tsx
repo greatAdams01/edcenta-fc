@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'
 
+import { manrope } from '@/utils/font';
 import { SchoolGrades } from '@/apollo/queries/dashboard';
 import SubLayout from '../../../../layout/SubLayout';
 import { useQuery } from '@apollo/client';
@@ -84,7 +85,7 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
       <div className='p-4'>
         <form onSubmit={handleSubmit}>
           <div className='flex w-full items-center'>
-            <div className='flex px-3 w-full py-3.5 bg-[#00AE9A] bg-opacity-70 text-white font-bold'>
+            <div className='flex px-3 ml-4 lg:ml-0 w-full py-3.5 bg-[#00AE9A] bg-opacity-70 text-white font-bold'>
               {schoolGrades.length > 0 && schoolGrades[0].subject.length > 0 && (
                 schoolGrades[0].subject[0].name
               )}
@@ -175,17 +176,17 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
                 </div>
                 <div className="sm:flex sm:items-start w-full">
                   <div className="w-full mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                    <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900 flex">
+                    <Dialog.Title as="h3" className={`${manrope.className} text-base font-semibold leading-6 text-gray-900 flex`}>
                       Assign {}
                     </Dialog.Title>
-                    <div className="mt-2">
+                    <div className={`${manrope.className} mt-2`}>
                       <p className="text-sm text-gray-500">
                         Select class or students below to assign Worksheet
                       </p>
 
                       {activityItems.map((item, index) => (
                     <Fragment key={item.code}>
-                      <tr className='flex justify-between w-full'>
+                      <tr className={`${manrope.className} flex justify-between w-full`}>
                         <div>
                       <td className="py-4 text-sm leading-6 border-t">
                           <div className="flex justify-center text-green-500 items-center w-5">
@@ -203,7 +204,7 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
                         </div>
                       </tr>
                       {openSubtables[index] && item.students && (
-                        <tr className=''>
+                        <tr className={`${manrope.className}`}>
                           <td colSpan={3} className='w-[100rem]'>
                             <table className="w-full border-collapse border-gray-300">
                               <thead className='bg-gray-200 w-full '>
