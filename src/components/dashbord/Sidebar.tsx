@@ -1,20 +1,21 @@
-import { Fragment, useState, useEffect } from 'react'
-import Image from 'next/image'
-import { useRouter } from 'next/router'
-import { Dialog, Menu, Transition } from '@headlessui/react'
+import { Fragment, useState, useEffect } from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
   Bars3Icon,
   BellIcon,
   Cog6ToothIcon,
   XMarkIcon,
-} from '@heroicons/react/24/outline'
-import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+} from '@heroicons/react/24/outline';
+
 import { deleteCookie } from 'cookies-next';
 import { useQuery } from '@apollo/client';
 import { getCookie } from 'cookies-next';
 
-import TopNav from './TopNav'
-import { navigation } from '@/utils/nav'
+import { manrope } from '@/utils/font';
+import TopNav from './TopNav';
+import { navigation } from '@/utils/nav';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -77,7 +78,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                   >
-                    <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
+                    <div className={`absolute left-full top-0 flex w-16 justify-center pt-5`}>
                       <button type="button" className="-m-2.5 p-2.5" onClick={() => setSidebarOpen(false)}>
                         <span className="sr-only">Close sidebar</span>
                         <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
@@ -85,7 +86,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                     </div>
                   </Transition.Child>
                   {/* Sidebar component, swap this element with another sidebar if you like */}
-                  <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
+                  <div className={`${manrope.className} flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4`}>
                   <div className="flex h-16 shrink-0 items-center">
                       <Image
                         width={200}

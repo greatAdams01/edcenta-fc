@@ -9,13 +9,13 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+
+import { manrope } from '@/utils/font';
 import { deleteCookie } from 'cookies-next';
 import { useQuery } from '@apollo/client';
 import { getCookie } from 'cookies-next';
 import { STAGES } from '@/apollo/queries/dashboard'
 
-// import TopNav from './TopNav'
-// import { subNavigation } from '@/utils/nav'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -91,7 +91,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                     </div>
                   </Transition.Child>
                   {/* Sidebar component, swap this element with another sidebar if you like */}
-                  <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
+                  <div className={`${manrope.className} flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4`}>
                   <div className="flex h-16 shrink-0 items-center">
                       <Image
                         width={200}
@@ -197,7 +197,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="lg:pl-72">
-          <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+          <div className="flex my-6 lg:my-0 lg:mx-0 mx-4">
           <button type="button" className="-m-2.5 p-2.5 text-gray-700 lg:hidden" onClick={() => setSidebarOpen(true)}>
             <span className="sr-only">Open sidebar</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
@@ -210,7 +210,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
           
         </div>
 
-          <main className="py-10">
+          <main className="py-0 -mt-20 lg:mt-0 md:py-0">
             <div className="px-4 sm:px-6 lg:px-8">{children}</div>
           </main>
         </div>
