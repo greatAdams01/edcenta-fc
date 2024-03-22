@@ -124,137 +124,144 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {schoolGrades.map((grade: any) => (
-                    grade.subject[0].topics.map((topic: any) => (
-                    <tr key={topic.name}>
-                        <td className="px-3 py-3.5 text-left text-sm text-gray-900 hover:underline cursor-pointer hover:text-green-500">{topic.name}</td>
-                        <td className="px-3 py-3.5 text-center text-sm text-gray-900">{grade.subject[0].topics.length}</td>
-                        <td className="px-3 py-3.5 text-center text-sm text-gray-900">
-                        <input type="checkbox"></input>
-                        </td>
-                        <td>
-                        <button onClick={() => setShowClass(true)} className="bg-[#00AE9A] bg-opacity-20 hover:bg-opacity-50 font-bold my-2 ml-6 px-3 py-3 text-left text-sm text-gray-900 rounded-md">Assign Topic</button>
-                        </td>
-                    </tr>
+              {schoolGrades.map((grade: any) => (
+                grade.subject.map((subject: any) => (
+                  subject.worksheet.map((worksheet: any) => (
+                    worksheet.questions.map((question: any) => ( 
+                      <Fragment key={question._id}>
+                        <tr>
+                          <td className="px-3 py-3.5 text-left text-sm text-gray-900 hover:underline cursor-pointer hover:text-green-500">
+                          <a href={`/dashboard/assign/assessment/questions/${question._id}`} >
+                            {question.title}
+                          </a>
+                            </td>
+                          <td className="px-3 py-3.5 text-center text-sm text-gray-900">{worksheet.questions.length}</td>
+                          <td className="px-3 py-3.5 text-center text-sm text-gray-900"><input type="checkbox" /></td>
+                          <td>
+                            <button onClick={() => setShowClass(true)} className="bg-[#00AE9A] bg-opacity-20 hover:bg-opacity-50 font-bold my-2 ml-4 px-3 py-3 text-left text-sm text-gray-900 rounded-md">Assign</button>
+                          </td>
+                        </tr>
+                      </Fragment>
                     ))
-                ))}
+                  ))
+                ))
+              ))}
              </tbody>
-
             </table>
           </div>
 
- {showClass && <div>
-    <Transition.Root show={showClass} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={setShowClass}>
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        </Transition.Child>
+            {showClass && <div>
+                <Transition.Root show={showClass} as={Fragment}>
+                  <Dialog as="div" className="relative z-10" onClose={setShowClass}>
+                    <Transition.Child
+                      as={Fragment}
+                      enter="ease-out duration-300"
+                      enterFrom="opacity-0"
+                      enterTo="opacity-100"
+                      leave="ease-in duration-200"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                    </Transition.Child>
 
-        <div className="fixed inset-0 z-10 w-screen overflow-y-scroll">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enterTo="opacity-100 translate-y-0 sm:scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
-                  <button
-                    type="button"
-                    className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={() => setShowClass(false)}
-                  >
-                    <span className="sr-only">Close</span>
-                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
-                </div>
-                <div className="sm:flex sm:items-start w-full">
-                  <div className="w-full mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                  <Dialog.Title as="h3" className={`${manrope.className} text-base font-semibold leading-6 text-gray-900 flex`}>
-                      Assign {}
-                    </Dialog.Title>
-                    <div className={`${manrope.className} mt-2`}>
-                      <p className="text-sm text-gray-500">
-                        Select class or students below to assign Assessment
-                      </p>
+                    <div className="fixed inset-0 z-10 w-screen overflow-y-scroll">
+                      <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                        <Transition.Child
+                          as={Fragment}
+                          enter="ease-out duration-300"
+                          enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                          enterTo="opacity-100 translate-y-0 sm:scale-100"
+                          leave="ease-in duration-200"
+                          leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                          leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                        >
+                          <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                            <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
+                              <button
+                                type="button"
+                                className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                onClick={() => setShowClass(false)}
+                              >
+                                <span className="sr-only">Close</span>
+                                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                              </button>
+                            </div>
+                            <div className="sm:flex sm:items-start w-full">
+                              <div className="w-full mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                              <Dialog.Title as="h3" className={`${manrope.className} text-base font-semibold leading-6 text-gray-900 flex`}>
+                                  Assign {}
+                                </Dialog.Title>
+                                <div className={`${manrope.className} mt-2`}>
+                                  <p className="text-sm text-gray-500">
+                                    Select class or students below to assign Assessment
+                                  </p>
 
-                      {activityItems.map((item, index) => (
-                    <Fragment key={item.code}>
-                       <tr className={`${manrope.className} flex justify-between w-full`}>
-                        <div>
-                      <td className="py-4 text-sm leading-6 border-t">
-                          <div className="flex justify-center text-green-500 items-center w-5">
-                            <PlusIcon onClick={() => toggleDropdown(index)} />
-                          </div>
-                        </td>
-                        <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8 border-t">
-                          <div className="flex items-center gap-x-4">
-                            <div className="truncate text-sm font-medium leading-6">Year {item.year} ({item.students.length})</div>
-                          </div>
-                        </td>
-                        </div>
-                        <div className='flex items-center'>
-                            <input type='checkbox'  className='mr-2'/> Assign to all
-                        </div>
-                      </tr>
-                      {openSubtables[index] && item.students && (
-                        <tr className={`${manrope.className}`}>
-                          <td colSpan={3} className='w-[100rem]'>
-                            <table className="w-full border-collapse border-gray-300">
-                              <thead className='bg-gray-200 w-full '>
-                                <tr className='w-full'>
-                                  <th className="px-4 py-2 text-left">Name</th>
-                                  <th className="px-4 py-2 text-center">Best score</th>
-                                  <th className="px-4 py-2 text-center">Assigned</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {item.students.map((student) => (
-                                  <tr key={student.name} className='w-full'>
-                                    <td className="border px-4 py-2 text-left">{student.name}</td>
-                                    <td className="border px-4 py-2 text-center">{student.score}</td>
-                                    <td className="border px-4 py-2 text-center"><input type='checkbox' /></td>
+                                  {activityItems.map((item, index) => (
+                                <Fragment key={item.code}>
+                                  <tr className={`${manrope.className} flex justify-between w-full`}>
+                                    <div>
+                                  <td className="py-4 text-sm leading-6 border-t">
+                                      <div className="flex justify-center text-green-500 items-center w-5">
+                                        <PlusIcon onClick={() => toggleDropdown(index)} />
+                                      </div>
+                                    </td>
+                                    <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8 border-t">
+                                      <div className="flex items-center gap-x-4">
+                                        <div className="truncate text-sm font-medium leading-6">Year {item.year} ({item.students.length})</div>
+                                      </div>
+                                    </td>
+                                    </div>
+                                    <div className='flex items-center'>
+                                        <input type='checkbox'  className='mr-2'/> Assign to all
+                                    </div>
                                   </tr>
-                                ))}
-                              </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                    )}
-                  </Fragment>
-                ))}
+                                  {openSubtables[index] && item.students && (
+                                    <tr className={`${manrope.className}`}>
+                                      <td colSpan={3} className='w-[100rem]'>
+                                        <table className="w-full border-collapse border-gray-300">
+                                          <thead className='bg-gray-200 w-full '>
+                                            <tr className='w-full'>
+                                              <th className="px-4 py-2 text-left">Name</th>
+                                              <th className="px-4 py-2 text-center">Best score</th>
+                                              <th className="px-4 py-2 text-center">Assigned</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {item.students.map((student) => (
+                                              <tr key={student.name} className='w-full'>
+                                                <td className="border px-4 py-2 text-left">{student.name}</td>
+                                                <td className="border px-4 py-2 text-center">{student.score}</td>
+                                                <td className="border px-4 py-2 text-center"><input type='checkbox' /></td>
+                                              </tr>
+                                            ))}
+                                          </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                )}
+                              </Fragment>
+                            ))}
 
+                                </div>
+                              </div>
+                            </div>
+                            <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                              <button
+                                type="button"
+                                className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:ml-3 sm:w-auto"
+                                onClick={() => setShowClass(false)}
+                              >
+                                Confirm
+                              </button>
+                            </div>
+                          </Dialog.Panel>
+                        </Transition.Child>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                  <button
-                    type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:ml-3 sm:w-auto"
-                    onClick={() => setShowClass(false)}
-                  >
-                    Confirm
-                  </button>
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
-          </div>
-        </div>
-      </Dialog>
-    </Transition.Root>
-</div>}
+                  </Dialog>
+                </Transition.Root>
+            </div>}
 
 
         </form>
