@@ -124,16 +124,27 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {schoolGrades.map((grade: any) => ( 
-                  <tr key={grade._id}>
-                    <td className="px-3 py-3.5 text-left text-sm text-gray-900 hover:underline cursor-pointer hover:text-green-500">{grade.subject[0].worksheet[0].title}</td>
-                    <td className="px-3 py-3.5 text-center text-sm text-gray-900">{grade.subject[0].worksheet.length}</td>
-                    <td className="px-3 py-3.5 text-center text-sm text-gray-900"><input type='checkbox'></input></td>
-                    <button 
-                    onClick={() => setShowClass(true)} className="bg-[#00AE9A] bg-opacity-20 hover:bg-opacity-50 font-bold my-2 ml-6 px-3 py-3 text-left text-sm text-gray-900 rounded-md">Assign Topic </button>
-                  </tr>
-                ))}
+              {schoolGrades.map((grade: any) => (
+                  grade.subject.map((subject: any) => (
+                    subject.topics.map((topic: any) => (
+                      <tr key={topic._id}>
+                        <td className="px-3 py-3.5 text-left text-sm text-gray-900 hover:underline cursor-pointer hover:text-green-500">
+                          <a href={`/dashboard/assign/worksheet/topic/${topic._id}`} >
+                            {topic.name}
+                          </a>
+                        </td>
+                        <td className="px-3 py-3.5 text-center text-sm text-gray-900">{topic.worksheet.length}</td>
+                        <td className="px-3 py-3.5 text-center text-sm text-gray-900"><input type='checkbox'></input></td>
+                        <td>
+                          <button onClick={() => setShowClass(true)} className="bg-[#00AE9A] bg-opacity-20 hover:bg-opacity-50 font-bold my-2 ml-4 px-3 py-3 text-left text-sm text-gray-900 rounded-md">Assign it</button>
+                        </td>
+                      </tr>
+                  ))
+                ))
+              ))} 
+
               </tbody>
+
             </table>
           </div>
 

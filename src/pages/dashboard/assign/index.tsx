@@ -101,7 +101,7 @@ export default function Assign() {
                             </Link>
                           ) : selectedCategory === 'assessment' && subject.topics.length > 0 ? (
                             <Link href={`/dashboard/assign/assessment/${subject._id}`}> 
-                                <p className='mr-2'>Assessment: {subject.worksheet[0].questions.length}</p>
+                                <p className='mr-2'>Assessment: {subject.worksheet[index].questions.length}</p>
                             </Link>
                           ) : (
                             <span>No {selectedCategory} available</span>

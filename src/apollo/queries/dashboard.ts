@@ -17,6 +17,20 @@ query SchoolGrades {
         questions {
           _id
           title
+          body {
+            _id
+            text
+            img
+          }
+          isObjective
+          options {
+            _id
+            _id
+            option
+            isCorrect
+          }
+          explanation
+          worksheetId
         }
       }
       topics {
@@ -24,6 +38,10 @@ query SchoolGrades {
         name
         slug
         levelId
+        worksheet {
+          _id
+          title
+        }
       }
     }
   }
@@ -56,6 +74,53 @@ query User {
     bankName
     acctNumber
     occupation
+  }
+}
+`
+export const TOPIC_QUERY = gql`
+  query Topic($topicId: ID!) {
+    topic(id: $topicId) {
+      _id
+      name
+      description
+      slug
+      levelId
+      subject {
+        _id
+        name
+      }
+      worksheet {
+      _id
+      title
+      createdAt
+      questions {
+        _id
+        title
+      }
+    }
+    }
+  }
+`;
+
+export const QUESTION_QUERY = gql`
+query SchoolGrades($questionId: ID!) {
+  question(id: $questionId) {
+    _id
+    title
+    body {
+      _id
+      text
+      img
+    }
+    isObjective
+    options {
+      _id
+      option
+      isCorrect
+    }
+    explanation
+    worksheetId
+    createdAt
   }
 }
 `
