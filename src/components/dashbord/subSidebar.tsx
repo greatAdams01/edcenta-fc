@@ -108,11 +108,21 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                         <ul role="list" className="-mx-2 space-y-1">
                         {stages.map((stage: any) => (
                           <li key={stage._id} className=''>
-                            <a href={stage.stage}>
-                             Stage {stage.stage}
-                            </a>
+                            <p className={classNames(
+                              'bg-[#00AE9A] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
+                            )}
+                            >
+                            Key Stage {stage.stage}
+                            </p>
+                            {stages.map((stage: any) => (
+                              <li key={stage._id} className='w-full pt-2'>
+                                <a href={stage.stage} className='hover:bg-[#00AE9A] hover:bg-opacity-20 group flex gap-x-3 rounded-md p-2 pl-8 text-md leading-6 font-semibold'>
+                                  {stage.year}
+                                </a>
+                              </li>
+                            ))}
                           </li>
-                              ))}
+                        ))}
                         </ul>
                       </li>
                       <li>
