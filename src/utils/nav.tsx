@@ -36,7 +36,7 @@ import {
         { name: 'My Subscriptions', href: '/dashboard/subscription' },
         { name: 'Manage students', href: '#' },
         { name: 'Manage groups', href: '#' },
-        { name: 'Notifications', href: '#' },
+        { name: 'Notifications', href: '/dashboard/notification' },
       ]
     }
   ];
@@ -54,3 +54,8 @@ import {
     { name: 'Sign out', href: '#' },
   ]
 
+
+  export const Notification = [
+    { topic: 'Create Number Codes using Multiple Word Codes', by: 'Mary', averageScore: 60,  score: 40, attempt: 3 },
+    { topic: 'Create Number Codes using Multiple Word Codes', by: 'John', averageScore: 60,  score: 70, attempt: 9 },
+  ]
