@@ -28,3 +28,13 @@ mutation ResetPassword($otp: Float!, $password: String!) {
 }
 `
 
+export const STUDENT_LOGIN = gql`
+  mutation LoginStudent($username: String!, $password: String!) {
+    loginStudent(username: $username, password: $password) {
+      _id
+      accountType
+      token
+    }
+  }
+`
+

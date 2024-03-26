@@ -13,7 +13,7 @@ import { Eye, EyeOff } from 'lucide-react';
 
 import '@/styles/tailwind.css'
 
-import { LOGIN } from '@/apollo/mutations/auth';
+import { LOGIN, STUDENT_LOGIN } from '@/apollo/mutations/auth';
 
 export default function Login() {
   const { data: session } = useSession();
@@ -21,6 +21,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [Loading, setLoading] = useState(false);
+  const [isStudent, setIsStudent] = useState(false);
   
   const authData: any = getCookie('Authdata');
 
@@ -45,6 +46,23 @@ export default function Login() {
     },
   });
 
+  const [studentLogin] = useMutation(STUDENT_LOGIN, {
+    variables: {
+      username: email,
+      password,
+    },
+    onCompleted: (data) => {
+      console.log(data);
+      setCookie('token', data.loginStudent.token);
+      setCookie('Authdata', data.loginStudent);
+      window.location.href = '/dashboard/';
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      setLoading(false);
+    },
+  });
+
   if (authData) {
     window.location.href = '/dashboard';
     return;
@@ -61,7 +79,7 @@ export default function Login() {
       return;
     }
     setLoading(true);
-    login();
+    isStudent ? studentLogin() : login();
 
   };
 
@@ -92,13 +110,13 @@ export default function Login() {
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                  Email address
+                  {isStudent ? 'Student Username' : 'Email Address'}
                 </label>
                 <div className="mt-2">
                   <input
                     id="email"
                     name="email"
-                    type="email"
+                    type={isStudent ? 'text' : 'email'}
                     value={email}
                     onChange={(event) => setEmail(event.target?.value)}
                     autoComplete="email"
@@ -138,6 +156,7 @@ export default function Login() {
                     name="remember-me"
                     type="checkbox"
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    onChange={() => setIsStudent(!isStudent)}
                   />
                   <label htmlFor="remember-me" className="ml-3 block text-sm leading-6 text-gray-900">
                     Are you a Student?
