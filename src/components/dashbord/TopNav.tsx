@@ -9,7 +9,7 @@ import { useQuery } from '@apollo/client';
 
 
 import { userNavigation } from '@/utils/nav'
-import { USER_FULLNAME } from '@/apollo/queries/auth'
+import { USER_FULLNAME, STUDENT_NAME } from '@/apollo/queries/auth'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -29,6 +29,14 @@ function TopNav() {
     onCompleted: (data) => {
       console.log(data)
       setFullName(`${data.user.firstName} ${data.user.lastName}`)
+      // dispatch(setUser(data.user))
+    }
+  })
+
+  useQuery(STUDENT_NAME, {
+    onCompleted: (data) => {
+      console.log(data)
+      setFullName(data.student.name)
       // dispatch(setUser(data.user))
     }
   })

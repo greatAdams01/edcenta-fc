@@ -15,7 +15,7 @@ import { getCookie } from 'cookies-next';
 
 import { manrope } from '@/utils/font';
 import TopNav from './TopNav';
-import { navigation } from '@/utils/nav';
+import { navigation, studentNav } from '@/utils/nav';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -23,7 +23,7 @@ function classNames(...classes: string[]) {
 
 export default function Wrapper({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  
+  const [navList, setList] = (useState as any)([]);
   const router = useRouter();
   const pathname = router.pathname;
 
@@ -38,6 +38,11 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
       return;
     }
     console.log(JSON.parse(authData).accountType);
+    if (JSON.parse(authData).accountType === 'STUDENT') {
+      setList(studentNav);
+    }else {
+      setList(navigation);
+    }
     setAccountType(JSON.parse(authData).accountType);
   }, [authData])
 
@@ -101,7 +106,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                       <li>
                         <ul role="list" className="-mx-2 space-y-1">
-                        {navigation.map((item) => (
+                        {navList.map((item: any) => (
                                 <li key={item.name}>
                                   <a
                                     href={item.href}
@@ -124,7 +129,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
 
                                   {item.children && (
                                     <ul className="pl-4 my-2">
-                                      {item.children.map((subItem) => (
+                                      {item.children.map((subItem: any) => (
                                         <li key={subItem.name}>
                                           <a href={subItem.href} className={classNames( subItem.href === pathname 
                                             ? 'text-indigo-500' 
@@ -183,7 +188,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                       <li>
                         <ul role="list" className="-mx-2 space-y-1">
-                        {navigation.map((item) => (
+                        {navList.map((item: any) => (
                                 <li key={item.name}>
                                   <a
                                     href={item.href}
@@ -206,7 +211,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
 
                                   {item.children && (
                                     <ul className="pl-4 my-2">
-                                      {item.children.map((subItem) => (
+                                      {item.children.map((subItem: any) => (
                                         <li key={subItem.name}>
                                           <a href={subItem.href} className={classNames( subItem.href === pathname 
                                             ? 'text-indigo-500' 
