@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 
 import { QUESTION_QUERY } from '@/apollo/queries/dashboard'; 
-import SubLayout from '@/layout/SubLayout';
+import AppLayout from '@/layout/AppLayout';
 
 const QuestionPage = () => {
   const router = useRouter();
@@ -15,14 +15,14 @@ const QuestionPage = () => {
   const question = data?.question || {}; 
 
   return (
-    <SubLayout>
+    <AppLayout>
       <div>
         <h1>{question.title}</h1> 
         <div>
             <p>{question.body?.text}</p>
         </div>
       </div>
-    </SubLayout>
+    </AppLayout>
   );
 };
 
