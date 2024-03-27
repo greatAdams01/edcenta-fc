@@ -34,3 +34,13 @@ query Query {
     lastName
   }
 }`
+
+export const STUDENT_NAME = gql`
+  query Student($studentId: ID!) {
+    student(id: $studentId) {
+      name
+      age
+      username
+    }
+  }
+`

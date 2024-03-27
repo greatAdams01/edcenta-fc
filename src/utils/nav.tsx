@@ -41,6 +41,28 @@ import {
     }
   ];
 
+  export const studentNav = [
+    { 
+      name: 'ACTIVITIES', 
+      href: '/dashboard', 
+      icon: CalendarIcon,
+      children: [
+        { name: 'Todo', href: '/dashboard/todo' },
+        { name: 'Completed', href: '/dashboard/completed' },
+      ]
+    },
+    { 
+      name: 'PROGRESS', 
+      href: '#', 
+      icon: ClipboardDocumentCheckIcon,
+      children: [
+        { name: 'Score', href: '#' },
+        { name: 'Reward', href: '#' },
+        { name: 'Badges', href: '#' },
+      ]
+    },
+  ]
+
   
   
   export const teams = [
@@ -50,7 +72,7 @@ import {
   ]
   
   export const userNavigation = [
-    { name: 'Your profile', href: '#' },
+    { name: 'Your profile', href: 'dashboard/details' },
     { name: 'Sign out', href: '#' },
   ]
 

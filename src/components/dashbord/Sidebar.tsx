@@ -7,7 +7,7 @@ import { useQuery } from '@apollo/client';
 import { getCookie } from 'cookies-next';
 import { manrope } from '@/utils/font';
 import TopNav from './TopNav';
-import { navigation } from '@/utils/nav';
+import { navigation, studentNav } from '@/utils/nav';
 import { STAGES } from '@/apollo/queries/dashboard';
 import Link from 'next/link';
 
@@ -19,6 +19,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   const { pathname, query } = router;
+  const [navList, setList] = useState<any>([])
   const { id } = query;
 
   const { data } = useQuery(STAGES);
@@ -33,6 +34,11 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
       return;
     }
     console.log(JSON.parse(authData).accountType);
+    if (JSON.parse(authData).accountType === 'STUDENT') {
+      setList(studentNav);
+    }else {
+      setList(navigation);
+    }
     setAccountType(JSON.parse(authData).accountType);
   }, []);
 
@@ -58,7 +64,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
       </li>
     ))
   } else {
-    renderedNavigation = navigation.map((item: any) => (
+    renderedNavigation = navList.map((item: any) => (
       <li key={item.name}>
         <a
           href={item.href}
