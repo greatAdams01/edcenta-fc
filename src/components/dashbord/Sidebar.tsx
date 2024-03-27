@@ -1,38 +1,34 @@
 import { Fragment, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { Dialog, Menu, Transition } from '@headlessui/react';
-import {
-  Bars3Icon,
-  BellIcon,
-  Cog6ToothIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline';
-
-import { deleteCookie } from 'cookies-next';
+import { Dialog, Transition } from '@headlessui/react';
+import { Bars3Icon, Cog6ToothIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@apollo/client';
 import { getCookie } from 'cookies-next';
-
 import { manrope } from '@/utils/font';
 import TopNav from './TopNav';
 import { navigation, studentNav } from '@/utils/nav';
+import { STAGES } from '@/apollo/queries/dashboard';
+import Link from 'next/link';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function Wrapper({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [navList, setList] = (useState as any)([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
-  const pathname = router.pathname;
+  const { pathname, query } = router;
+  const [navList, setList] = useState<any>([])
+  const { id } = query;
 
-  
+  const { data } = useQuery(STAGES);
+  const stages = data?.schoolGrades || [];
 
-  const [accountType, setAccountType] = useState('' as string);
-  const authData: any = getCookie('Authdata');
+  const [accountType, setAccountType] = useState('');
 
   useEffect(() => {
+    const authData: any = getCookie('Authdata');
     if (!authData) {
       window.location.href = '/auth/login';
       return;
@@ -44,7 +40,64 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
       setList(navigation);
     }
     setAccountType(JSON.parse(authData).accountType);
-  }, [authData])
+  }, []);
+
+  let renderedNavigation;
+  console.log('Current pathname:', pathname);
+  if (pathname === '/dashboard/assign/worksheet/[id]' || pathname === '/dashboard/assign/worksheet/topic/[id]' || pathname === '/dashboard/assign/assessment/[id]' || pathname === '/dashboard/assign/assessment/questions/[id]' ) {
+    renderedNavigation = stages.map((stage: any) => (
+      <li key={stage._id} className=''>
+        <p className={classNames(
+          'bg-[#00AE9A] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
+        )}>
+          Key Stage {stage.stage}
+        </p>
+        <ul className="pl-4 my-2">
+          {stages.map((stage: any) => (
+            <li key={stage._id} className='w-full pt-2'>
+              <a href={stage.stage} className='hover:bg-[#00AE9A] hover:bg-opacity-20 group flex gap-x-3 rounded-md p-2 pl-8 text-md leading-6 font-semibold'>
+                {stage.year}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </li>
+    ))
+  } else {
+    renderedNavigation = navList.map((item: any) => (
+      <li key={item.name}>
+        <a
+          href={item.href}
+          className={classNames(
+            item.href === pathname
+              ? 'bg-gray-500 text-indigo-600 font-semibold'
+              : 'text-gray-700 hover:text-indigo-600',
+            'bg-[#00AE9A] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
+          )}
+        >
+          <item.icon
+            className={classNames(
+              item.href === pathname ? 'text-indigo-500' : 'group-hover:text-indigo-600',
+              'h-6 w-6 shrink-0'
+            )}
+            aria-hidden="true"
+          />
+          {item.name}
+        </a>
+        {item.children && (
+          <ul className="pl-4 my-2">
+            {item.children.map((subItem: any) => (
+              <li key={subItem.name}>
+                <a href={subItem.href} className={classNames(subItem.href === pathname ? 'text-indigo-500' : 'hover:text-gray-600', 'ml-8 space-y-4 font-semibold')}>
+                  {subItem.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </li>
+    ));
+  }
 
   return (
     <>
@@ -93,57 +146,22 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                   {/* Sidebar component, swap this element with another sidebar if you like */}
                   <div className={`${manrope.className} flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4`}>
                   <div className="flex h-16 shrink-0 items-center">
+                    <Link href={'/dashboard'} className='flex items-center'>
                       <Image
                         width={200}
                         height={100}
                         className="h-14 w-auto"
                         src={'/logo1.png'}
                         alt="EdCenta"
-                      />
+                        />
+                        </Link>
                       <h1 className='ml-2 text-xl font-bold'>EdCenta</h1>
                   </div>
                   <nav className="flex flex-1 flex-col">
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                       <li>
                         <ul role="list" className="-mx-2 space-y-1">
-                        {navList.map((item: any) => (
-                                <li key={item.name}>
-                                  <a
-                                    href={item.href}
-                                    className={classNames(
-                                      item.href === pathname
-                                        ? 'bg-gray-500 text-indigo-600 font-semibold'
-                                        : 'text-gray-700 hover:text-indigo-600',
-                                      'bg-[#00AE9A] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
-                                    )}
-                                  >
-                                    <item.icon
-                                      className={classNames(
-                                        item.href === pathname ?  ' text-indigo-500' : ' group-hover:text-indigo-600',
-                                        'h-6 w-6 shrink-0'
-                                      )}
-                                      aria-hidden="true"
-                                    />
-                                    {item.name}
-                                  </a>
-
-                                  {item.children && (
-                                    <ul className="pl-4 my-2">
-                                      {item.children.map((subItem: any) => (
-                                        <li key={subItem.name}>
-                                          <a href={subItem.href} className={classNames( subItem.href === pathname 
-                                            ? 'text-indigo-500' 
-                                            : 'hover:text-gray-600', 
-                                            'ml-8 space-y-4 font-semibold'
-                                            )}>
-                                            {subItem.name}
-                                          </a>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  )}
-                                </li>
-                              ))}
+                          {renderedNavigation}
                         </ul>
                       </li>
                       <li>
@@ -175,57 +193,22 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
           <div className="flex h-16 shrink-0 items-center">
+          <Link href={'/dashboard'}  className='flex items-center'>
                       <Image
                         width={200}
                         height={100}
                         className="h-14 w-auto"
                         src={'/logo1.png'}
                         alt="EdCenta"
-                      />
+                        />
                       <h1 className='ml-2 text-xl font-bold'>EdCenta</h1>
+                        </Link>
                   </div>
                   <nav className="flex flex-1 flex-col">
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                       <li>
                         <ul role="list" className="-mx-2 space-y-1">
-                        {navList.map((item: any) => (
-                                <li key={item.name}>
-                                  <a
-                                    href={item.href}
-                                    className={classNames(
-                                      item.href === pathname
-                                        ? 'bg-gray-500 text-indigo-600 font-semibold'
-                                        : 'text-gray-700 hover:text-indigo-600',
-                                      'bg-[#00AE9A] bg-opacity-20 group flex gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold'
-                                    )}
-                                  >
-                                    <item.icon
-                                      className={classNames(
-                                        item.href === pathname ?  ' text-indigo-500' : ' group-hover:text-indigo-600',
-                                        'h-6 w-6 shrink-0'
-                                      )}
-                                      aria-hidden="true"
-                                    />
-                                    {item.name}
-                                  </a>
-
-                                  {item.children && (
-                                    <ul className="pl-4 my-2">
-                                      {item.children.map((subItem: any) => (
-                                        <li key={subItem.name}>
-                                          <a href={subItem.href} className={classNames( subItem.href === pathname 
-                                            ? 'text-indigo-500' 
-                                            : 'hover:text-gray-600', 
-                                            'ml-8 space-y-4 font-semibold'
-                                            )}>
-                                            {subItem.name}
-                                          </a>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  )}
-                                </li>
-                              ))}
+                          {renderedNavigation}
                         </ul>
                       </li>
                       <li>
@@ -263,7 +246,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
         </div>
 
           <main className="py-10">
-            <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+            <div className="px-4 lg:px-8">{children}</div>
           </main>
         </div>
       </div>

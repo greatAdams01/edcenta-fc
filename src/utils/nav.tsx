@@ -72,7 +72,7 @@ import {
   ]
   
   export const userNavigation = [
-    { name: 'Your profile', href: '#' },
+    { name: 'Your profile', href: 'dashboard/details' },
     { name: 'Sign out', href: '#' },
   ]
 
@@ -80,4 +80,5 @@ import {
   export const Notification = [
     { topic: 'Create Number Codes using Multiple Word Codes', by: 'Mary', averageScore: 60,  score: 40, attempt: 3 },
     { topic: 'Create Number Codes using Multiple Word Codes', by: 'John', averageScore: 60,  score: 70, attempt: 9 },
+    { topic: 'Create Number Codes using Multiple Word Codes', by: 'Angella', averageScore: 60,  score: 83, attempt: 1 },
   ]

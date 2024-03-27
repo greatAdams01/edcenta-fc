@@ -7,7 +7,7 @@ import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'
 
 import { manrope } from '@/utils/font';
 import { SchoolGrades } from '@/apollo/queries/dashboard';
-import SubLayout from '../../../../layout/SubLayout';
+import AppLayout from '../../../../layout/AppLayout';
 import { useQuery } from '@apollo/client';
 
 const activityItems = [
@@ -81,7 +81,7 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
     event.preventDefault();
   }
   return (
-    <SubLayout>
+    <AppLayout>
       <div className='p-4'>
         <form onSubmit={handleSubmit}>
           <div className='flex w-full'>
@@ -266,7 +266,7 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
 
         </form>
       </div>
-    </SubLayout>
+    </AppLayout>
   );
 };
 
