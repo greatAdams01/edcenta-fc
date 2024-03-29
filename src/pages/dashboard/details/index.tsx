@@ -139,7 +139,7 @@ function Index() {
               </div>
               <div className='w-full flex justify-between items-center'>
                 <label htmlFor='Last name' className='w-full'>Occupation <span className='text-red-500'>*</span></label>
-                <input type='text' value={ocacupation} onChange={(event) => setOccupation(event.target?.value)} className='border-2 w-[100%] lg:w-[100rem] h-12 rounded-md px-4 my-2'/>
+                <input type='text' value={occupation} onChange={(event) => setOccupation(event.target?.value)} className='border-2 w-[100%] lg:w-[100rem] h-12 rounded-md px-4 my-2'/>
               </div>
               </div>
 
