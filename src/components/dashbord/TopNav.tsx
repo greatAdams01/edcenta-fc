@@ -4,12 +4,12 @@ import {
   BellIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-import { deleteCookie } from 'cookies-next';
-import { useQuery } from '@apollo/client';
+import { deleteCookie, getCookie } from 'cookies-next';
+import { useQuery, useLazyQuery } from '@apollo/client';
 
 
 import { userNavigation } from '@/utils/nav'
-import { USER_FULLNAME } from '@/apollo/queries/auth'
+import { USER_FULLNAME, STUDENT_NAME } from '@/apollo/queries/auth'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -17,6 +17,7 @@ function classNames(...classes: string[]) {
 
 function TopNav() {
   const [fullName, setFullName] = useState('');
+  const [isStudent, setIsStudent] = useState(false);
 
   const logOut = () => {
     // remove token and Authdata from cookies
@@ -25,13 +26,28 @@ function TopNav() {
     window.location.href = '/auth/login';
   }
 
-  useQuery(USER_FULLNAME, {
+  const [user, { loading }] = useLazyQuery(USER_FULLNAME, {
     onCompleted: (data) => {
-      console.log(data)
       setFullName(`${data.user.firstName} ${data.user.lastName}`)
-      // dispatch(setUser(data.user))
     }
   })
+
+  const [student ] = useLazyQuery(STUDENT_NAME, {
+    // variables: { studentId: list._id },
+    onCompleted: (data) => {
+      setFullName(data.student.name)
+    }
+  })
+
+  useEffect(() => {
+    const authData: any = getCookie('Authdata');
+    if (JSON.parse(authData).accountType === 'STUDENT') {
+      setIsStudent(true)
+      student({ variables: { studentId: JSON.parse(authData)._id }})
+    }else {
+      user()
+    }
+  }, [])
 
   return (
     <>
@@ -90,8 +106,8 @@ function TopNav() {
                         <a
                           href={item.href}
                           className={classNames(
-                            active ? 'bg-gray-50' : '',
-                            'block px-3 py-1 text-sm leading-6 text-gray-900'
+                            active ? `bg-gray-50 ${isStudent && item.name === 'Your profile' ? 'hidden' : ''}` : '',
+                            ` px-3 py-1 text-sm leading-6 text-gray-900 ${isStudent && item.name === 'Your profile' ? 'hidden' : 'block'}`
                           )}
                           onClick={item.name === 'Sign out' ? logOut : () => { }}
                         >
