@@ -7,3 +7,8 @@ mutation EditUserInfo($firstName: String, $lastName: String, $email: String, $ph
   }
 }
 `
+
+export const CHANGE_PASSWORD = gql`
+mutation UpdatePassword($newPassword: String!, $oldPassword: String!) {
+  updatePassword(newPassword: $newPassword, oldPassword: $oldPassword)
+}`
