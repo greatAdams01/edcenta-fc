@@ -74,6 +74,9 @@ query User {
     bankName
     acctNumber
     occupation
+    isVerified
+    isActive
+    lastLoggedIn
   }
 }
 `
@@ -121,6 +124,20 @@ query SchoolGrades($questionId: ID!) {
     explanation
     worksheetId
     createdAt
+  }
+}
+`
+
+export const STUDENTS = gql`
+query Query {
+  students {
+    _id
+    name
+    username
+    age
+    grade
+    email
+    creatorId
   }
 }
 `

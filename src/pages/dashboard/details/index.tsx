@@ -8,6 +8,7 @@ import AppLayout from '../../../layout/AppLayout';
 
 import { USER } from '@/apollo/queries/dashboard';
 import { MUTATE_USER } from '@/apollo/mutations/dashboard';
+import Password from "@/components/ui/password"
 
 function Index() {
   const { data } = useQuery(USER);
@@ -23,6 +24,8 @@ function Index() {
   const [bankName, setBankName] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
   const [occupation, setOccupation] = useState('');
+  const [change, isClicked] = useState<boolean>(false)
+
 
   useEffect(() => {
     if (data && data.user) {
@@ -40,7 +43,9 @@ function Index() {
     }
   }, [data]);
 
-  
+  const ifClicked = () => {
+    isClicked(!change)
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -100,9 +105,9 @@ function Index() {
                 <label htmlFor='Last name' className='w-full'>Email <span className='text-red-500'>*</span></label>
                 <input type='text' value={email} onChange={(event) => setEmail(event.target?.value)} className='border-2 w-[100%] lg:w-[100rem] h-12 rounded-md px-4 my-2'/>
               </div>
-              <div className='w-full flex items-center'>
+              <div className='w-full flex'>
                 <label htmlFor='Last name' className='w-full'>Password <span className='text-red-500'>*</span></label>
-                <a href='#' className='underline text-blue-500 hover:text-blue-900 w-full'>Change Password</a>
+                  <a href='#' onClick={ifClicked} className='underline text-blue-500 hover:text-blue-900 w-full'>Change Password</a> 
               </div>
               <div className='w-full flex justify-between items-center'>
                 <label htmlFor='Last name' className='w-full'> Contact <span className='text-red-500'>*</span></label>
@@ -137,6 +142,9 @@ function Index() {
                 <input type='text' value={occupation} onChange={(event) => setOccupation(event.target?.value)} className='border-2 w-[100%] lg:w-[100rem] h-12 rounded-md px-4 my-2'/>
               </div>
               </div>
+
+               {change && <Password />}
+
             </form>
           </div>
         </div>

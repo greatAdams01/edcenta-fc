@@ -51,7 +51,7 @@ export default function Signup() {
       },5000)
     },
     onError: (error) => {
-      toast.error(error.message + ". Check your Internet connection and try again.");
+      toast.error(error.message);
       setLoading(false);
     }
   })

@@ -43,7 +43,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
   }, []);
 
   let renderedNavigation;
-  console.log('Current pathname:', pathname);
+  // console.log('Current pathname:', pathname);
   if (pathname === '/dashboard/assign/worksheet/[id]' || pathname === '/dashboard/assign/worksheet/topic/[id]' || pathname === '/dashboard/assign/assessment/[id]' || pathname === '/dashboard/assign/assessment/questions/[id]' ) {
     renderedNavigation = stages.map((stage: any) => (
       <li key={stage._id} className=''>
