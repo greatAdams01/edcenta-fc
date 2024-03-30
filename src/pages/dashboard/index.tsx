@@ -1,10 +1,12 @@
 import { Fragment, useEffect, useState } from 'react'
 import {
-  PlusIcon,
+  PlusIcon, ArrowRightEndOnRectangleIcon
 } from '@heroicons/react/24/outline'
 import { getCookie } from 'cookies-next';
 
 import AppLayout from '../../layout/AppLayout'
+import { USER, STUDENTS } from '@/apollo/queries/dashboard';
+import { useQuery } from '@apollo/client';
 
 const stats = [
   { name: 'Account setup', value: '90%' },
@@ -12,49 +14,20 @@ const stats = [
   { name: 'No. of Student', value: '230' },
   { name: 'Curriculum completed', value: '98.5%' },
 ]
-const statuses: { [key: string]: string } = { Completed: 'text-green-400 bg-green-400/10', Incomplete: 'text-rose-400 bg-rose-400/10' }
 
-const activityItems = [
-  {
-    class: 'SS1',
-    code: '2d89f0c8',
-    status: 'Completed',
-    topics: '100',
-    student: '20',
-    students:[{
-      name:'John',
-      assigned: '2',
-      completed: '1',
-      average:'80',
-      mark: '20',
-      badge: '4',
-      reward: '6',
-    },],
-  },
-  {
-    class: 'Basic 2',
-    code: '1329wqc2',
-    status: 'Incomplete',
-    topics: '85',
-    student: '32',
-    students:[{
-      name:'John',
-      assigned: '2',
-      completed: '1',
-      average:'80',
-      mark: '20',
-      badge: '4',
-      reward: '6',
-    },],
-  },
-]
+// const statuses: { [key: string]: string } = { Completed: 'text-green-400 bg-green-400/10', Incomplete: 'text-rose-400 bg-rose-400/10' }
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function Dashboard() {
-  const [openSubtables, setOpenSubtables] = useState(Array(activityItems.length).fill(false));
+  const { data: userData } = useQuery(USER);
+  const { data: studentsData } = useQuery(STUDENTS);
+  const user = userData?.user || []; 
+  const students = studentsData?.students || [];
+
+  const [openSubtables, setOpenSubtables] = useState<Array<boolean>>(Array(students.length).fill(false));
   const [accountType, setAccountType] = useState('' as string);
 
   const toggleDropdown = (index: number) => {
@@ -75,6 +48,8 @@ export default function Dashboard() {
     setAccountType(JSON.parse(authData).accountType);
   }, [authData])
   
+  
+
   return (
     <AppLayout>
       <div>
@@ -90,13 +65,24 @@ export default function Dashboard() {
                       <span className="font-semibold">Dashboard</span>
                     </h1>
                   </div>
-                  {/* <p className="mt-2 text-xs leading-6 text-gray-400">Deploys from GitHub via main branch</p> */}
                 </div>
                 <div className="flex order-first flex-none rounded-full bg-indigo-400/10 px-2 py-1 text-xs font-medium text-indigo-400 ring-1 ring-inset ring-indigo-400/30 sm:order-none">
-                <div className="flex-none rounded-full bg-green-400/10 p-1 text-green-400">
+                
+                  {user.isActive === true ? (
+                    <>
+                    <div className="flex-none rounded-full bg-green-400/10 p-1 text-green-400">
+                    <div className="h-2 w-2 rounded-full bg-current" />
+                  </div>
+                  <p>Active</p>
+                  </>
+                  ):(
+                    <>
+                    <div className="flex-none rounded-full bg-red-400/10 p-1 text-red-400">
                       <div className="h-2 w-2 rounded-full bg-current" />
                     </div>
-                  Active
+                    <p>Inactive</p>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -122,110 +108,52 @@ export default function Dashboard() {
             {/* Activity list */}
             <div className="border-t border-white/10 pt-11">
               <h2 className="px-4 text-base font-semibold leading-7 sm:px-6 lg:px-8">Curriculum</h2>
-              <table className="mt-6 w-full whitespace-nowrap text-left min-w-full divide-y divide-gray-300">
-                <colgroup>
-                  <col className="w-full sm:w-4/12" />
-                  <col className="lg:w-4/12" />
-                  <col className="lg:w-2/12" />
-                  <col className="lg:w-1/12" />
-                  <col className="lg:w-1/12" />
-                </colgroup>
-                <thead className="border-b border-white/10 text-sm leading-6 bg-purple-500 bg-opacity-50">
-                  <tr>
-                    <th scope="col" className="py-2 pl-4 pr-8 font-semibold sm:pl-6 lg:pl-8">
-                      Class
-                    </th>
-                    <th scope="col" className="hidden py-2 pl-0 pr-8 font-semibold sm:table-cell">
-                      Class code 
-                    </th>
-                    <th scope="col" className="py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-20">
-                      Status
-                    </th>
-                    <th scope="col" className="hidden py-2 pl-0 pr-8 font-semibold md:table-cell lg:pr-20">
-                      Topics completed
-                    </th>
-                    <th
-                      scope="col"
-                      className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-6 lg:pr-8"
-                    >
-                      No. of Student
-                    </th>
-                    <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                      <span className="sr-only">Select</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {activityItems.map((item, index) => (
-                    <Fragment key={item.code}>
-                      <tr>
-                        <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8 border-t">
-                          <div className="flex items-center gap-x-4">
-                            <div className="truncate text-sm font-medium leading-6">{item.class}</div>
-                          </div>
-                        </td>
-                        <td className="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8 border-t">
-                          <div className="flex gap-x-3">
-                            <div className="font-mono text-sm leading-6 text-gray-400">{item.code}</div>
-                          </div>
-                        </td>
-                        <td className="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20 border-t">
-                          <div className="flex items-center justify-end gap-x-2 sm:justify-start">
-                            <div className={classNames(statuses[item.status], 'flex-none rounded-full p-1')}>
-                              <div className="h-1.5 w-1.5 rounded-full bg-current" />
-                            </div>
-                            <div className="hidden sm:block">{item.status}</div>
-                          </div>
-                        </td>
-                        <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 md:table-cell lg:pr-20 border-t">
-                          {item.topics}
-                        </td>
-                        <td className="hidden py-4 pl-0 pr-4 text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t">
-                          {item.student}
-                        </td>
-                        <td className="py-4 text-sm leading-6 border-t">
-                          <div className="flex justify-center text-green-500 items-center w-5">
-                            <PlusIcon onClick={() => toggleDropdown(index)} />
-                          </div>
-                        </td>
-                      </tr>
-                      {openSubtables[index] && item.students && (
-                        <tr>
-                          <td colSpan={6}>
-                            <table className="w-full border-collapse border-gray-300">
-                              <thead className='bg-gray-200'>
-                                <tr>
-                                  <th className="px-4 py-2">Name</th>
-                                  <th className="px-4 py-2">Assigned</th>
-                                  <th className="px-4 py-2">Completed</th>
-                                  <th className="px-4 py-2">Average</th>
-                                  <th className="px-4 py-2">Mark</th>
-                                  <th className="px-4 py-2">Badge</th>
-                                  <th className="px-4 py-2">Reward</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {item.students.map((student) => (
-                                  <tr key={student.name}>
-                                    <td className="border px-4 py-2">{student.name}</td>
-                                    <td className="border px-4 py-2">{student.assigned}</td>
-                                    <td className="border px-4 py-2">{student.completed}</td>
-                                    <td className="border px-4 py-2">{student.average}</td>
-                                    <td className="border px-4 py-2">{student.mark}</td>
-                                    <td className="border px-4 py-2">{student.badge}</td>
-                                    <td className="border px-4 py-2">{student.reward}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                          </table>
-                        </td>
-                      </tr>
+            {students.map((student: any, index: number) => (
+                  <Fragment key={student._id}>
+                    <section className="w-full my-4 bg-gray-200 border border-purple-500 rounded-md flex justify-between px-4 py-6">
+                      <div className="font-bold">
+                        {student.grade === "65ee6115df691bf5cea750a6" ? 'Primary 1' : 'Not Decided yet'} ({students.length} {student.length === 1 ? 'students' : 'student'})
+                      </div>
+                      <PlusIcon onClick={() => toggleDropdown(index)} className="w-6" />
+                    </section>
+                    {openSubtables[index] && student._id && (
+                      <section className='bg-gray-200 shadow-sm shadow-black shadow-opacity-50'>
+                        <table className='w-full border-collapse border-gray-300' >
+                        {/* <colgroup>
+                          <col className="w-full sm:w-4/12" />
+                          <col className="lg:w-4/12" />
+                          <col className="lg:w-2/12" />
+                          <col className="lg:w-1/12" />
+                          <col className="lg:w-1/12" />
+                        </colgroup> */}
+                          <thead className='w-full bg-purple-500 bg-opacity-50'>
+                            <tr className='w-full'>
+                              <th className='py-4'>Name</th>
+                              <th className='hidden md:flex py-4 justify-center'>Assigned</th>
+                              <th>Completed</th>
+                              <th>Average %</th>
+                              <th >Badges</th>
+                              <th className='hidden md:flex py-4 justify-center'>Rewards</th>
+                              <th className='pr-4'>Login</th>
+                            </tr>
+                          </thead>
+                          <tbody className='border-b border-white/10 font-bold '>
+                            <tr>
+                              <td className='px-4 py-4'>{student.name}</td>
+                              <td className='text-center hidden md:flex justify-center py-4 '>1</td>
+                              <td className='text-center'>1</td>
+                              <td className='text-center'>20</td>
+                              <td className='text-center hidden md:flex justify-center py-4'>1</td>
+                              <td className='text-center'>1</td>
+                              <td className='text-center w-4 cursor-pointer pr-4'><a href='#' title={student.name}> <ArrowRightEndOnRectangleIcon /> </a></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        
+                      </section>
                     )}
                   </Fragment>
                 ))}
-              </tbody>
-
-              </table>
             </div>
       </div>
     </AppLayout>
