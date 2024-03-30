@@ -8,46 +8,8 @@ import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { manrope } from '@/utils/font';
 import { SchoolGrades } from '@/apollo/queries/dashboard';
 import AppLayout from '../../../../layout/AppLayout';
+import { USER, STUDENTS } from '@/apollo/queries/dashboard';
 import { useQuery } from '@apollo/client';
-
-const activityItems = [
-    {
-      class: 'SS1',
-      year: '1',
-      code: '2d89f0c8',
-      status: 'Completed',
-      topics: '100',
-      student: '20',
-      students:[{
-        name:'John',
-        assigned: '2',
-        score: '0',
-        completed: '1',
-        average:'80',
-        mark: '20',
-        badge: '4',
-        reward: '6',
-      },],
-    },
-    {
-      class: 'Basic 2',
-      year: '3',
-      code: '1329wqc2',
-      status: 'Incomplete',
-      topics: '85',
-      student: '32',
-      students:[{
-        name:'John',
-        assigned: '2',
-        score: '8',
-        completed: '1',
-        average:'80',
-        mark: '20',
-        badge: '4',
-        reward: '6',
-      },],
-    },
-  ]
 
 
 interface AssessmentProps {
@@ -59,6 +21,8 @@ function classNames(...classes: string[]) {
   }
 
 const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
+  const [check, setCheck] = useState<boolean>(true)
+  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [showClass, setShowClass] = useState(false); 
 
   const { data } = useQuery(SchoolGrades, {
@@ -69,7 +33,12 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
 
   const [open, setOpen] = useState(true)
 
-  const [openSubtables, setOpenSubtables] = useState(Array(activityItems.length).fill(false));
+  const { data: userData } = useQuery(USER);
+  const { data: studentsData } = useQuery(STUDENTS);
+  const user = userData?.user || []; 
+  const students = studentsData?.students || [];
+
+  const [openSubtables, setOpenSubtables] = useState<Array<boolean>>(Array(students.length).fill(false));
 
   const toggleDropdown = (index: number) => {
     const newOpenSubtables = [...openSubtables];
@@ -80,6 +49,34 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   }
+
+  function checkAll() {
+    const allAssessmentIds = schoolGrades.flatMap((grade: any) =>
+      grade.subject.flatMap((subject: any) => subject.worksheet.flatMap((worksheet: any) => worksheet.questions.map((question: any) => question._id)))
+      );
+      setSelectedSubjects(allAssessmentIds);
+      setCheck(false);
+  }
+
+  function uncheckAll() {
+    selectedSubjects.length === 0;
+    setSelectedSubjects([]);
+    setCheck(true);
+  }
+  
+
+  const checkBoxHandler = (e: React.ChangeEvent<HTMLInputElement>) => { 
+    const value = e.target.value;
+    const isChecked = e.target.checked;
+
+    if (isChecked) {
+      setSelectedSubjects([...selectedSubjects, value]);
+    } else {
+      setSelectedSubjects(prevData => prevData.filter(id => id !== value));
+    }
+  };
+  
+
   return (
     <AppLayout>
       <div className='p-4'>
@@ -112,7 +109,7 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
                     Assessment  
                   </th>
                   <th>
-                    <input type='checkbox' />
+                  <input type="checkbox" onClick={!check ? uncheckAll : checkAll} />
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-bold text-gray-900">
                     {schoolGrades ? (
@@ -127,7 +124,7 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
               {schoolGrades.map((grade: any) => (
                 grade.subject.map((subject: any) => (
                   subject.worksheet.map((worksheet: any) => (
-                    worksheet.questions.map((question: any) => ( 
+                    worksheet.questions.map((question: any, index: number) => ( 
                       <Fragment key={question._id}>
                         <tr>
                           <td className="px-3 py-3.5 text-left text-sm text-gray-900 hover:underline cursor-pointer hover:text-green-500">
@@ -136,7 +133,14 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
                           </a>
                             </td>
                           <td className="px-3 py-3.5 text-center text-sm text-gray-900">{worksheet.questions.length}</td>
-                          <td className="px-3 py-3.5 text-center text-sm text-gray-900"><input type="checkbox" /></td>
+                          <td className="px-3 py-3.5 text-center text-sm text-gray-900">
+                          <input
+                            type="checkbox"
+                            checked={selectedSubjects.includes(question._id)}
+                            value={question._id}
+                            onChange={checkBoxHandler}
+                          />
+                          </td>
                           <td>
                             <button onClick={() => setShowClass(true)} className="bg-[#00AE9A] bg-opacity-20 hover:bg-opacity-50 font-bold my-2 ml-4 px-3 py-3 text-left text-sm text-gray-900 rounded-md">Assign</button>
                           </td>
@@ -196,54 +200,57 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
                                   <p className="text-sm text-gray-500">
                                     Select class or students below to assign Assessment
                                   </p>
-
-                                  {activityItems.map((item, index) => (
-                                <Fragment key={item.code}>
-                                  <tr className={`${manrope.className} flex justify-between w-full`}>
-                                    <div>
-                                  <td className="py-4 text-sm leading-6 border-t">
+                                  {students.map((student: any, index: number) => (
+                                  <Fragment key={student._id}>
+                                    <section className="w-full my-4 bg-gray-200 border border-purple-500 rounded-md flex justify-between px-4 py-6">
+                                      <div className="font-bold flex">
                                       <div className="flex justify-center text-green-500 items-center w-5">
-                                        <PlusIcon onClick={() => toggleDropdown(index)} />
+                                      <PlusIcon onClick={() => toggleDropdown(index)} />
                                       </div>
-                                    </td>
-                                    <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8 border-t">
-                                      <div className="flex items-center gap-x-4">
-                                        <div className="truncate text-sm font-medium leading-6">Year {item.year} ({item.students.length})</div>
+                                      <div className='truncate text-sm font-medium leading-6 gap-x-4 mx-2'>
+                                        {student.grade === "65ee6115df691bf5cea750a6" ? 'Primary 1' : 'Not Decided yet'} ({students.length} {student.length === 1 ? 'students' : 'student'})
                                       </div>
-                                    </td>
-                                    </div>
-                                    <div className='flex items-center'>
-                                        <input type='checkbox'  className='mr-2'/> Assign to all
-                                    </div>
-                                  </tr>
-                                  {openSubtables[index] && item.students && (
-                                    <tr className={`${manrope.className}`}>
-                                      <td colSpan={3} className='w-[100rem]'>
-                                        <table className="w-full border-collapse border-gray-300">
-                                          <thead className='bg-gray-200 w-full '>
-                                            <tr className='w-full'>
-                                              <th className="px-4 py-2 text-left">Name</th>
-                                              <th className="px-4 py-2 text-center">Best score</th>
-                                              <th className="px-4 py-2 text-center">Assigned</th>
+                                      </div>
+                                      
+                                      <div className='flex items-center'>
+                                            <input type='checkbox'  className='mr-2'/> Assign to all
+                                        </div>
+                                    </section>
+                                    {openSubtables[index] && student._id && (
+                                      <section className='bg-gray-200 shadow-sm shadow-black shadow-opacity-50 truncate text-sm font-medium leading-6'>
+                                        <table className='w-full border-collapse border-gray-300' >
+                                        {/* <colgroup>
+                                          <col className="w-full sm:w-4/12" />
+                                          <col className="lg:w-4/12" />
+                                          <col className="lg:w-2/12" />
+                                          <col className="lg:w-1/12" />
+                                          <col className="lg:w-1/12" />
+                                        </colgroup> */}
+                                          <thead className='w-full bg-purple-500 bg-opacity-50'>
+                                            <tr className={`${manrope.className} w-full`}>
+                                              <th className='py-4 px-4'>Name</th>
+                                              <th>Best Score</th>
+                                              <th >Assigned</th>
+                                              <th className='flex items-center'>
+                                                <input type='checkbox'  className='mr-2 my-6'/> Assign to all
+                                              </th>
                                             </tr>
                                           </thead>
-                                          <tbody>
-                                            {item.students.map((student) => (
-                                              <tr key={student.name} className='w-full'>
-                                                <td className="border px-4 py-2 text-left">{student.name}</td>
-                                                <td className="border px-4 py-2 text-center">{student.score}</td>
-                                                <td className="border px-4 py-2 text-center"><input type='checkbox' /></td>
-                                              </tr>
-                                            ))}
+                                          <tbody className='border-b border-white/10 font-bold '>
+                                            <tr className={`${manrope.className}`}>
+                                              <td className='px-4 py-4'>{student.name}</td>
+                                              <td className='text-center'>20</td>
+                                              <td className='text-center'>1</td>
+                                              <td className="border px-4 py-2 text-center"><input type='checkbox' /></td>
+                                            </tr>
                                           </tbody>
-                                      </table>
-                                    </td>
-                                  </tr>
-                                )}
-                              </Fragment>
-                            ))}
-
-                                </div>
+                                        </table>
+                                        
+                                      </section>
+                                    )}
+                                  </Fragment>
+                                ))}
+                               </div>
                               </div>
                             </div>
                             <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
