@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import Link from 'next/link';
 
 import { Dialog, Transition } from '@headlessui/react';
-import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'; // Corrected icon import
+import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'; 
 
 import { manrope } from '@/utils/font';
 import { SchoolGrades } from '@/apollo/queries/dashboard';

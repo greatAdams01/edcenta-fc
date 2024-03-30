@@ -39,7 +39,6 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
   const students = studentsData?.students || [];
 
   const [openSubtables, setOpenSubtables] = useState<Array<boolean>>(Array(students.length).fill(false));
-  const [checkboxes, setCheckboxes] = useState<boolean[]>(Array(schoolGrades.length).fill(false));
 
   const toggleDropdown = (index: number) => {
     const newOpenSubtables = [...openSubtables];
