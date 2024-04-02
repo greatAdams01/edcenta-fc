@@ -12,3 +12,10 @@ export const CHANGE_PASSWORD = gql`
 mutation UpdatePassword($newPassword: String!, $oldPassword: String!) {
   updatePassword(newPassword: $newPassword, oldPassword: $oldPassword)
 }`
+
+export const CREATE_STUDENT = gql`
+mutation CreateStudent($input: StudentInput!) {
+  createStudent(input: $input) {
+    _id
+  }
+}`

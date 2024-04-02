@@ -34,7 +34,7 @@ import {
       children: [
         { name: 'My Details', href: '/dashboard/details' },
         { name: 'My Subscriptions', href: '/dashboard/subscription' },
-        { name: 'Manage students', href: '#' },
+        { name: 'Manage students', href: '/dashboard/students' },
         { name: 'Manage groups', href: '#' },
         { name: 'Notifications', href: '/dashboard/notification' },
       ]
