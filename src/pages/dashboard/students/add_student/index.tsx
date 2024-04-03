@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
+import React, { useEffect, useState } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -7,9 +7,14 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import AppLayout from '@/layout/AppLayout';
 
+import { USER } from '@/apollo/queries/dashboard'
+
 import { CREATE_STUDENT } from '@/apollo/mutations/dashboard';
 
 export default function Create() {
+
+    const { data } = useQuery(USER)
+    const User = data?.USER || []
 
     const path = useRouter();
 
@@ -18,8 +23,14 @@ export default function Create() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [age, setAge] = useState('');
-    const [grade, setGrade] = useState('');
+    const [grade, setGrade] = useState('65ee6115df691bf5cea750a6');
     const [creatorId, setCreatorId] = useState('');
+
+    useEffect(() => {
+      if (data && data.user) {
+        setCreatorId(data.user._id || '')
+      }
+    },[data])
 
     const [createStudent, { loading }] = useMutation(CREATE_STUDENT, {
         variables: {
@@ -76,15 +87,15 @@ export default function Create() {
         return;
       }
 
-      if (grade === '') {
+      if (!grade) {
         console.log('Please add grade');
         toast.error('Please add grade');
         return;
       }
 
       if (creatorId === '') {
-        console.log('Input a valid creator Id');
-        toast.error('Input a valid creator Id');
+        console.log('Input a valid creators Id');
+        toast.error('Input a valid creators Id');
         return;
       }
       createStudent()
@@ -129,8 +140,10 @@ export default function Create() {
                 <input type='number' value={age} onChange={(e) => setAge(e.target?.value)} className='border-2 w-[100%] lg:w-[100rem] h-12 rounded-md px-4 my-2'/>
               </div>
               <div className='w-full flex justify-between items-center'>
-                <label htmlFor='Last name' className='w-full'>Grade <span className='text-red-500'>*</span></label>
-                <input type='text' value={grade} onChange={(e) => setGrade(e.target?.value)} className='border-2 w-[100%] lg:w-[100rem] h-12 rounded-md px-4 my-2'/>
+                    <label htmlFor='Last name' className='w-full'>Grade <span className='text-red-500'>*</span></label>
+                    <select value={grade} onChange={(e) => setGrade(e.target.value)} className='border-2 w-[100%] lg:w-[100rem] h-12 rounded-md px-4 my-2'>
+                      <option value={"65ee6115df691bf5cea750a6"}>Primary 1</option>
+                    </select>
               </div>
               <div className='w-full flex justify-between items-center'>
                 <label htmlFor='Last name' className='w-full'>Creator&quot;s ID <span className='text-red-500'>*</span></label>

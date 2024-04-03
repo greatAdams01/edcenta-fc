@@ -27,6 +27,15 @@ export default function Dashboard() {
   const user = userData?.user || []; 
   const students = studentsData?.students || [];
 
+  const groupedStudents = students.reduce((groups: any, student: any) => {
+    const groupKey = student.grade;
+    if (!groups[groupKey]) {
+      groups[groupKey] = [];
+    }
+    groups[groupKey].push(student);
+    return groups;
+  }, {});
+
   const [openSubtables, setOpenSubtables] = useState<Array<boolean>>(Array(students.length).fill(false));
   const [accountType, setAccountType] = useState('' as string);
 
@@ -108,52 +117,42 @@ export default function Dashboard() {
             {/* Activity list */}
             <div className="border-t border-white/10 pt-11">
               <h2 className="px-4 text-base font-semibold leading-7 sm:px-6 lg:px-8">Curriculum</h2>
-            {students.map((student: any, index: number) => (
-                  <Fragment key={student._id}>
-                    <section className="w-full my-4 bg-gray-200 border border-purple-500 rounded-md flex justify-between px-4 py-6">
-                      <div className="font-bold">
-                        {student.grade === "65ee6115df691bf5cea750a6" ? 'Primary 1' : 'Not Decided yet'} ({students.length} {student.length === 1 ? 'students' : 'student'})
-                      </div>
-                      <PlusIcon onClick={() => toggleDropdown(index)} className="w-6" />
-                    </section>
-                    {openSubtables[index] && student._id && (
-                      <section className='bg-gray-200 shadow-sm shadow-black shadow-opacity-50'>
-                        <table className='w-full border-collapse border-gray-300' >
-                        {/* <colgroup>
-                          <col className="w-full sm:w-4/12" />
-                          <col className="lg:w-4/12" />
-                          <col className="lg:w-2/12" />
-                          <col className="lg:w-1/12" />
-                          <col className="lg:w-1/12" />
-                        </colgroup> */}
-                          <thead className='w-full bg-purple-500 bg-opacity-50'>
-                            <tr className='w-full'>
-                              <th className='py-4'>Name</th>
-                              <th className='hidden md:flex py-4 justify-center'>Assigned</th>
-                              <th>Completed</th>
-                              <th>Average %</th>
-                              <th >Badges</th>
-                              <th className='hidden md:flex py-4 justify-center'>Rewards</th>
-                              <th className='pr-4'>Login</th>
-                            </tr>
-                          </thead>
-                          <tbody className='border-b border-white/10 font-bold '>
-                            <tr>
+              {Object.keys(groupedStudents).map((grade, index) => (
+                <Fragment key={grade}>
+                  <section className="w-full my-4 bg-gray-200 border border-purple-500 rounded-md flex justify-between px-4 py-6">
+                    <div className="font-bold">
+                      {grade === "65ee6115df691bf5cea750a6" ? 'Primary 1' : 'Not Decided yet'} ({groupedStudents[grade].length} {groupedStudents[grade].length === 1 ? 'student' : 'students'})
+                    </div>
+                    <PlusIcon onClick={() => toggleDropdown(index)} className="w-6" />
+                  </section>
+                  {openSubtables[index] && (
+                    <section className='bg-gray-200 shadow-sm shadow-black shadow-opacity-50'>
+                      <table className='w-full border-collapse border-gray-300' >
+                        <thead className='w-full bg-purple-500 bg-opacity-50'>
+                          <tr className='w-full'>
+                            <th className='py-4'>Name</th>
+                            <th className='hidden md:flex py-4 justify-center'>Recomendations</th>
+                            <th>Self-Asign</th>
+                            <th>Status</th>
+                            <th className='pr-4'>Login</th>
+                          </tr>
+                        </thead>
+                        <tbody className='border-b border-white/10 font-bold '>
+                          {groupedStudents[grade].map((student: any) => (
+                            <tr key={student._id}>
                               <td className='px-4 py-4'>{student.name}</td>
                               <td className='text-center hidden md:flex justify-center py-4 '>1</td>
                               <td className='text-center'>1</td>
                               <td className='text-center'>20</td>
-                              <td className='text-center hidden md:flex justify-center py-4'>1</td>
-                              <td className='text-center'>1</td>
-                              <td className='text-center w-4 cursor-pointer pr-4'><a href='#' title={student.name}> <ArrowRightEndOnRectangleIcon /> </a></td>
+                              <td className='text-center w-4 cursor-pointer pr-4'><a href='#' title={student.name}> <ArrowRightEndOnRectangleIcon className='w-6 text-green-900 hover:text-green-600' /> </a></td>
                             </tr>
-                          </tbody>
-                        </table>
-                        
-                      </section>
-                    )}
-                  </Fragment>
-                ))}
+                          ))}
+                        </tbody>
+                      </table>
+                    </section>
+                  )}
+                </Fragment>
+              ))}
             </div>
       </div>
     </AppLayout>
