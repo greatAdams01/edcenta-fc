@@ -23,7 +23,7 @@ export default function Create() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [age, setAge] = useState('');
-    const [grade, setGrade] = useState('65ee6115df691bf5cea750a6');
+    const [grade, setGrade] = useState('');
     const [creatorId, setCreatorId] = useState('');
 
     useEffect(() => {
@@ -34,15 +34,15 @@ export default function Create() {
 
     const [createStudent, { loading }] = useMutation(CREATE_STUDENT, {
         variables: {
-            input:{
+          input: {
             name,
             username,
             email,
             password,
-            age,
+            age: parseInt(age),
             grade,
-            creatorId
-          }
+            creatorId,
+          },
         },
         onCompleted: (data) => {
             console.log(data)
@@ -65,9 +65,14 @@ export default function Create() {
         toast.error('Name field cannot empty');
         return;
       }
-      if (username === ''){
+      if (username.trim() === ''){
         console.log('UserName field cannot be empty');
         toast.error('UserName field cannot be empty');
+        return;
+      }
+      if (username.includes(' ')) {
+        console.log('Username cannot contain spaces');
+        toast.error('Username cannot contain spaces');
         return;
       }
       if (email === ''){
@@ -142,6 +147,7 @@ export default function Create() {
               <div className='w-full flex justify-between items-center'>
                     <label htmlFor='Last name' className='w-full'>Grade <span className='text-red-500'>*</span></label>
                     <select value={grade} onChange={(e) => setGrade(e.target.value)} className='border-2 w-[100%] lg:w-[100rem] h-12 rounded-md px-4 my-2'>
+                    <option value={""}>Select class</option>
                       <option value={"65ee6115df691bf5cea750a6"}>Primary 1</option>
                     </select>
               </div>
