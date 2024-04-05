@@ -50,6 +50,7 @@ export default function Manage() {
                   </section>
                   {openSubtables[index] && (
                     <section className='bg-gray-200 shadow-sm shadow-black shadow-opacity-50'>
+                      <form>
                       <table className='w-full border-collapse border-gray-300' >
                         <thead className='w-full bg-purple-500 bg-opacity-50'>
                           <tr className='w-full'>
@@ -64,14 +65,30 @@ export default function Manage() {
                           {groupedStudents[grade].map((student: any) => (
                             <tr key={student._id}>
                               <td className='px-4 py-4'>{student.name}</td>
-                              <td className='text-center hidden md:flex justify-center py-4 '>1</td>
-                              <td className='text-center'>1</td>
-                              <td className='text-center'>20</td>
-                              <td className='text-center w-4 cursor-pointer pr-4'><a href='#' title={student.name}> <ArrowRightEndOnRectangleIcon /> </a></td>
+                              <td className='text-center hidden md:flex justify-center py-4 '>
+                              <label className="switch">
+                                <input type="checkbox" />
+                                <span className="slider"></span>
+                              </label>
+                              </td>
+                              <td className='text-center'>
+                              <label className="switch">
+                                <input type="checkbox" />
+                                <span className="slider"></span>
+                              </label>
+                              </td>
+                              <td className='text-center'>
+                              <label className="switch">
+                                <input type="checkbox" />
+                                <span className="slider"></span>
+                              </label>
+                              </td>
+                              <td className='text-center w-2 cursor-pointer pr-4'><a href='#' title={student.name}> <ArrowRightEndOnRectangleIcon className='w-9' /> </a></td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
+                    </form> 
                     </section>
                   )}
                 </Fragment>
