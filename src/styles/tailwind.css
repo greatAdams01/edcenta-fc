@@ -61,8 +61,8 @@
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 50px;
+  height: 24px;
 }
 
 .switch input { 
@@ -74,7 +74,7 @@
 .slider {
   position: absolute;
   cursor: pointer;
-  border-radius: 34px;
+  border-radius: 24px;
   top: 0;
   left: 0;
   right: 0;
@@ -86,11 +86,11 @@
 
 .slider:before {
   position: absolute;
-  border-radius: 50%;
+  border-radius: 40%;
   content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
+  height: 16px;
+  width: 16px;
+  left: 3px;
   bottom: 4px;
   background-color: white;
   -webkit-transition: .4s;

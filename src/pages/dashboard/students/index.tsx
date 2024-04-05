@@ -48,7 +48,7 @@ export default function Manage() {
                     </div>
                     <PlusIcon onClick={() => toggleDropdown(index)} className="w-6" />
                   </section>
-                  {!openSubtables[index] && (
+                  {openSubtables[index] && (
                     <section className='bg-gray-200 shadow-sm shadow-black shadow-opacity-50'>
                       <form>
                       <table className='w-full border-collapse border-gray-300' >
@@ -83,7 +83,7 @@ export default function Manage() {
                                 <span className="slider"></span>
                               </label>
                               </td>
-                              <td className='text-center w-4 cursor-pointer pr-4'><a href='#' title={student.name}> <ArrowRightEndOnRectangleIcon /> </a></td>
+                              <td className='text-center w-2 cursor-pointer pr-4'><a href='#' title={student.name}> <ArrowRightEndOnRectangleIcon className='w-9' /> </a></td>
                             </tr>
                           ))}
                         </tbody>
