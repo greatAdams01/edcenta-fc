@@ -61,8 +61,8 @@ export default function Create() {
       e.preventDefault();
 
       if (name === ''){
-        console.log('Name field cannot empty');
-        toast.error('Name field cannot empty');
+        console.log('Student name field cannot empty');
+        toast.error('Student name field cannot empty');
         return;
       }
       if (username.trim() === ''){
@@ -95,12 +95,6 @@ export default function Create() {
       if (!grade) {
         console.log('Please add grade');
         toast.error('Please add grade');
-        return;
-      }
-
-      if (creatorId === '') {
-        console.log('Input a valid creators Id');
-        toast.error('Input a valid creators Id');
         return;
       }
       createStudent()
@@ -151,7 +145,7 @@ export default function Create() {
                       <option value={"65ee6115df691bf5cea750a6"}>Primary 1</option>
                     </select>
               </div>
-              <div className='w-full flex justify-between items-center'>
+              <div className='hidden w-full flex justify-between items-center'>
                 <label htmlFor='Last name' className='w-full'>Creator&quot;s ID <span className='text-red-500'>*</span></label>
                 <input type='text' value={creatorId} onChange={(e) => setCreatorId(e.target?.value)} className='border-2 w-[100%] lg:w-[100rem] h-12 rounded-md px-4 my-2'/>
               </div>

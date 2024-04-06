@@ -70,6 +70,16 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
     }
   };
 
+  const groupedStudents = students.reduce((groups: any, student: any) => {
+    const groupKey = student.grade;
+    if (!groups[groupKey]) {
+      groups[groupKey] = [];
+    }
+    groups[groupKey].push(student);
+    return groups;
+  }, {});
+
+
   return (
     <AppLayout>
       <div className="p-4">
@@ -191,26 +201,23 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
                               </Dialog.Title>
                               <div className={`${manrope.className} mt-2`}>
                                 <p className="text-sm text-gray-500">Select class or students below to assign Worksheet</p>
-                                {students.map((student: any, index: number) => (
-                                  <Fragment key={student._id}>
-                                    <section className="w-full my-4 bg-gray-200 border border-purple-500 rounded-md flex justify-between px-4 py-6">
+                                {Object.keys(groupedStudents).map((grade, index) => (
+                                    <Fragment key={grade}>
+                                      <section className="w-full my-4 bg-gray-200 border border-purple-500 rounded-md flex justify-between px-4 py-6">
                                       <div className="font-bold flex">
-                                        <div className="flex justify-center text-green-500 items-center w-5">
+                                        <div className="flex justify-center text-green-500 items-center w-5 mr-2">
                                           <PlusIcon onClick={() => toggleDropdown(index)} />
                                         </div>
-                                        <div className="truncate text-sm font-medium leading-6 gap-x-4 mx-2">
-                                          {student.grade === '65ee6115df691bf5cea750a6' ? 'Primary 1' : 'Not Decided yet'} ({students.length}{' '}
-                                          {student.length === 1 ? 'students' : 'student'})
+                                          {grade === "65ee6115df691bf5cea750a6" ? 'Primary 1' : 'Not Decided yet'} ({groupedStudents[grade].length} {groupedStudents[grade].length === 1 ? 'student' : 'students'})
                                         </div>
-                                      </div>
-
-                                      <div className="flex items-center">
+                                        <div className="flex items-center">
                                         <input type="checkbox" className="mr-2" /> Assign to all
                                       </div>
-                                    </section>
-                                    {openSubtables[index] && student._id && (
-                                      <section className="bg-gray-200 shadow-sm shadow-black shadow-opacity-50 truncate text-sm font-medium leading-6">
-                                        <table className="w-full border-collapse border-gray-300">
+                                      </section>
+                                      {openSubtables[index] && (
+                                        <section className="bg-gray-200 shadow-sm shadow-black shadow-opacity-50 truncate text-sm font-medium leading-6">
+                                          <form>
+                                          <table className="w-full border-collapse border-gray-300">
                                           <thead className="w-full bg-purple-500 bg-opacity-50">
                                             <tr className={`${manrope.className} w-full`}>
                                               <th className="py-4 px-4">Name</th>
@@ -222,20 +229,23 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
                                             </tr>
                                           </thead>
                                           <tbody className="border-b border-white/10 font-bold">
-                                            <tr className={`${manrope.className}`}>
-                                              <td className="px-4 py-4">{student.name}</td>
+                                              {groupedStudents[grade].map((student: any) => (
+                                                <tr key={student._id} className={`${manrope.className}`}>
+                                                  <td className="px-4 py-4">{student.name}</td>
                                               <td className="text-center">20</td>
                                               <td className="text-center">1</td>
                                               <td className="border px-4 py-2 text-center">
                                                 <input type="checkbox" />
                                               </td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </section>
-                                    )}
-                                  </Fragment>
-                                ))}
+                                                </tr>
+                                              ))}
+                                            </tbody>
+                                          </table>
+                                        </form> 
+                                        </section>
+                                      )}
+                                    </Fragment>
+                                  ))}
                               </div>
                             </div>
                           </div>
