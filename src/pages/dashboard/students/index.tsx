@@ -38,7 +38,7 @@ export default function Manage() {
             </a>
           </section>
           <section>
-            <h1 className="font-bold text-lg">Classes</h1>
+            <h1 className="font-bold text-lg">Manage students</h1>
             <div>
               {Object.keys(groupedStudents).map((grade, index) => (
                 <Fragment key={grade}>
