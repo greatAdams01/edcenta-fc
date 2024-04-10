@@ -72,7 +72,7 @@ import {
   ]
   
   export const userNavigation = [
-    { name: 'Your profile', href: 'dashboard/details' },
+    { name: 'Your profile', href: '/dashboard/details' },
     { name: 'Sign out', href: '#' },
   ]
 

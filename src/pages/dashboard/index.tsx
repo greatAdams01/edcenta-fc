@@ -8,13 +8,6 @@ import AppLayout from '../../layout/AppLayout'
 import { USER, STUDENTS } from '@/apollo/queries/dashboard';
 import { useQuery } from '@apollo/client';
 
-const stats = [
-  { name: 'Account setup', value: '90%' },
-  { name: 'No. of Class', value: '3' },
-  { name: 'No. of Student', value: '230' },
-  { name: 'Curriculum completed', value: '98.5%' },
-]
-
 // const statuses: { [key: string]: string } = { Completed: 'text-green-400 bg-green-400/10', Incomplete: 'text-rose-400 bg-rose-400/10' }
 
 function classNames(...classes: string[]) {
@@ -96,21 +89,32 @@ export default function Dashboard() {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-1 bg-gray-700/10 sm:grid-cols-2 lg:grid-cols-4">
-                {stats.map((stat, statIdx) => (
-                  <div
-                    key={stat.name}
-                    className={classNames(
-                      statIdx % 2 === 1 ? 'sm:border-l' : statIdx === 2 ? 'lg:border-l' : '',
-                      'border-t border-white/5 py-6 px-4 sm:px-6 lg:px-8'
-                    )}
-                  >
-                    <p className="text-sm font-medium leading-6 text-purple-400">{stat.name}</p>
+              <div className="grid grid-cols-1 bg-gray-700/10 sm:grid-cols-2 lg:grid-cols-4 font-bold">
+                
+                <div className='border-t border-white/5 py-6 px-4 sm:px-6 lg:px-8'>
+                <p className="text-sm font-medium leading-6 text-purple-400">Account setup</p>
                     <p className="mt-2 flex items-baseline gap-x-2">
-                      <span className="text-4xl font-semibold tracking-tight">{stat.value}</span>
+                    <span className="text-4xl font-semibold tracking-tight">90%</span>
                     </p>
-                  </div>
-                ))}
+                </div>
+                <div className='border-t border-white/5 py-6 px-4 sm:px-6 lg:px-8'>
+                <p className="text-sm font-medium leading-6 text-purple-400">No. of Class</p>
+                    <p className="mt-2 flex items-baseline gap-x-2  px-6">
+                    <span className="text-4xl font-semibold tracking-tight">{Object.keys(groupedStudents).length}</span>
+                    </p>
+                </div>
+                <div className='border-t border-white/5 py-6 px-4 sm:px-6 lg:px-8'>
+                <p className="text-sm font-medium leading-6 text-purple-400">No. of Student</p>
+                <p className="mt-2 flex items-baseline gap-x-2  px-6">
+                      <span className="text-4xl font-semibold tracking-tight">{students.length}</span>
+                    </p>
+                </div>
+                <div className='border-t border-white/5 py-6 px-4 sm:px-6 lg:px-8'>
+                <p className="text-sm font-medium leading-6 text-purple-400">Curriculum completed</p>
+                <p className="mt-2 flex items-baseline gap-x-2  px-6">
+                      <span className="text-4xl font-semibold tracking-tight">0</span>
+                    </p>
+                </div>
               </div>
             </header>
 
