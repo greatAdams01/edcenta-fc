@@ -22,7 +22,7 @@ import {
       icon: ClipboardDocumentCheckIcon,
       children: [
         { name: 'Score', href: '#' },
-        { name: 'Reward', href: '#' },
+        { name: 'Reward', href: '/dashboard/reward' },
         { name: 'Badges', href: '#' },
       ]
     },
@@ -72,7 +72,7 @@ import {
   ]
   
   export const userNavigation = [
-    { name: 'Your profile', href: 'dashboard/details' },
+    { name: 'Your profile', href: '/dashboard/details' },
     { name: 'Sign out', href: '#' },
   ]
 

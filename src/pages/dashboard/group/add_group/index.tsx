@@ -18,12 +18,9 @@ export default function Create() {
 
     const path = useRouter();
 
+    const [checkBox, setCheckBox] = useState('');
     const [name, setName] = useState('');
-    const [username, setUserName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [age, setAge] = useState('');
-    const [grade, setGrade] = useState('');
+    const [description, setDescription] = useState('');
     const [creatorId, setCreatorId] = useState('');
 
     useEffect(() => {
@@ -35,12 +32,9 @@ export default function Create() {
     const [createStudent, { loading }] = useMutation(CREATE_STUDENT, {
         variables: {
           input: {
+            checkBox,
             name,
-            username,
-            email,
-            password,
-            age: parseInt(age),
-            grade,
+            description,
             creatorId,
           },
         },
@@ -61,42 +55,11 @@ export default function Create() {
       e.preventDefault();
 
       if (name === ''){
-        console.log('Student name field cannot empty');
-        toast.error('Student name field cannot empty');
-        return;
-      }
-      if (username.trim() === ''){
-        console.log('UserName field cannot be empty');
-        toast.error('UserName field cannot be empty');
-        return;
-      }
-      if (username.includes(' ')) {
-        console.log('Username cannot contain spaces');
-        toast.error('Username cannot contain spaces');
-        return;
-      }
-      if (email === ''){
-        console.log('Enter a valid email address');
-        toast.error('Enter a valid email address');
-        return;
-      }
-      if(password === ''){
-        console.log('Password field cannot be empty')
-        toast.error('Password field cannot be empty')
+        console.log('Group name field cannot empty');
+        toast.error('Group name field cannot empty');
         return;
       }
      
-      if (age === '') {
-        console.log('Identify an Age');
-        toast.error('Identify an Age')
-        return;
-      }
-
-      if (!grade) {
-        console.log('Please add grade');
-        toast.error('Please add grade');
-        return;
-      }
       createStudent()
     };
 
@@ -118,21 +81,22 @@ export default function Create() {
               </div>
             <div className='w-full md:w-4/6 mt-6 md:grid gap-6 items-center'>
                 
-                <div className='flex my-2'>
-                <label htmlFor='status' className='w-full flex'>Status <span className='text-red-500'>*</span></label>
+                <div className='flex my-2 pr-6'>
+                <label htmlFor='status' className='w-full flex'>Status</label>
                 <label className="switch">
-                    <input type="checkbox" />
+                    <input type="checkbox" value={checkBox} />
                     <span className="slider"></span>
                 </label>
                 </div>
 
                 <div className='w-full flex justofy-between my-2'>  
                 <label htmlFor='name' className='w-full md:w-[10rem] flex'>Name <span className='text-red-500'>*</span></label>
-                <input type='text' value={username} onChange={(e) => setUserName(e.target?.value)} className='border-2 w-full h-12 rounded-md px-4 my-2 mx-4'/>
+                <input type='text' value={name} onChange={(e) => setName(e.target?.value)} className='border-2 w-full h-12 rounded-md px-4 my-2 mx-4'/>
                 </div>
+
                 <div className='w-full  flex justofy-between my-2'>
                 <label htmlFor='description' className='w-full md:w-[10rem] flex'>Desciption</label>
-                <textarea value={email} onChange={(e) => setEmail(e.target?.value)} className='border-2 w-full h-40 rounded-md px-4 my-2 mx-4'/>
+                <textarea value={description} onChange={(e) => setDescription(e.target?.value)} className='border-2 w-full h-40 rounded-md px-4 my-2 mx-4'/>
                 </div>
 
               </div>
