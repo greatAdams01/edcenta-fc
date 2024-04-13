@@ -7,7 +7,7 @@ import { useQuery } from '@apollo/client';
 import { getCookie } from 'cookies-next';
 import { manrope } from '@/utils/font';
 import TopNav from './TopNav';
-import { navigation, studentNav } from '@/utils/nav';
+import { adminNav } from '@/utils/nav';
 import { STAGES } from '@/apollo/queries/dashboard';
 import Link from 'next/link';
 
@@ -19,7 +19,6 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   const { pathname, query } = router;
-  const [navList, setList] = useState<any>([])
   const { id } = query;
 
   const { data } = useQuery(STAGES);
@@ -32,16 +31,6 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
     if (!authData) {
       window.location.href = '/auth/login';
       return;
-    }
-    if (JSON.parse(authData).accountType === 'ADMIN' || JSON.parse(authData).accountType === 'SUPERADMIN' || JSON.parse(authData).accountType === 'MODERATOR') {
-      console.log('Redirecting to admin');
-      window.location.href = '/admin';
-    }
-    console.log(JSON.parse(authData).accountType);
-    if (JSON.parse(authData).accountType === 'STUDENT') {
-      setList(studentNav);
-    }else {
-      setList(navigation);
     }
     setAccountType(JSON.parse(authData).accountType);
   }, []);
@@ -68,7 +57,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
       </li>
     ))
   } else {
-    renderedNavigation = navList.map((item: any) => (
+    renderedNavigation = adminNav.map((item: any) => (
       <li key={item.name}>
         <a
           href={item.href}
