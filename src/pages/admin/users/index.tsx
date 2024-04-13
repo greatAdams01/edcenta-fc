@@ -10,9 +10,10 @@ import Pagination from "@/components/dashbord/Pagination"
 import AdminLayout from "@/layout/AdminLayout"
 import { USERS } from '@/apollo/queries/admin';
 import ModalAuth from '@/components/ModalComp';
-import { IUser } from '../../../../types';
+import { AccountType, IUser } from '../../../../types';
 import { DELETE_USER } from '@/apollo/mutations/admin';
 import { showToast } from '@/utils/toast';
+import EditUser from '@/components/dashbord/EditUser';
 
 
 function Users() {
@@ -22,11 +23,42 @@ function Users() {
   const [open, setOpen] = useState(false)
   const [toDelete, setDelete] = useState(false)
   const [itemId, setItemId] = useState('')
-  const [user, setUser] = useState<IUser>()
+  const [user, setUser] = useState<IUser>({
+    firstName: '',
+  lastName: '',
+  email: '',
+  phone: 0,
+  facebookId: '',
+  googleId: '',
+  address: '',
+  password: '',
+  city: '',
+  state: '',
+  otp: 0,
+  isVerified: false,
+  ninverified: false,
+  dob: '',
+  sex: '',
+
+  lastLoggedIn: '',
+  accountType: AccountType.ADMIN,
+  isActive: false,
+
+  bName: '',
+  bankName: '',
+  bank: '',
+  acctNumber: '',
+  bankCode: 0,
+  occupation: '',
+  })
 
   const handleDelete = (id?: string) => {
     setItemId(id ? id : '')
     setDelete(!toDelete)
+    setOpen(!open)
+  }
+  const handleEdit = (id?: string) => {
+    setItemId(id ? id : '')
     setOpen(!open)
   }
 
@@ -47,17 +79,16 @@ function Users() {
     },
     onCompleted: (data) => {
       console.log(data)
-      if (data.deleteUser) {
         showToast('success', 'User deleted')
-        handleDelete()
-      }
+      // reload the page
+      window.location.reload()
     },
     onError: (error) => {
       showToast('error', error.message)
       // setLoading(false);
     },
   });
-
+  
   useEffect(() => {
     if (itemId) {
       
@@ -125,7 +156,7 @@ function Users() {
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.accountType}</td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.isActive ? 'Active' : 'InActive'}</td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
-                      <a href="#" className="text-indigo-600 hover:text-indigo-900" onClick={() => setOpen(true)}>
+                      <a href="#" className="text-indigo-600 hover:text-indigo-900" onClick={() => handleEdit(person._id)}>
                         Edit<span className="sr-only">, {person.name}</span>
                       </a>
                     </td>
@@ -145,7 +176,7 @@ function Users() {
       </div>
     </div>
     <Pagination page={page} count={data?.users?.totalPage} handlePageChange={async (e) => handlePageChange(e)} />
-    <ModalAuth isOpen={open} onClose={() => toDelete ? handleDelete() : setOpen(false)} styling={toDelete ? 'w-[500px] m-auto' : 'w-[1000px] m-auto'}>
+    <ModalAuth isOpen={open} XIcon={true} onClose={() => toDelete ? handleDelete() : setOpen(false)} styling={toDelete ? 'w-[500px] m-auto' : 'w-[1000px] m-auto'}>
       {
         toDelete ? 
         <>
@@ -184,7 +215,9 @@ function Users() {
                   </button>
                 </div>
         </> 
-        : <></>
+        : <>
+          <EditUser user={user} />
+        </>
       }
     </ModalAuth>
     </AdminLayout>
