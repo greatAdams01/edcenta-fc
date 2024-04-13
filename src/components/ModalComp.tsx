@@ -14,12 +14,12 @@ interface ModelProps{
 const ModalAuth = ({ isOpen, onClose, children, styling, XIcon }: ModelProps) => {
   return (
     <div
-      className={`fixed inset-0 flex items-start pt-20 justify-center z-50  ${
+      className={`fixed inset-0 flex items-start justify-center z-50  ${
         isOpen ? '' : 'hidden'
       }`}
     >
       <div onClick={() => onClose()} className="fixed inset-0 bg-[#010B1ACC] h-full"></div>
-      <div className={`bg-white rounded-sm z-10 ${styling}`}>
+      <div className={`bg-white rounded-md z-10 ${styling}`}>
       <div className={`flex justify-end px-4 py-4 ${
         XIcon ? '' : 'hidden'
       } `}>
