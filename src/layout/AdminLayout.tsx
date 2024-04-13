@@ -1,3 +1,6 @@
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Sidebar from "@/components/dashbord/AdminSide";
 
 type LayoutProps = {
@@ -9,6 +12,7 @@ function AdminLayout({ children }: LayoutProps) {
     <main className="">
       <Sidebar>
       { children }
+      <ToastContainer />
       </Sidebar>
     </main>
   )

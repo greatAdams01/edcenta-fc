@@ -1,21 +1,38 @@
-import { useState, useEffect } from 'react'
-import { useLazyQuery } from '@apollo/client';
+import { useState, useEffect, use } from 'react'
+import { useLazyQuery, useMutation } from '@apollo/client';
+
+import {
+  ExclamationTriangleIcon
+} from '@heroicons/react/24/outline'
+
 
 import Pagination from "@/components/dashbord/Pagination"
 import AdminLayout from "@/layout/AdminLayout"
 import { USERS } from '@/apollo/queries/admin';
+import ModalAuth from '@/components/ModalComp';
+import { IUser } from '../../../../types';
+import { DELETE_USER } from '@/apollo/mutations/admin';
+import { showToast } from '@/utils/toast';
 
 
 function Users() {
   const [page, setPage] = useState(1)
   const [userType, setType] = useState('')
   const [userList, setUsers]  = useState<any[]>([])
+  const [open, setOpen] = useState(false)
+  const [toDelete, setDelete] = useState(false)
+  const [itemId, setItemId] = useState('')
+  const [user, setUser] = useState<IUser>()
 
+  const handleDelete = (id?: string) => {
+    setItemId(id ? id : '')
+    setDelete(!toDelete)
+    setOpen(!open)
+  }
 
   const [users, { loading, error, data } ] = useLazyQuery(USERS, {
     variables: { page, limit: 15, filter: userType },
     onCompleted: (data) => {
-      console.log(data)
       setUsers(data.users.data)
     }
   })
@@ -24,10 +41,32 @@ function Users() {
     setPage(pageNum)
   }
 
+  const [deleteUser, deleteStatus] = useMutation(DELETE_USER, {
+    variables: {
+      deleteUserId: itemId,
+    },
+    onCompleted: (data) => {
+      console.log(data)
+      if (data.deleteUser) {
+        showToast('success', 'User deleted')
+        handleDelete()
+      }
+    },
+    onError: (error) => {
+      showToast('error', error.message)
+      // setLoading(false);
+    },
+  });
+
   useEffect(() => {
+    if (itemId) {
+      
+      const user = userList.find((user) => user._id === itemId)
+      setUser(user)
+    }
     // Fetch data from API
     users()
-  }, [page])
+  }, [page, itemId])
   return (
     <AdminLayout>
       <div className="px-4 sm:px-6 lg:px-8">
@@ -86,12 +125,12 @@ function Users() {
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.accountType}</td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.isActive ? 'Active' : 'InActive'}</td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
-                      <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                      <a href="#" className="text-indigo-600 hover:text-indigo-900" onClick={() => setOpen(true)}>
                         Edit<span className="sr-only">, {person.name}</span>
                       </a>
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
-                      <a href="#" className="text-red-600 hover:text-red-900">
+                      <a href="#" className="text-red-600 hover:text-red-900"  onClick={() => handleDelete(person._id)}>
                         Delete<span className="sr-only">, {person.name}</span>
                       </a>
                     </td>
@@ -106,6 +145,48 @@ function Users() {
       </div>
     </div>
     <Pagination page={page} count={data?.users?.totalPage} handlePageChange={async (e) => handlePageChange(e)} />
+    <ModalAuth isOpen={open} onClose={() => toDelete ? handleDelete() : setOpen(false)} styling={toDelete ? 'w-[500px] m-auto' : 'w-[1000px] m-auto'}>
+      {
+        toDelete ? 
+        <>
+            <div className="sm:flex sm:items-start">
+                  <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                    <ExclamationTriangleIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
+                  </div>
+                  <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                    <h3 className="text-base font-semibold leading-6 text-gray-900">
+                      Delete account
+                    </h3>
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-500">
+                        Are you sure you want to delete <span className='font-bold'> {user?.firstName} {user?.lastName}</span> ? All of {`it's`} data will be permanently removed
+                        from our servers forever. This action cannot be undone.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                  <button
+                    type="button"
+                    disabled={deleteStatus.loading}
+                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                    onClick={() => deleteUser()}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    type="button"
+                    disabled={deleteStatus.loading}
+                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    onClick={() => handleDelete()}
+                  >
+                    Cancel
+                  </button>
+                </div>
+        </> 
+        : <></>
+      }
+    </ModalAuth>
     </AdminLayout>
   )
 }
