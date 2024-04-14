@@ -293,14 +293,15 @@ export enum AssessmentStatus {
 export interface IStudent extends DefaultAttributes {
   name: string;
   age: number;
-  grade: string;
+  grade: ISchoolGrade;
   username: string;
   password: string;
   email: string;
   creatorId: string;
   schoolId: string;
-  assessment: string[] | string[];
+  assessment: string[];
   lastLoggedIn: string;
+  isActive: boolean;
 }
 
 

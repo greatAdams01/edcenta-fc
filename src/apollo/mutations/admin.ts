@@ -15,3 +15,11 @@ export const EDIT_USER = gql`
   }
 }
 `
+
+export const DELETE_STUDENT = gql`
+  mutation DeleteStudent($deleteStudentId: ID!) {
+    deleteStudent(id: $deleteStudentId) {
+      _id
+    }
+  }
+`

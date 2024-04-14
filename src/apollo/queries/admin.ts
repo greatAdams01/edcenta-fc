@@ -34,3 +34,28 @@ query Users($page: Int, $limit: Int, $filter: String) {
   }
 }
 `
+
+export const STUDENTS = gql`
+query Students($page: Int, $limit: Int, $filter: String) {
+  students(page: $page, limit: $limit, filter: $filter) {
+    data {
+      _id
+      age
+      createdAt
+      creatorId
+      email
+      lastLoggedIn
+      name
+      username
+      isActive
+      grade {
+        _id
+        year
+        stage
+      }
+    }
+    totalPage
+    totalRecord
+  }
+}
+`

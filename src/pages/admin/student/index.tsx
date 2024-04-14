@@ -8,48 +8,37 @@ import {
 
 import Pagination from "@/components/dashbord/Pagination"
 import AdminLayout from "@/layout/AdminLayout"
-import { USERS } from '@/apollo/queries/admin';
+import { STUDENTS } from '@/apollo/queries/admin';
 import ModalAuth from '@/components/ModalComp';
-import { AccountType, IUser } from '../../../../types';
-import { DELETE_USER } from '@/apollo/mutations/admin';
+import { AccountType, IStudent } from '../../../../types';
+import { DELETE_STUDENT } from '@/apollo/mutations/admin';
 import { showToast } from '@/utils/toast';
-import EditUser from '@/components/dashbord/EditUser';
 
 
-function Users() {
+function Students() {
   const [page, setPage] = useState(1)
-  const [userType, setType] = useState('')
-  const [userList, setUsers]  = useState<any[]>([])
+  const [studentList, setStudents]  = useState<any[]>([])
   const [open, setOpen] = useState(false)
   const [toDelete, setDelete] = useState(false)
   const [itemId, setItemId] = useState('')
-  const [user, setUser] = useState<IUser>({
-    firstName: '',
-  lastName: '',
-  email: '',
-  phone: 0,
-  facebookId: '',
-  googleId: '',
-  address: '',
-  password: '',
-  city: '',
-  state: '',
-  otp: 0,
-  isVerified: false,
-  ninverified: false,
-  dob: '',
-  sex: '',
+  const [student, setStudent] = useState<IStudent>({
+    name: '',
+    username: '',
+    email: '',
+    age: 0,
+    creatorId: '',
+    grade: {
+      ages: '',
+      stage: 0,
+      year: ''
+    },
+    password: '',
+    lastLoggedIn: '',
+    assessment: [''],
+    schoolId: '',
+    _id: '',
+    isActive: false,
 
-  lastLoggedIn: '',
-  accountType: AccountType.ADMIN,
-  isActive: false,
-
-  bName: '',
-  bankName: '',
-  bank: '',
-  acctNumber: '',
-  bankCode: 0,
-  occupation: '',
   })
 
   const handleDelete = (id?: string) => {
@@ -62,10 +51,10 @@ function Users() {
     setOpen(!open)
   }
 
-  const [users, { loading, error, data } ] = useLazyQuery(USERS, {
-    variables: { page, limit: 20, filter: userType },
+  const [students, { loading, error, data } ] = useLazyQuery(STUDENTS, {
+    variables: { page, limit: 20, filter: '' },
     onCompleted: (data) => {
-      setUsers(data.users.data)
+      setStudents(data.students.data)
     }
   })
 
@@ -73,13 +62,13 @@ function Users() {
     setPage(pageNum)
   }
 
-  const [deleteUser, deleteStatus] = useMutation(DELETE_USER, {
+  const [deleteStudent, deleteStatus] = useMutation(DELETE_STUDENT, {
     variables: {
-      deleteUserId: itemId,
+      deleteStudentId: itemId,
     },
     onCompleted: (data) => {
       console.log(data)
-        showToast('success', 'User deleted')
+        showToast('success', 'Student deleted')
       // reload the page
       window.location.reload()
     },
@@ -92,20 +81,20 @@ function Users() {
   useEffect(() => {
     if (itemId) {
       
-      const user = userList.find((user) => user._id === itemId)
-      setUser(user)
+      const student = studentList.find((student) => student._id === itemId)
+      setStudent(student)
     }
     // Fetch data from API
-    users()
+    students()
   }, [page, itemId])
   return (
     <AdminLayout>
       <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h1 className="text-base font-semibold leading-6 text-gray-900">Users</h1>
+          <h1 className="text-base font-semibold leading-6 text-gray-900">Students</h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the users in your account including their name, title, email and role.
+            A list of all the Students in your account including their name, username, email .
           </p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -113,7 +102,7 @@ function Users() {
             type="button"
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Add user
+            Add Student
           </button>
         </div>
       </div>
@@ -126,6 +115,9 @@ function Users() {
                   <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
                     Name
                   </th>
+                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
+                    Username
+                  </th>
                   {/* <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Title
                   </th> */}
@@ -133,7 +125,10 @@ function Users() {
                     Email
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                    Role
+                    Year
+                  </th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Stage
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Status
@@ -146,14 +141,19 @@ function Users() {
               {
                 data && (
                   <tbody className="bg-white">
-                {userList.map((person: any) => (
-                  <tr key={person.email} className="even:bg-gray-50">
+                {studentList.map((person: any) => (
+                  <tr key={person._id} className="even:bg-gray-50">
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                    {person.firstName} {person.lastName}
+                    {person.name}
+                    </td>
+                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
+                    {person.username}
                     </td>
                     {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td> */}
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.email}</td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.accountType}</td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.grade.year}</td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.grade.stage}</td>
+                    
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.isActive ? 'Active' : 'InActive'}</td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
                       <a href="#" className="text-indigo-600 hover:text-indigo-900" onClick={() => handleEdit(person._id)}>
@@ -175,7 +175,7 @@ function Users() {
         </div>
       </div>
     </div>
-    <Pagination page={page} count={data?.users?.totalPage} handlePageChange={async (e) => handlePageChange(e)} />
+    <Pagination page={page} count={data?.students?.totalPage} handlePageChange={async (e) => handlePageChange(e)} />
     <ModalAuth isOpen={open} XIcon={true} onClose={() => toDelete ? handleDelete() : setOpen(false)} styling={toDelete ? 'w-[500px] m-auto' : 'w-[1000px] m-auto'}>
       {
         toDelete ? 
@@ -190,7 +190,7 @@ function Users() {
                     </h3>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                        Are you sure you want to delete <span className='font-bold'> {user?.firstName} {user?.lastName}</span> ? All of {`it's`} data will be permanently removed
+                        Are you sure you want to delete <span className='font-bold'> {student?.name}</span> ? All of {`it's`} data will be permanently removed
                         from our servers forever. This action cannot be undone.
                       </p>
                     </div>
@@ -201,7 +201,7 @@ function Users() {
                     type="button"
                     disabled={deleteStatus.loading}
                     className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                    onClick={() => deleteUser()}
+                    onClick={() => deleteStudent()}
                   >
                     Delete
                   </button>
@@ -216,7 +216,7 @@ function Users() {
                 </div>
         </> 
         : <>
-          <EditUser user={user} />
+          {/* <EditUser user={student} /> */}
         </>
       }
     </ModalAuth>
@@ -224,5 +224,5 @@ function Users() {
   )
 }
 
-export default Users
+export default Students
 

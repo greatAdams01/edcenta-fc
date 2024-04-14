@@ -23,7 +23,7 @@ const ModalAuth = ({ isOpen, onClose, children, styling, XIcon }: ModelProps) =>
       <div className={`flex justify-end px-4 py-4 ${
         XIcon ? '' : 'hidden'
       } `}>
-        <XCircleIcon className='w-8 text-red-400'  onClick={onClose}  />
+        <XCircleIcon className='w-8 text-red-400 cursor-pointer'  onClick={onClose}  />
       </div>
 
         <div className="p-6">
