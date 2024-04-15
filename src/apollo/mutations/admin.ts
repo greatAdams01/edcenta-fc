@@ -23,3 +23,12 @@ export const DELETE_STUDENT = gql`
     }
   }
 `
+
+
+export const UPDATE_STUDENT = gql`
+  mutation UpdateStudent($updateStudentId: ID!, $input: StudentInput!) {
+    updateStudent(id: $updateStudentId, input: $input) {
+      _id
+    }
+  }
+`

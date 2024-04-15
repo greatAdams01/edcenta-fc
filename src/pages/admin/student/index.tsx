@@ -13,6 +13,7 @@ import ModalAuth from '@/components/ModalComp';
 import { AccountType, IStudent } from '../../../../types';
 import { DELETE_STUDENT } from '@/apollo/mutations/admin';
 import { showToast } from '@/utils/toast';
+import EditStudent from '@/components/dashbord/EditStudent';
 
 
 function Students() {
@@ -216,7 +217,7 @@ function Students() {
                 </div>
         </> 
         : <>
-          {/* <EditUser user={student} /> */}
+          <EditStudent student={student} />
         </>
       }
     </ModalAuth>
