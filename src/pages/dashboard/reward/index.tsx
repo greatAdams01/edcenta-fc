@@ -7,7 +7,7 @@ import { STUDENTS } from '@/apollo/queries/dashboard';
 
 export default function Reward() {
   const { data } = useQuery(STUDENTS);
-  const students = data?.students || [];
+  const students = data?.students.data || [];
 
   return (
     <AppLayout>
@@ -17,11 +17,11 @@ export default function Reward() {
           <section className='flex w-full justify-between my-4'>
             <select className='border border-black rounded-md w-60 px-2'>
                 {students.map((student: any) => (
-                  <option key={student} className='font-bold'>{student.name}</option>
+                  <option key={student} value={student.name} className='font-bold'>{student.name}</option>
                 ))}
                 
             </select>
-            <a href={'/dashboard/students/add_student'} className='bg-[#00AE9A] bg-opacity-70 hover:bg-opacity-100 border rounded-md py-4 px-4 flex items-center justify-center text-center font-bold'>
+            <a href={'#'} className='bg-[#00AE9A] bg-opacity-70 hover:bg-opacity-100 border rounded-md py-4 px-4 flex items-center justify-center text-center font-bold'>
               <PlusIcon className='w-4 mr-2' /> Create Reward
             </a>
             

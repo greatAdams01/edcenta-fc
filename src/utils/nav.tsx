@@ -21,7 +21,7 @@ import {
       href: '#', 
       icon: ClipboardDocumentCheckIcon,
       children: [
-        { name: 'Score', href: '#' },
+        { name: 'Score', href: '/dashboard/score' },
         { name: 'Reward', href: '/dashboard/reward' },
         { name: 'Badges', href: '#' },
       ]
@@ -81,4 +81,19 @@ import {
     { topic: 'Create Number Codes using Multiple Word Codes', by: 'Mary', averageScore: 60,  score: 40, attempt: 3 },
     { topic: 'Create Number Codes using Multiple Word Codes', by: 'John', averageScore: 60,  score: 70, attempt: 9 },
     { topic: 'Create Number Codes using Multiple Word Codes', by: 'Angella', averageScore: 60,  score: 83, attempt: 1 },
+  ]
+    
+  export const statData = [
+    {
+      subject: 'Eng',
+      score: 85,
+    },
+      {
+        subject: 'Math',
+        score: 60,
+      },
+      {
+        subject: 'Bio',
+        score: 42,
+      },
   ]

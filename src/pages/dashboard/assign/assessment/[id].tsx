@@ -23,6 +23,8 @@ function classNames(...classes: string[]) {
 const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
   const [check, setCheck] = useState<boolean>(true)
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
+  const [checkStudent, setCheckStudent] = useState<boolean>(true)
+  const [selectedStudent, setSelectedStudent]= useState<string[]>([])
   const [showClass, setShowClass] = useState(false); 
 
   const { data } = useQuery(SchoolGrades, {
@@ -36,7 +38,7 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
   const { data: userData } = useQuery(USER);
   const { data: studentsData } = useQuery(STUDENTS);
   const user = userData?.user || []; 
-  const students = studentsData?.students || [];
+  const students = studentsData?.students.data || [];
 
   const [openSubtables, setOpenSubtables] = useState<Array<boolean>>(Array(students.length).fill(false));
 
@@ -63,21 +65,40 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
     setSelectedSubjects([]);
     setCheck(true);
   }
+
+  function checkAllStudent(){
+    const selectAllStudent = students.flatMap((student: any) => student._id );
+    setSelectedStudent(selectAllStudent);
+    setCheckStudent(false)
+  }
+
+  function uncheckAllStudent(){
+    selectedStudent.length === 0;
+    setSelectedStudent([]);
+    setCheckStudent(true)
+  }
   
 
   const checkBoxHandler = (e: React.ChangeEvent<HTMLInputElement>) => { 
     const value = e.target.value;
     const isChecked = e.target.checked;
+    const studentIsChecked = e.target.checked
 
     if (isChecked) {
       setSelectedSubjects([...selectedSubjects, value]);
     } else {
       setSelectedSubjects(prevData => prevData.filter(id => id !== value));
     }
+
+    if (studentIsChecked){
+      setSelectedStudent([...selectedStudent, value]);
+    }else {
+      setSelectedStudent(prevData => (prevData.filter(id => id !== value)))
+    }
   };
   
   const groupedStudents = students.reduce((groups: any, student: any) => {
-    const groupKey = student.grade;
+    const groupKey = student.grade.year;
     if (!groups[groupKey]) {
       groups[groupKey] = [];
     }
@@ -215,10 +236,10 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
                                         <div className="flex justify-center text-green-500 items-center w-5 mr-2">
                                           <PlusIcon onClick={() => toggleDropdown(index)} />
                                         </div>
-                                          {grade === "65ee6115df691bf5cea750a6" ? 'Primary 1' : 'Not Decided yet'} ({groupedStudents[grade].length} {groupedStudents[grade].length === 1 ? 'student' : 'students'})
+                                          {grade} ({groupedStudents[grade].length} {groupedStudents[grade].length === 1 ? 'student' : 'students'})
                                         </div>
                                         <div className="flex items-center">
-                                        <input type="checkbox" className="mr-2" /> Assign to all
+                                        <input type="checkbox" onClick={!checkStudent ? uncheckAllStudent : checkAllStudent} className="mr-2" /> Assign to all
                                       </div>
                                       </section>
                                       {openSubtables[index] && (
@@ -230,9 +251,7 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
                                               <th className="py-4 px-4">Name</th>
                                               <th>Best Score</th>
                                               <th>Assigned</th>
-                                              <th className="flex items-center">
-                                                <input type="checkbox" className="mr-2 my-6" /> Assign to all
-                                              </th>
+                                              <th>Check</th>
                                             </tr>
                                           </thead>
                                           <tbody className="border-b border-white/10 font-bold">
@@ -242,7 +261,7 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
                                               <td className="text-center">20</td>
                                               <td className="text-center">1</td>
                                               <td className="border px-4 py-2 text-center">
-                                                <input type="checkbox" />
+                                                <input type="checkbox" checked={selectedStudent.includes(student._id)}  value={student._id} onChange={checkBoxHandler}/>
                                               </td>
                                                 </tr>
                                               ))}

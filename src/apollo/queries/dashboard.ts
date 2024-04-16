@@ -129,15 +129,21 @@ query SchoolGrades($questionId: ID!) {
 `
 
 export const STUDENTS = gql`
-query Query {
+query Data {
   students {
-    _id
+    data {
+      _id
     name
     username
     age
-    grade
     email
     creatorId
+      grade {
+        year
+        ages
+        stage
+      }
+    }
   }
 }
 `
