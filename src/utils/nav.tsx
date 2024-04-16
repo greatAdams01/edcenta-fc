@@ -1,5 +1,6 @@
 import {
     CalendarIcon,
+    UserCircleIcon,
     UsersIcon,
     ClipboardDocumentCheckIcon
   } from '@heroicons/react/24/outline'
@@ -75,6 +76,43 @@ import {
     { name: 'Your profile', href: '/dashboard/details' },
     { name: 'Sign out', href: '#' },
   ]
+
+export const adminNav = [
+    { 
+      name: 'Users', 
+      href: '/admin', 
+      icon: UserCircleIcon,
+      children: [
+        { name: 'Users', href: '/admin/users' },
+        { name: 'Students', href: '/admin/student' },
+        { name: 'Schools', href: '/admin/preview' },
+        // { name: 'Review completed', href: '/admin/review' },
+      ]
+    },
+    { 
+      name: 'PROGRESS', 
+      href: '#', 
+      icon: ClipboardDocumentCheckIcon,
+      children: [
+        { name: 'Score', href: '#' },
+        { name: 'Reward', href: '/admin/reward' },
+        { name: 'Badges', href: '#' },
+      ]
+    },
+    { 
+      name: 'ACCOUNTS', 
+      href: '/admin/details', 
+      icon: UsersIcon, 
+      current: false,
+      children: [
+        { name: 'My Details', href: '/admin/details' },
+        { name: 'My Subscriptions', href: '/admin/subscription' },
+        { name: 'Manage students', href: '/admin/students' },
+        { name: 'Manage groups', href: '/admin/group' },
+        { name: 'Notifications', href: '/admin/notification' },
+      ]
+    }
+]
 
 
   export const Notification = [
