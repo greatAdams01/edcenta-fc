@@ -58,7 +58,7 @@ export default function Score() {
             </select>
           </section>
 
-          <section className='font-bold flex space-x-32'>
+          <section className='font-bold grid md:flex gap-x-32'>
             <section className=''> 
               <p className='text-lg my-2'>Overall score</p>
               <div className='border p-8 flex flex-col justify-center items-center space-y-6'>
@@ -117,7 +117,7 @@ export default function Score() {
 
             <section className=''> 
               <p className='text-lg my-2'>Subject score</p>
-              <div className='w-[50vw] border p-6 grid grid-cols-[repeat(auto-fit,_minmax(10rem,_1fr))] gap-x-10'>
+              <div className='w-full md:w-[50vw] border p-6 grid grid-cols-[repeat(auto-fit,_minmax(10rem,_1fr))] gap-x-10'>
                 {statData.map((stat, index) => (
                   <div key={index} className='w-full grid justify-center'>
                     <div className='w-full flex justify-center'><p className='bg-green-500 text-white text-center p-2 w-5/6'>{stat.subject}</p></div>
