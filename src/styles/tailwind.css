@@ -118,7 +118,7 @@ input:checked + .slider:before {
 
 .circle-progress {
   fill: none;
-  stroke: #0075BC;
+  /* stroke: #0075BC; */
   stroke-linecap: round;
   stroke-linejoin: round;
 }
