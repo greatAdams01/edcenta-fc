@@ -19,3 +19,9 @@ mutation CreateStudent($input: StudentInput!) {
     _id
   }
 }`
+
+export const ASSIGN_WORKSHEET = gql`
+mutation Mutation($studentIds: [ID!]!, $worksheetId: ID!) {
+  assingStudentsWorksheet(studentIds: $studentIds, worksheetId: $worksheetId)
+}
+`

@@ -5,9 +5,9 @@ import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'; 
 
 import { manrope } from '@/utils/font';
-import { SchoolGrades } from '@/apollo/queries/dashboard';
+import { SchoolGrades, USER, STUDENTS  } from '@/apollo/queries/dashboard';
 import AppLayout from '../../../../layout/AppLayout';
-import { USER, STUDENTS } from '@/apollo/queries/dashboard';
+import { ASSIGN_WORKSHEET }  from '@/apollo/mutations/dashboard'
 import { useQuery } from '@apollo/client';
 
 interface WorksheetProps {
@@ -24,6 +24,7 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
   const { data } = useQuery(SchoolGrades, {
     variables: { _id },
   });
+
 
   const schoolGrades = data?.schoolGrades || [];
 

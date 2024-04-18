@@ -85,6 +85,8 @@ export default function Score() {
                       strokeDasharray : statArray,
                       strokeDashoffset : statOffset,
                     }}
+                    stroke={ parseFloat(estimatedPercentage.toFixed(2)) <= 30 ? '#FF0000' : parseFloat(estimatedPercentage.toFixed(2)) <= 60 ? '#0075BC' : '#00AE9A' }
+                    
                     transform = {`rotate(-90 ${circleWidth / 2} ${circleWidth / 2})`}
                   />
                   <text
@@ -120,7 +122,7 @@ export default function Score() {
               <div className='w-full md:w-[50vw] border p-6 grid grid-cols-[repeat(auto-fit,_minmax(10rem,_1fr))] gap-x-10'>
                 {statData.map((stat, index) => (
                   <div key={index} className='w-full grid justify-center'>
-                    <div className='w-full flex justify-center'><p className='bg-green-500 text-white text-center p-2 w-5/6'>{stat.subject}</p></div>
+                    <div className='w-full flex justify-center'><p className='bg-[#00AE9A] text-white text-center p-2 w-5/6'>{stat.subject}</p></div>
                     <svg 
                       width={circleWidth}
                       height={circleWidth}
@@ -142,6 +144,7 @@ export default function Score() {
                             strokeDasharray : subjectStatArray,
                             strokeDashoffset : subjectOffsets[index],
                           }}
+                          stroke={currentScores[index] <= 30 ? '#FF0000' : currentScores[index] <= 60 ? '#0075BC' : '#00AE9A'}
                           transform = {`rotate(-90 ${circleWidth / 2} ${circleWidth / 2})`}
                         />
                         <text
@@ -158,7 +161,7 @@ export default function Score() {
                       <table>
                         <thead>
                           <tr>
-                          <th className='w-full flex justify-center'><p className='bg-green-500 text-white p-2 w-5/6'>Activities completed</p></th>
+                          <th className='w-full flex justify-center'><p className='bg-[#00AE9A] text-white p-2 w-5/6'>Activities completed</p></th>
                           </tr>
                         </thead>
                         <tbody className='text-center w-full border-b h-10 mb-4'>

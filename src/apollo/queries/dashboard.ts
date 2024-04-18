@@ -92,18 +92,9 @@ export const TOPIC_QUERY = gql`
         _id
         name
       }
-      worksheet {
-      _id
-      title
-      createdAt
-      questions {
-        _id
-        title
-      }
-    }
     }
   }
-`;
+`
 
 export const QUESTION_QUERY = gql`
 query SchoolGrades($questionId: ID!) {

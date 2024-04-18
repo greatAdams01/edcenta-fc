@@ -119,7 +119,7 @@ export default function Dashboard() {
 
             {/* Activity list */}
             <div className="border-t border-white/10 pt-11">
-              <h2 className="px-4 text-base font-semibold leading-7 sm:px-6 lg:px-8">Curriculum</h2>
+              <h2 className="px-0 text-base font-semibold leading-7">Curriculum</h2>
               {Object.keys(groupedStudents).map((grade, index) => (
                 <Fragment key={grade}>
                   <section className="w-full my-4 bg-gray-200 border border-purple-500 rounded-md flex justify-between px-4 py-6">
