@@ -7,10 +7,10 @@ import { STUDENTS } from '@/apollo/queries/dashboard';
 
 export default function Manage() {
   const { data } = useQuery(STUDENTS);
-  const students = data?.students || [];
+  const students = data?.students.data || [];
 
   const groupedStudents = students.reduce((groups: any, student: any) => {
-    const groupKey = student.grade;
+    const groupKey = student.grade.year;
     if (!groups[groupKey]) {
       groups[groupKey] = [];
     }
@@ -44,7 +44,7 @@ export default function Manage() {
                 <Fragment key={grade}>
                   <section className="w-full my-4 bg-gray-200 border border-purple-500 rounded-md flex justify-between px-4 py-6">
                     <div className="font-bold">
-                      {grade === "65ee6115df691bf5cea750a6" ? 'Primary 1' : 'Not Decided yet'} ({groupedStudents[grade].length} {groupedStudents[grade].length === 1 ? 'student' : 'students'})
+                      {grade} ({groupedStudents[grade].length} {groupedStudents[grade].length === 1 ? 'student' : 'students'})
                     </div>
                     <PlusIcon onClick={() => toggleDropdown(index)} className="w-6" />
                   </section>
