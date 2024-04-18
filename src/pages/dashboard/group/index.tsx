@@ -7,10 +7,10 @@ import { STUDENTS } from '@/apollo/queries/dashboard';
 
 export default function Group() {
   const { data } = useQuery(STUDENTS);
-  const students = data?.students || [];
+  const students = data?.students.data || [];
 
   const groupedStudents = students.reduce((groups: any, student: any) => {
-    const groupKey = student.grade;
+    const groupKey = student.grade.year;
     if (!groups[groupKey]) {
       groups[groupKey] = [];
     }
@@ -56,11 +56,11 @@ export default function Group() {
                         {Object.keys(groupedStudents).map((grade) => (
                           <Fragment key={grade}>
                             <tr className="">
-                              <td className="h-10 flex items-center justify-center text-center font-semibold ">
-                                <p className='hover:underline cursor-pointer hover:text-green-500'>
-                                {grade === "65ee6115df691bf5cea750a6" ? 'Primary 1' : 'Not Decided yet'}
+                              <td className="h-10 flex items-center justify-center text-center font-semibold hover:underline cursor-pointer hover:text-green-500">
+                                <p className=''>
+                                {grade}
                                 </p>
-                                <PencilIcon className='w-6 ml-2 cursor-pointer hover:text-blue-500 ' />
+                                <PencilIcon className='w-6 ml-2' />
                               </td>
                               <td className='text-center'> You </td>
                               <td className='text-center flex items-center justify-center'>
