@@ -52,7 +52,7 @@ export default function Manage() {
                     <section className='bg-gray-200 shadow-sm shadow-black shadow-opacity-50'>
                       <form>
                       <table className='w-full border-collapse border-gray-300' >
-                        <thead className='w-full bg-purple-500 bg-opacity-50'>
+                        <thead className='w-full bg-[#0075BC] text-white'>
                           <tr className='w-full'>
                             <th className='py-4'>Name</th>
                             <th className='hidden md:flex py-4 justify-center'>Recomendations</th>

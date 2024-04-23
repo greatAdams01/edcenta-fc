@@ -30,10 +30,10 @@ export default function Assign() {
   return (
     <AppLayout>
       <div className="px-4 sm:px-6 lg:px-8">
-        <h1 className='font-bold '>COmpleted Activities</h1>
+        <h1 className='font-bold '>Completed Activities</h1>
         <div className='mt-4 -my-2 sm:-mx-6 lg:-mx-8'>
             <table className='min-w-full divide-y devide-gray-300 mt-4'>
-                <thead className='bg-[#00AE9A] bg-opacity-70 font-bold'>
+                <thead className='bg-[#0075BC] text-white font-bold'>
                     <tr className=''>
                         <th scope='col' className='py-8'>Activity</th>
                         <th scope='col'>Subject</th>
