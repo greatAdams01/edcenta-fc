@@ -47,6 +47,7 @@ export default function Group() {
                           <tr className='w-full'>
                             <th className='py-4'>Name</th>
                             <th className='hidden md:flex py-4 justify-center'>Owner/Assigned Teacher</th>
+                            <th className='flex md:hidden justify-center items-center py-4'>Owner</th>
                             <th>Students</th>
                             <th>Status</th>
                             <th className='pr-4'>Delete</th>
