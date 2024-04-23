@@ -4,11 +4,14 @@ import Link from 'next/link';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'; 
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { manrope } from '@/utils/font';
+
 import { SchoolGrades, USER, STUDENTS  } from '@/apollo/queries/dashboard';
 import AppLayout from '../../../../layout/AppLayout';
 import { ASSIGN_WORKSHEET }  from '@/apollo/mutations/dashboard'
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 
 interface WorksheetProps {
   _id: string;
@@ -25,6 +28,7 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
     variables: { _id },
   });
 
+  const [assignWorksheet] = useMutation(ASSIGN_WORKSHEET);
 
   const schoolGrades = data?.schoolGrades || [];
 
@@ -65,6 +69,7 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
     const selectAllStudent = students.flatMap((student: any) => student._id );
     setSelectedStudent(selectAllStudent);
     setCheckStudent(false)
+    console.log(selectedStudent)
   }
 
   function uncheckAllStudent(){
@@ -86,10 +91,13 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
 
     if (studentIsChecked){
       setSelectedStudent([...selectedStudent, value]);
+      console.log(selectedStudent)
     }else {
       setSelectedStudent(prevData => (prevData.filter(id => id !== value)))
     }
   };
+
+  
 
   const groupedStudents = students.reduce((groups: any, student: any) => {
     const groupKey = student.grade.year;
@@ -101,6 +109,22 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
   }, {});
 
 
+  const handleAssignWorksheet = async () => {
+    try {
+      await assignWorksheet({
+        variables: {
+          studentIds: selectedStudent,
+          worksheetIds: selectedSubjects,
+        },
+      });
+      toast.success('Worksheet Assigned successfully');
+    } catch (error) {
+      toast.error('Error assigning worksheet ' + error );
+      console.log(error)
+    }
+    console.log(selectedStudent, _id)
+  };
+  
   return (
     <AppLayout>
       <div className="p-4">
@@ -269,13 +293,13 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
                             </div>
                           </div>
                           <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                            <button
-                              type="button"
-                              className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:ml-3 sm:w-auto"
-                              onClick={() => setShowClass(false)}
-                            >
-                              Confirm
-                            </button>
+                          <button
+                            type="button"
+                            className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:ml-3 sm:w-auto"
+                            onClick={handleAssignWorksheet}
+                          >
+                            Confirm
+                          </button>
                           </div>
                         </Dialog.Panel>
                       </Transition.Child>
@@ -286,6 +310,7 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
             </div>
           )}
         </form>
+        <ToastContainer />
       </div>
     </AppLayout>
   );

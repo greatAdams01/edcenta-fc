@@ -21,7 +21,7 @@ mutation CreateStudent($input: StudentInput!) {
 }`
 
 export const ASSIGN_WORKSHEET = gql`
-mutation Mutation($studentIds: [ID!]!, $worksheetId: ID!) {
-  assingStudentsWorksheet(studentIds: $studentIds, worksheetId: $worksheetId)
+mutation AssignWorksheets($studentIds: [ID!]!, $worksheetIds: [ID!]!) {
+  assingStudentsWorksheet(studentIds: $studentIds, worksheetIds: $worksheetIds) 
 }
 `
