@@ -1,7 +1,11 @@
+'use client'
 import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
+
 
 export function Hero() {
   return (
+    <AnimatePresence>
     <div className="bg-white">
     <main>
       <div className="relative isolate">
@@ -45,21 +49,36 @@ export function Hero() {
           <div className="mx-auto max-w-7xl px-6 pb-32 pt-36 sm:pt-60 lg:px-8 lg:pt-32">
             <div className="mx-auto max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
               <div className="relative w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
-                <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+                <motion.h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl"
+                initial={{y: -100, opacity: 0}}
+                animate={{y: 0, opacity: 1}}
+                transition={{duration: 1}}
+                >
                   Online learning that helps your child get ahead
-                </h1>
-                <p className="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">
+                </motion.h1>
+                <motion.p className="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none"
+                initial={{ y: 100, opacity: 0}}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{duration: 1}}
+                >
                   Cupidatat minim id magna ipsum sint dolor qui. Sunt sit in quis cupidatat mollit aute velit. Et
                   labore commodo nulla aliqua proident mollit ullamco exercitation tempor. Sint aliqua anim nulla sunt
                   mollit id pariatur in voluptate cillum.
-                </p>
+                </motion.p>
                 <div className="mt-10 flex items-center gap-x-6">
+                 <motion.div
+                 initial={{scale: 0.2}}
+                 whileInView={{scale:1, }}
+                 transition={{duration: 1}}
+                 >
+
                   <Link
                     href={'/auth/login'}
                     className="font-dosis rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  >
+                    >
                     Get started
                   </Link>
+                    </motion.div>
                   <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
                     Live demo <span aria-hidden="true">→</span>
                   </a>
@@ -67,50 +86,75 @@ export function Hero() {
               </div>
               <div className="mt-14 flex justify-end gap-8 sm:-mt-44 sm:justify-start sm:pl-20 lg:mt-0 lg:pl-0">
                 <div className="ml-auto w-44 flex-none space-y-8 pt-32 sm:ml-0 sm:pt-80 lg:order-last lg:pt-36 xl:order-none xl:pt-80">
-                  <div className="relative">
+                  <motion.div className="relative"
+                  initial={{x: 200, opacity: 0}}
+                  whileInView={{x: 0, opacity: 1}}
+                  viewport={{once: true}}
+                  transition={{duration: 1.5}}
+                  >
                     <img
                       src="hero1.jpg"
                       alt=""
                       className="aspect-[2/3] w-full rounded-xl bg-gray-900/5 object-cover shadow-lg"
                     />
                     <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10" />
-                  </div>
+                  </motion.div>
                 </div>
                 <div className="mr-auto w-44 flex-none space-y-8 sm:mr-0 sm:pt-52 lg:pt-36">
-                  <div className="relative">
+                  <motion.div className="relative"
+                  initial={{x: -200, opacity: 0}}
+                  whileInView={{x: 0, opacity: 1}}
+                  viewport={{once: true}}
+                  transition={{duration: 1.5}}
+                  >
                     <img
                       src="hero2.jpg"
                       alt=""
                       className="aspect-[2/3] w-full rounded-xl bg-gray-900/5 object-cover shadow-lg"
                     />
                     <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10" />
-                  </div>
-                  <div className="relative">
+                  </motion.div>
+                  <motion.div className="relative"
+                  initial={{y: 100, opacity: 0}}
+                  whileInView={{y: 0, opacity: 1}}
+                  viewport={{once: true}}
+                  transition={{duration: 1.5}}
+                  >
                     <img
                       src="hero3.jpg"
                       alt=""
                       className="aspect-[2/3] w-full rounded-xl bg-gray-900/5 object-cover shadow-lg"
                     />
                     <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10" />
-                  </div>
+                  </motion.div>
                 </div>
                 <div className="w-44 flex-none space-y-8 pt-32 sm:pt-0">
-                  <div className="relative">
+                  <motion.div className="relative"
+                  initial={{y: -200, opacity: 0}}
+                  whileInView={{y: 0, opacity: 1}}
+                  viewport={{once: true}}
+                  transition={{duration: 1.5}}
+                  >
                     <img
                       src="hero4.jpg"
                       alt=""
                       className="aspect-[2/3] w-full rounded-xl bg-gray-900/5 object-cover shadow-lg"
                     />
                     <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10" />
-                  </div>
-                  <div className="relative">
+                  </motion.div>
+                  <motion.div className="relative"
+                  initial={{x: 200, opacity: 0}}
+                  whileInView={{x: 0, opacity: 1}}
+                  viewport={{once: true}}
+                  transition={{duration: 1.5}}
+                  >
                     <img
                       src="hero5.jpg"
                       alt=""
                       className="aspect-[2/3] w-full rounded-xl bg-gray-900/5 object-cover shadow-lg"
                     />
                     <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10" />
-                  </div>
+                  </motion.div>
                 </div>
               </div>
             </div>
@@ -119,5 +163,6 @@ export function Hero() {
       </div>
     </main>
   </div>
+  </AnimatePresence>
   );
 }

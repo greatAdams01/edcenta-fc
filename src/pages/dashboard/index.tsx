@@ -7,6 +7,7 @@ import { getCookie } from 'cookies-next';
 import AppLayout from '../../layout/AppLayout'
 import { USER, STUDENTS } from '@/apollo/queries/dashboard';
 import { useQuery } from '@apollo/client';
+import { motion } from "framer-motion"
 // import { Stats } from '@/utils/nav';
 
 // const statuses: { [key: string]: string } = { Completed: 'text-green-400 bg-green-400/10', Incomplete: 'text-rose-400 bg-rose-400/10' }
@@ -74,7 +75,8 @@ export default function Dashboard() {
   
   return (
     <AppLayout>
-      <div>
+      <motion.div
+      animate={{}}>
             <header>
               {/* Heading */}
               <div className="flex flex-col items-start justify-between px-4 py-4 sm:flex-row sm:items-center sm:px-6 lg:px-8">
@@ -162,7 +164,7 @@ export default function Dashboard() {
                 </Fragment>
               ))}
             </div>
-      </div>
+      </motion.div>
     </AppLayout>
   )
 }
