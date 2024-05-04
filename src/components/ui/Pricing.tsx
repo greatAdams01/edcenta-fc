@@ -1,75 +1,13 @@
 'use client'
 
 import { useEffect, useId, useState } from 'react'
-import Image from 'next/image'
-import { Tab } from '@headlessui/react'
-import { Dot } from 'lucide-react'; // Import the Dot icon component
-import clsx from 'clsx'
+
+import { motion, AnimatePresence, inView, easeInOut } from 'framer-motion'
+
+import { Check, Sparkles } from 'lucide-react'; 
 
 import { Container } from '@/components/ux/Container'
-import { DiamondIcon } from '@/components/ux/DiamondIcon'
-// Import your avatar images
-
-const days = [
-  {
-    date: 'Individual Plans',
-    dateTime: '',
-    speakers: [
-      {
-        name: 'Basic',
-        info: [
-          'Suitable for individual learners looking to explore specific topics',
-          'Access to a selection of courses and educational resources.',
-        ],
-        image: '/istockphoto-886934266-612x612.jpg',
-      },
-      {
-        name: 'Standard',
-        info: [
-          'Perfect for learners seeking a more comprehensive learning experience.',
-          'Access to a wider range of courses covering various subjects.',
-          'Enhanced features, including quizzes, assessments, and certificates.',
-        ],
-        image: '/istockphoto-510398013-612x612.jpg',
-      },
-      {
-        name: 'Premium',
-        info: [
-          'Ideal for serious learners committed to advancing their knowledge and skills.',
-          'Full access to all courses, resources, and premium features.',
-          'Personalized learning paths and expert guidance.',
-          'Priority support and exclusive benefits.',
-        ],
-        image: '/istockphoto-1308840815-612x612.jpg',
-      },
-    ],
-  },
-  {
-    date: 'Group Plans',
-    dateTime: '',
-    speakers: [
-      {
-        name: 'Small Group',
-        info: [
-          'Designed for small groups or study circles.',
-          'Access to selected courses suitable for group learning.',
-          'Collaboration tools and progress tracking for group members.'
-
-        ],
-        image: '/istockphoto-1166892018-612x612.jpg',
-      },
-      {
-        name: 'Corporate',
-        info: [
-          'Tailored solutions for organizations and corporate training programs.',
-          'Customized course content and learning paths aligned with business objectives.',
-          'Dedicated account management and priority support'
-        ],
-        image: '/istockphoto-1413666057-612x612.jpg',
-      },
-    ],
-  },
-]
+import { Price } from '@/utils/Price';
 
 function ImageClipPaths({
   id,
@@ -93,6 +31,7 @@ function ImageClipPaths({
 }
 
 export function Pricing() {
+  
   let id = useId()
   let [tabOrientation, setTabOrientation] = useState('horizontal')
 
@@ -127,108 +66,48 @@ export function Pricing() {
             Pricing
           </h2>
           <p className="mt-4 font-display text-2xl tracking-tight text-blue-900">
-            Whether you are an individual learner looking to enhance your skills or a group seeking comprehensive educational solutions, we have a plan for you.
+            Whether you are an individual learner looking to enhance your skills or a group seeking comprehensive educational solutions, we have the best plan for you.
           </p>
         </div>
-        <Tab.Group
-          as="div"
-          className="mt-14 grid grid-cols-1 items-start gap-x-8 gap-y-8 sm:mt-16 sm:gap-y-16 lg:mt-24 lg:grid-cols-4"
-          vertical={tabOrientation === 'vertical'}
+        <AnimatePresence mode='wait'>
+        <section className='my-10 grid md:grid-cols-3 gap-x-8 gap-y-4'
         >
-          <Tab.Panels className="lg:col-span-3">
-            {days.map((day) => (
-              <Tab.Panel
-                key={day.dateTime}
-                className="grid grid-cols-1 gap-x-8 gap-y-10 ui-not-focus-visible:outline-none sm:grid-cols-2 sm:gap-y-16 md:grid-cols-3"
-                unmount={false}
+          {Price.map((price: any, index: any) => (
+            <motion.div key={index} className='transition-all ease-in-out delay-500 duration-1000 border border-blue-500 hover:border-2 hover:shadow-lg hover:shadow-blue-500 rounded-md p-4 leading-loose' 
+            initial={{y:100, opacity:0}}
+            whileInView={{y:0, opacity:1}}
+            transition={{duration:0.75}}
+            whileHover={{
+              scale: 1.02
+            }}
+            >
+              <div className='grid gap-y-4'>
+                <div className='w-full flex justify-center'>
+                {price.popular === true ? (
+                  <p className='flex items-center bg-purple-500 px-2 rounded-full text-white font-bold'><Sparkles  className='mr-px w-4'/>Most Popular</p>
+                )  :(null)}
+                </div>
+              <h2 className='font-bold text-2xl text-center text-blue-950'>{price.name}</h2>
+              <p className='text-center text-lg font-light opacity-70  '>{price.description}</p>
+              <div className='w-full flex justify-center'>
+              <motion.button 
+              type='button' 
+              className='w-full transition-all ease-in-out delay-500 duration-1000 rounded-md bg-blue-500 hover:bg-[#0075BC] p-2 text-white font-bold'
               >
-                {day.speakers.map((speaker, speakerIndex) => (
-                  <div key={speakerIndex}>
-                    <div className="group relative h-[17.5rem] transform overflow-hidden rounded-4xl">
-                      <div
-                        className={clsx(
-                          'absolute bottom-6 left-0 right-4 top-0 rounded-4xl border transition duration-300 group-hover:scale-95 xl:right-6',
-                          [
-                            'border-blue-300',
-                            'border-indigo-300',
-                            'border-sky-300',
-                          ][speakerIndex % 3],
-                        )}
-                      />
-                      <div
-                        className="absolute inset-0 bg-indigo-50"
-                        style={{ clipPath: `url(#${id}-${speakerIndex % 3})` }}
-                      >
-                        <Image
-                          className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-110"
-                          src={speaker.image}
-                          width={100}
-                          height={100}
-                          alt=""
-                          priority
-                          sizes="(min-width: 1280px) 17.5rem, (min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
-                        />
-                      </div>
-                    </div>
-                    <h3 className="mt-8 font-display text-xl font-bold tracking-tight text-slate-900">
-                      {speaker.name}
-                    </h3>
-                    <ul className="mt-1 text-base tracking-tight text-slate-500">
-                      {speaker.info.map((item, index) => (
-                        <li key={index} className="flex items-center">
-                          <Dot className="mr-2" size="16" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </Tab.Panel>
-            ))}
-          </Tab.Panels>
-
-          <div className="relative -mx-4 flex overflow-x-auto pb-4 sm:mx-0 sm:block sm:overflow-visible sm:pb-0">
-            <div className="absolute bottom-0 left-0.5 top-2 hidden w-px bg-slate-200 lg:block" />
-            <Tab.List className="grid auto-cols-auto grid-flow-col justify-start gap-x-8 gap-y-10 whitespace-nowrap px-4 sm:mx-auto sm:max-w-2xl sm:grid-cols-3 sm:px-0 sm:text-center lg:grid-flow-row lg:grid-cols-1 lg:text-left">
-              {({ selectedIndex }) => (
-                <>
-                  {days.map((day, dayIndex) => (
-                    <div key={day.dateTime} className="relative lg:pl-8">
-                      <DiamondIcon
-                        className={clsx(
-                          'absolute left-[-0.5px] top-[0.5625rem] hidden h-1.5 w-1.5 overflow-visible lg:block',
-                          dayIndex === selectedIndex
-                            ? 'fill-blue-600 stroke-blue-600'
-                            : 'fill-transparent stroke-slate-400',
-                        )}
-                      />
-                      <div className="relative">
-                        <div
-                          className={clsx(
-                            '',
-                            dayIndex === selectedIndex
-                              ? 'text-blue-600'
-                              : 'text-slate-500',
-                          )}
-                        >
-                          <Tab className="ui-not-focus-visible:outline-none">
-                            <time
-                              className="mt-1.5 block text-md lg:text-2xl font-semibold tracking-tight text-blue-900"
-                            >
-                              {day.date}
-                            </time>
-                          </Tab>
-                        </div>
-                       
-                      </div>
-                    </div>
-                  ))}
-                </>
-              )}
-            </Tab.List>
-          </div>
-
-        </Tab.Group>
+                Start Plan
+              </motion.button> 
+              </div>
+              <div className='w-full h-px bg-blue-500 rounded-full' />
+              </div>
+              {price.points.map((point: any, index: any) => (
+                <div key={index} className='flex my-2 gap-x-4'>
+                  <div className='w-2 h-2 mt-1 mx-4'><Check className='text-blue-500 '/></div> <p>{point.point}</p>
+                </div>
+              ))}
+            </motion.div>
+          ))}
+        </section>
+        </AnimatePresence>
       </Container>
     </section>
   )
