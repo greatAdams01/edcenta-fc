@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useState } from 'react'
 
-import { motion, AnimatePresence, inView, easeInOut } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 
 import { Check, Sparkles } from 'lucide-react'; 
 

@@ -1,5 +1,7 @@
 import Image from 'next/image'
 
+import {motion} from 'framer-motion'
+
 import { Container } from '@/components/ux/Container'
 import logoLaravel from '@/images/logos/laravel.svg'
 import logoMirage from '@/images/logos/mirage.svg'
@@ -19,7 +21,12 @@ const sponsors = [
 
 export function Sponsors() {
   return (
-    <section id="sponsors" aria-label="Sponsors" className="py-20 sm:py-32">
+    <motion.section id="sponsors" aria-label="Sponsors" className="py-20 sm:py-32"
+    initial={{opacity:0, y:100}}
+    whileInView={{opacity:1, y:0}}
+    viewport={{once:true}}
+    transition={{duration:0.75}}
+    >
       <Container>
         <h2 className="mx-auto max-w-2xl text-center font-display text-4xl font-medium tracking-tighter text-blue-900 sm:text-5xl">
           Current sponsorships for our workshops and speakers.
@@ -35,6 +42,6 @@ export function Sponsors() {
           ))}
         </div>
       </Container>
-    </section>
+    </motion.section>
   )
 }

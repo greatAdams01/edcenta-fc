@@ -5,6 +5,8 @@ import Image from 'next/image'
 import { Tab } from '@headlessui/react'
 import clsx from 'clsx'
 
+import { motion, AnimatePresence } from 'framer-motion'
+
 import { Container } from '@/components/ux/Container'
 import { DiamondIcon } from '@/components/ux/DiamondIcon'
 import andrewGreeneImage from '@/images/avatars/andrew-greene.jpg'
@@ -136,10 +138,14 @@ export function Learn() {
   }, [])
 
   return (
-    <section
+    <motion.section
       id="speakers"
       aria-labelledby="speakers-title"
       className="py-20 sm:py-32"
+      initial={{opacity: 0, y:100}}
+      whileInView={{opacity:1, y:0}}
+      viewport={{once: true}}
+      transition={{duration: 0.75}}
     >
       <ImageClipPaths id={id} />
       <Container>
@@ -249,6 +255,6 @@ export function Learn() {
           </Tab.Panels>
         </Tab.Group>
       </Container>
-    </section>
+    </motion.section>
   )
 }
