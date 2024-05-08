@@ -76,6 +76,7 @@ export function Pricing() {
             <motion.div key={index} className='transition-all ease-in-out delay-500 duration-1000 border border-blue-500 hover:border-2 hover:shadow-lg hover:shadow-blue-500 rounded-md p-4 leading-loose' 
             initial={{y:100, opacity:0}}
             whileInView={{y:0, opacity:1}}
+            viewport={{once: true}}
             transition={{duration:0.75}}
             whileHover={{
               scale: 1.02

@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 export function Hero() {
   return (
-    <AnimatePresence>
     <div className="bg-white">
     <main>
       <div className="relative isolate">
@@ -69,6 +68,7 @@ export function Hero() {
                  <motion.div
                  initial={{scale: 0.2}}
                  whileInView={{scale:1, }}
+                 viewport={{once: true}}
                  transition={{duration: 1}}
                  >
 
@@ -163,6 +163,5 @@ export function Hero() {
       </div>
     </main>
   </div>
-  </AnimatePresence>
   );
 }
