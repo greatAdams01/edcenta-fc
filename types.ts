@@ -18,7 +18,7 @@ export enum AccountType {
   TUTOR = 'TUTOR',
   PARENT = 'PARENT',
   MODERATOR = 'MODERATOR',
-  SUPERADMIN = 'SUPERADMIN'
+  SUPERADMIN = 'SUPERADMIN',
 }
 
 export enum ITransactionType {
@@ -78,8 +78,8 @@ export interface IUser extends DefaultAttributes {
 export interface ISchool extends DefaultAttributes {
   name: string
   address: string
-  students: string[] 
-  tutors: string[] 
+  students: string[]
+  tutors: string[]
   isVerified: boolean
   isActive: boolean
   userId: string
@@ -103,14 +103,13 @@ export interface ITutor extends DefaultAttributes {
   classes: string[]
 }
 
-
 export interface IClass extends DefaultAttributes {
   className: string
   subject: string
   classCode: string
   address: string
-  students: string[] 
-  tutor: string[];
+  students: string[]
+  tutor: string[]
   isVerified: boolean
   isActive: boolean
 }
@@ -231,7 +230,7 @@ export interface ITopic extends DefaultAttributes {
   slug: string
   levelId: string
   subject: string
-  type: string;
+  type: string
 }
 
 export interface ISubtopic extends DefaultAttributes {
@@ -243,37 +242,36 @@ export interface ISubtopic extends DefaultAttributes {
 export interface IFile {
   file: string
   type: FileType
-} 
+}
 
 enum Difficulty {
   EASY = 'EASY',
   MEDIUM = 'MEDIUM',
   HARD = 'HARD',
-
 }
 
 export interface ISheet {
-  text: string;
-  img: string;
+  text: string
+  img: string
 }
 
 export interface IWorkSheet extends DefaultAttributes {
-  title: string;
-  body: ISheet[];
-  subjectId: string;
-  topicId: string;
-  levelId: string;
-  difficulty: Difficulty;
-  questions: string[] | string[];
+  title: string
+  body: ISheet[]
+  subjectId: string
+  topicId: string
+  levelId: string
+  difficulty: Difficulty
+  questions: string[] | string[]
 }
 
 export interface IQuestion extends DefaultAttributes {
-  title: string;
-  body: ISheet[];
-  isObjective: boolean;
-  options: IQuestionOption[];
-  worksheetId: string;
-  explanation: string;
+  title: string
+  body: ISheet[]
+  isObjective: boolean
+  options: IQuestionOption[]
+  worksheetId: string
+  explanation: string
 }
 
 export interface IQuestionOption {
@@ -286,42 +284,39 @@ export enum AssessmentStatus {
   PENDING = 'PENDING',
   DONE = 'DONE',
   FAILED = 'FAILED',
-  
 }
-
 
 export interface IStudent extends DefaultAttributes {
-  name: string;
-  age: number;
-  grade: ISchoolGrade;
-  username: string;
-  password: string;
-  email: string;
-  creatorId: string;
-  schoolId: string;
-  assessment: string[];
-  lastLoggedIn: string;
-  isActive: boolean;
+  name: string
+  age: number
+  grade: ISchoolGrade
+  username: string
+  password: string
+  email: string
+  creatorId?: string
+  schoolId: string
+  assessment: string[]
+  lastLoggedIn: string
+  isActive: boolean
 }
 
-
 export interface IAnswer {
-  questionId: string;
-  answer: string; // question option ID
-  isCorrect: boolean;
+  questionId: string
+  answer: string // question option ID
+  isCorrect: boolean
 }
 
 export interface IAssessment extends DefaultAttributes {
-  student: string;
-  worksheetId: string;
-  answers: IAnswer[];
-  score: number;
-  status: AssessmentStatus;
-  attemptedAt: string;
+  student: string
+  worksheetId: string
+  answers: IAnswer[]
+  score: number
+  status: AssessmentStatus
+  attemptedAt: string
 }
 
-export interface ISchoolGrade extends DefaultAttributes{
-  stage: number;
-  ages: string;
-  year: string; 
+export interface ISchoolGrade extends DefaultAttributes {
+  stage: number
+  ages: string
+  year: string
 }
