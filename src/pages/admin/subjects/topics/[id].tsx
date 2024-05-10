@@ -1,32 +1,37 @@
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
-
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
-
-import Pagination from '@/components/dashbord/Pagination'
+import { GET_SUBJECT_TOPICS } from '@/apollo/queries/admin'
+import { ITopic } from '../../../../../types'
 import AdminLayout from '@/layout/AdminLayout'
-import { SUBJECTS } from '@/apollo/queries/admin'
+import Link from 'next/link'
+import Pagination from '@/components/dashbord/Pagination'
 import ModalAuth from '@/components/ModalComp'
-import { ISubject } from '../../../../types'
-import { DELETE_SUBJECT } from '@/apollo/mutations/admin'
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { showToast } from '@/utils/toast'
 import EditSubject from '@/components/dashbord/EditSubject'
+import { DELETE_TOPIC } from '@/apollo/mutations/admin'
 
-function Subjects() {
+type TopicsProps = {
+  _id: string
+}
+
+const Topics: React.FC<TopicsProps> = () => {
+  const router = useRouter()
+  const { id } = router.query
   const [page, setPage] = useState(1)
   const [subjectType, setType] = useState('')
-  const [subjectList, setSubjects] = useState<any[]>([])
+  const [topicList, setTopics] = useState<any[]>([])
   const [open, setOpen] = useState(false)
   const [toDelete, setDelete] = useState(false)
   const [itemId, setItemId] = useState('')
-  const [subject, setSubject] = useState<ISubject>({
+  const [topic, setTopic] = useState<ITopic>({
     name: '',
     description: '',
     slug: '',
-    tags: [],
-    schoolGrade: '',
-    save: () => {},
+    levelId: '',
+    subject: '',
+    type: '',
   })
 
   const handleDelete = (id?: string) => {
@@ -39,27 +44,30 @@ function Subjects() {
     setOpen(!open)
   }
 
-  const [getSubjects, { loading, error, data }] = useLazyQuery(SUBJECTS, {
-    variables: { page, limit: 20, filter: subjectType },
-    onCompleted: (data) => {
-      setSubjects(data.subjects)
+  const [getTopics, { loading, error, data }] = useLazyQuery(
+    GET_SUBJECT_TOPICS,
+    {
+      variables: { subjectId: id },
+      onCompleted: (data) => {
+        setTopics(data.subjects)
+      },
     },
-  })
+  )
   useEffect(() => {
-    console.log('subjectList', subjectList)
-  }, [subjectList])
+    console.log('subjectList', topicList)
+  }, [topicList])
 
   const handlePageChange = (pageNum: number) => {
     setPage(pageNum)
   }
 
-  const [deleteSubject, deleteStatus] = useMutation(DELETE_SUBJECT, {
+  const [deleteSubject, deleteStatus] = useMutation(DELETE_TOPIC, {
     variables: {
       id: itemId,
     },
     onCompleted: (data) => {
       console.log(data)
-      showToast('success', 'User deleted')
+      showToast('success', 'Topic deleted')
       // reload the page
       window.location.reload()
     },
@@ -71,11 +79,11 @@ function Subjects() {
 
   useEffect(() => {
     if (itemId) {
-      const subject = subjectList.find((subject) => subject._id === itemId)
-      setSubject(subject)
+      const topic = topicList.find((topic) => topic._id === itemId)
+      setTopic(topic)
     }
     // Fetch data from API
-    getSubjects()
+    getTopics()
   }, [page, itemId])
   return (
     <AdminLayout>
@@ -83,10 +91,10 @@ function Subjects() {
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
             <h1 className="text-base font-semibold leading-6 text-gray-900">
-              Subject
+              Topic
             </h1>
             <p className="mt-2 text-sm text-gray-700">
-              A list of all the subjects available in the platform.
+              A list of all the topics available in the Subject.
             </p>
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -94,7 +102,7 @@ function Subjects() {
               href={'/admin/subjects/add_subject'}
               className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Create subject
+              Create topic
             </a>
           </div>
         </div>
@@ -129,7 +137,7 @@ function Subjects() {
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
-                      Tags
+                      Type
                     </th>
                     <th
                       scope="col"
@@ -141,12 +149,13 @@ function Subjects() {
                 </thead>
                 {data && (
                   <tbody className="bg-white">
-                    {subjectList.map((person, index) => (
+                    {topicList.map((person, index) => (
                       <tr key={index} className="even:bg-gray-50">
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
                           <Link
-                            href={`subjects/topics/${person._id}`}
+                            href="#"
                             className="cursor-pointer text-indigo-600 hover:text-indigo-900"
+                            onClick={() => handleEdit(person._id)}
                           >
                             {person.name}
                           </Link>
@@ -159,7 +168,7 @@ function Subjects() {
                           {person.slug}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {person.tags.join(', ')}
+                          {person.type}
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
                           <a
@@ -216,7 +225,7 @@ function Subjects() {
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
                     Are you sure you want to delete{' '}
-                    <span className="font-bold"> {subject?.name}</span> ? All of{' '}
+                    <span className="font-bold"> {topic?.name}</span> ? All of{' '}
                     {`it's`} data will be permanently removed from our servers
                     forever. This action cannot be undone.
                   </p>
@@ -243,13 +252,11 @@ function Subjects() {
             </div>
           </>
         ) : (
-          <>
-            <EditSubject subject={subject} />
-          </>
+          <>{/* <EditSubject subject={topic} /> */}</>
         )}
       </ModalAuth>
     </AdminLayout>
   )
 }
 
-export default Subjects
+export default Topics

@@ -72,3 +72,22 @@ export const SUBJECTS = gql`
     }
   }
 `
+
+export const GET_SUBJECT_TOPICS = gql`
+  query GetSubjectTopics($subjectId: ID!) {
+    getSubjectTopics(subjectId: $subjectId) {
+      _id
+      name
+      description
+      slug
+      levelId
+      worksheet {
+        _id
+        title
+        body
+        difficulty
+      }
+      type
+    }
+  }
+`

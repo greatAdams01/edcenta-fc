@@ -53,6 +53,13 @@ export const DELETE_STUDENT = gql`
     }
   }
 `
+export const UPDATE_STUDENT = gql`
+  mutation UpdateStudent($updateStudentId: ID!, $input: StudentInput!) {
+    updateStudent(id: $updateStudentId, input: $input) {
+      _id
+    }
+  }
+`
 
 export const UPDATE_SUBJECT = gql`
   mutation UpdateSubject(
@@ -80,5 +87,29 @@ export const UPDATE_SUBJECT = gql`
 export const DELETE_SUBJECT = gql`
   mutation DeleteSubject($id: ID!) {
     deleteSubject(id: $id)
+  }
+`
+export const DELETE_TOPIC = gql`
+  mutation DeleteTopic($id: ID!) {
+    deleteTopic(id: $id)
+  }
+`
+
+export const CREATE_SUBJECT = gql`
+  mutation CreateSubject(
+    $name: String!
+    $description: String!
+    $schoolGrade: String!
+  ) {
+    createSubject(
+      name: $name
+      description: $description
+      schoolGrade: $schoolGrade
+    ) {
+      _id
+      name
+      description
+      schoolGrade
+    }
   }
 `
