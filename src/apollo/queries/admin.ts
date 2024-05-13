@@ -117,7 +117,7 @@ export const WORKSHEETS = gql`
         _id
         title
         body {
-          text: ''
+          text: ""
         }
         levelId
         topicId
