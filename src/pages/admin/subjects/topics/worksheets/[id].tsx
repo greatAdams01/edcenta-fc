@@ -1,32 +1,35 @@
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
-
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
-
-import Pagination from '@/components/dashbord/Pagination'
+import { TOPICS, WORKSHEETS } from '@/apollo/queries/admin'
+import { IWorksheet } from '../../../../../../types'
 import AdminLayout from '@/layout/AdminLayout'
-import { SUBJECTS } from '@/apollo/queries/admin'
+import Link from 'next/link'
+import Pagination from '@/components/dashbord/Pagination'
 import ModalAuth from '@/components/ModalComp'
-import { ISubject } from '../../../../types'
-import { DELETE_SUBJECT } from '@/apollo/mutations/admin'
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { showToast } from '@/utils/toast'
-import EditSubject from '@/components/dashbord/EditSubject'
+import { DELETE_WORKSHEET } from '@/apollo/mutations/admin'
+import EditTopic from '@/components/dashbord/EditTopic'
+import EditWorksheet from '@/components/dashbord/EditWorksheet'
 
-function Subjects() {
+type WorksheetProps = {
+  _id: string
+}
+
+const Topics: React.FC<WorksheetProps> = () => {
+  const router = useRouter()
+  const { id } = router.query
   const [page, setPage] = useState(1)
-  const [subjectType, setType] = useState('')
-  const [subjectList, setSubjects] = useState<any[]>([])
+  const [worksheetType, setType] = useState('')
+  const [worksheetList, setWorksheets] = useState<any[]>([])
   const [open, setOpen] = useState(false)
   const [toDelete, setDelete] = useState(false)
   const [itemId, setItemId] = useState('')
-  const [subject, setSubject] = useState<ISubject>({
-    name: '',
-    description: '',
-    slug: '',
-    tags: [],
-    schoolGrade: '',
-    save: () => {},
+  const [worksheet, setWorksheet] = useState<IWorksheet>({
+    title: '',
+    body: [],
+    difficulty: '',
   })
 
   const handleDelete = (id?: string) => {
@@ -38,33 +41,34 @@ function Subjects() {
     setItemId(id ? id : '')
     setOpen(!open)
   }
-
-  const [getSubjects, { loading, error, data }] = useLazyQuery(SUBJECTS, {
-    variables: { page, limit: 20, filter: subjectType },
+  const [getWorksheet, { loading, error, data }] = useLazyQuery(WORKSHEETS, {
+    variables: { page, limit: 20, filter: worksheetType, searchParams: id },
     onCompleted: (data) => {
-      setSubjects(data.subjects.data)
+      console.log('Data:', data)
+      setWorksheets(data.worksheet.data)
     },
   })
+
+  if (error) {
+    console.log('Error:', error)
+  }
   useEffect(() => {
-    console.log('subjectList', subjectList)
-  }, [subjectList])
+    console.log('worksheetList', worksheetList)
+  }, [worksheetList])
 
   const handlePageChange = (pageNum: number) => {
     setPage(pageNum)
   }
 
-  const [deleteSubject, deleteStatus] = useMutation(DELETE_SUBJECT, {
+  const [deleteTopic, deleteStatus] = useMutation(DELETE_WORKSHEET, {
     variables: {
       id: itemId,
     },
     onCompleted: (data) => {
-      if (data.deleteSubject) {
-        showToast('success', 'Subject deleted')
-        // reload the page
-        window.location.reload()
-      } else {
-        showToast('error', 'Failed to delete subject')
-      }
+      console.log(data)
+      showToast('success', 'Topic deleted')
+      // reload the page
+      window.location.reload()
     },
     onError: (error) => {
       showToast('error', error.message)
@@ -74,11 +78,11 @@ function Subjects() {
 
   useEffect(() => {
     if (itemId) {
-      const subject = subjectList.find((subject) => subject._id === itemId)
-      setSubject(subject)
+      const topic = worksheetList.find((worksheet) => worksheet._id === itemId)
+      setWorksheet(topic)
     }
     // Fetch data from API
-    getSubjects()
+    getWorksheet()
   }, [page, itemId, open])
   return (
     <AdminLayout>
@@ -86,18 +90,18 @@ function Subjects() {
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
             <h1 className="text-base font-semibold leading-6 text-gray-900">
-              Subject
+              Topic
             </h1>
             <p className="mt-2 text-sm text-gray-700">
-              A list of all the subjects available in the platform.
+              A list of all the topics available in the Subject.
             </p>
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
             <a
-              href={'/admin/subjects/add_subject'}
+              href={'/admin/subjects/topics/add_topic'}
               className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Create subject
+              Create topic
             </a>
           </div>
         </div>
@@ -124,18 +128,6 @@ function Subjects() {
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Slugs
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Tags
-                    </th>
-                    <th
-                      scope="col"
                       className="relative py-3.5 pl-3 pr-4 sm:pr-3"
                     >
                       <span className="sr-only">Edit</span>
@@ -144,25 +136,19 @@ function Subjects() {
                 </thead>
                 {data && (
                   <tbody className="bg-white">
-                    {subjectList.map((person, index) => (
+                    {worksheetList.map((person, index) => (
                       <tr key={index} className="even:bg-gray-50">
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
                           <Link
                             href={`subjects/topics/${person._id}`}
                             className="cursor-pointer text-indigo-600 hover:text-indigo-900"
                           >
-                            {person.name}
+                            {person.title}
                           </Link>
                         </td>
                         {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td> */}
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {person.description}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {person.slug}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {person.tags.join(', ')}
+                          {person.body.text}
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
                           <a
@@ -170,7 +156,8 @@ function Subjects() {
                             className="text-indigo-600 hover:text-indigo-900"
                             onClick={() => handleEdit(person._id)}
                           >
-                            Edit<span className="sr-only">, {person.name}</span>
+                            Edit
+                            <span className="sr-only">, {person.title}</span>
                           </a>
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
@@ -180,7 +167,7 @@ function Subjects() {
                             onClick={() => handleDelete(person._id)}
                           >
                             Delete
-                            <span className="sr-only">, {person.name}</span>
+                            <span className="sr-only">, {person.title}</span>
                           </a>
                         </td>
                       </tr>
@@ -214,14 +201,14 @@ function Subjects() {
               </div>
               <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                 <h3 className="text-base font-semibold leading-6 text-gray-900">
-                  Delete account
+                  Delete topic
                 </h3>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
                     Are you sure you want to delete{' '}
-                    <span className="font-bold"> {subject?.name}</span> ? All of{' '}
-                    {`it's`} data will be permanently removed from our servers
-                    forever. This action cannot be undone.
+                    <span className="font-bold"> {worksheet?.title}</span> ? All
+                    of {`it's`} data will be permanently removed from our
+                    servers forever. This action cannot be undone.
                   </p>
                 </div>
               </div>
@@ -231,7 +218,7 @@ function Subjects() {
                 type="button"
                 disabled={deleteStatus.loading}
                 className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                onClick={() => deleteSubject()}
+                onClick={() => deleteTopic()}
               >
                 Delete
               </button>
@@ -247,7 +234,7 @@ function Subjects() {
           </>
         ) : (
           <>
-            <EditSubject subject={subject} />
+            <EditWorksheet worksheet={worksheet} />
           </>
         )}
       </ModalAuth>
@@ -255,4 +242,4 @@ function Subjects() {
   )
 }
 
-export default Subjects
+export default Topics

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
-import { GET_SUBJECT_TOPICS } from '@/apollo/queries/admin'
+import { TOPICS } from '@/apollo/queries/admin'
 import { ITopic } from '../../../../../types'
 import AdminLayout from '@/layout/AdminLayout'
 import Link from 'next/link'
@@ -9,8 +9,8 @@ import Pagination from '@/components/dashbord/Pagination'
 import ModalAuth from '@/components/ModalComp'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { showToast } from '@/utils/toast'
-import EditSubject from '@/components/dashbord/EditSubject'
 import { DELETE_TOPIC } from '@/apollo/mutations/admin'
+import EditTopic from '@/components/dashbord/EditTopic'
 
 type TopicsProps = {
   _id: string
@@ -19,8 +19,13 @@ type TopicsProps = {
 const Topics: React.FC<TopicsProps> = () => {
   const router = useRouter()
   const { id } = router.query
+  React.useEffect(() => {
+    if (id) {
+      localStorage.setItem('subjectId', id as string)
+    }
+  }, [id])
   const [page, setPage] = useState(1)
-  const [subjectType, setType] = useState('')
+  const [topicType, setType] = useState('')
   const [topicList, setTopics] = useState<any[]>([])
   const [open, setOpen] = useState(false)
   const [toDelete, setDelete] = useState(false)
@@ -30,8 +35,6 @@ const Topics: React.FC<TopicsProps> = () => {
     description: '',
     slug: '',
     levelId: '',
-    subject: '',
-    type: '',
   })
 
   const handleDelete = (id?: string) => {
@@ -43,16 +46,17 @@ const Topics: React.FC<TopicsProps> = () => {
     setItemId(id ? id : '')
     setOpen(!open)
   }
-
-  const [getTopics, { loading, error, data }] = useLazyQuery(
-    GET_SUBJECT_TOPICS,
-    {
-      variables: { subjectId: id },
-      onCompleted: (data) => {
-        setTopics(data.subjects)
-      },
+  const [getTopics, { loading, error, data }] = useLazyQuery(TOPICS, {
+    variables: { page, limit: 20, filter: topicType, searchParams: id },
+    onCompleted: (data) => {
+      console.log('Data:', data)
+      setTopics(data.topics.data)
     },
-  )
+  })
+
+  if (error) {
+    console.log('Error:', error)
+  }
   useEffect(() => {
     console.log('subjectList', topicList)
   }, [topicList])
@@ -61,7 +65,7 @@ const Topics: React.FC<TopicsProps> = () => {
     setPage(pageNum)
   }
 
-  const [deleteSubject, deleteStatus] = useMutation(DELETE_TOPIC, {
+  const [deleteTopic, deleteStatus] = useMutation(DELETE_TOPIC, {
     variables: {
       id: itemId,
     },
@@ -84,7 +88,7 @@ const Topics: React.FC<TopicsProps> = () => {
     }
     // Fetch data from API
     getTopics()
-  }, [page, itemId])
+  }, [page, itemId, open])
   return (
     <AdminLayout>
       <div className="px-4 sm:px-6 lg:px-8">
@@ -99,7 +103,7 @@ const Topics: React.FC<TopicsProps> = () => {
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
             <a
-              href={'/admin/subjects/add_subject'}
+              href={'/admin/subjects/topics/add_topic'}
               className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Create topic
@@ -153,9 +157,8 @@ const Topics: React.FC<TopicsProps> = () => {
                       <tr key={index} className="even:bg-gray-50">
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
                           <Link
-                            href="#"
+                            href={`subjects/topics/worksheets/${person._id}`}
                             className="cursor-pointer text-indigo-600 hover:text-indigo-900"
-                            onClick={() => handleEdit(person._id)}
                           >
                             {person.name}
                           </Link>
@@ -220,7 +223,7 @@ const Topics: React.FC<TopicsProps> = () => {
               </div>
               <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                 <h3 className="text-base font-semibold leading-6 text-gray-900">
-                  Delete account
+                  Delete topic
                 </h3>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
@@ -237,7 +240,7 @@ const Topics: React.FC<TopicsProps> = () => {
                 type="button"
                 disabled={deleteStatus.loading}
                 className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                onClick={() => deleteSubject()}
+                onClick={() => deleteTopic()}
               >
                 Delete
               </button>
@@ -252,7 +255,9 @@ const Topics: React.FC<TopicsProps> = () => {
             </div>
           </>
         ) : (
-          <>{/* <EditSubject subject={topic} /> */}</>
+          <>
+            <EditTopic topic={topic} />
+          </>
         )}
       </ModalAuth>
     </AdminLayout>

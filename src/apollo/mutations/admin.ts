@@ -84,6 +84,42 @@ export const UPDATE_SUBJECT = gql`
     }
   }
 `
+export const UPDATE_TOPIC = gql`
+  mutation UpdateTopic($id: ID!, $name: String!) {
+    updateTopic(id: $id, name: $name) {
+      _id
+      name
+    }
+  }
+`
+
+export const UPDATE_WORKSHEET = gql`
+  mutation UpdateWorksheet($id: ID!, $input: WorkSheetInput!) {
+    updateWorksheet(id: $id, input: $input) {
+      _id
+      title
+      body {
+        text: ''
+      }
+      levelId
+      topicId
+      subjectId
+      difficulty
+    }
+  }
+`
+
+export const WORKSHEET_INPUT = gql`
+  input WorkSheetInput {
+    title: String!
+    body: [BodyInput!]!
+    levelId: ID!
+    topicId: ID!
+    subjectId: String!
+    difficulty: String!
+  }
+`
+
 export const DELETE_SUBJECT = gql`
   mutation DeleteSubject($id: ID!) {
     deleteSubject(id: $id)
@@ -92,6 +128,14 @@ export const DELETE_SUBJECT = gql`
 export const DELETE_TOPIC = gql`
   mutation DeleteTopic($id: ID!) {
     deleteTopic(id: $id)
+  }
+`
+
+export const DELETE_WORKSHEET = gql`
+  mutation DeleteWorksheet($id: ID!) {
+    deleteWorksheet(id: $id) {
+      _id
+    }
   }
 `
 
@@ -110,6 +154,29 @@ export const CREATE_SUBJECT = gql`
       name
       description
       schoolGrade
+    }
+  }
+`
+export const CREATE_TOPIC = gql`
+  mutation CreateTopic(
+    $name: String!
+    $levelId: ID!
+    $subjectId: ID!
+    $type: TopicType!
+    $description: String!
+  ) {
+    createTopic(
+      name: $name
+      levelId: $levelId
+      subjectId: $subjectId
+      type: $type
+      description: $description
+    ) {
+      _id
+      name
+      description
+      slug
+      levelId
     }
   }
 `

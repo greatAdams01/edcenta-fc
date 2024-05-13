@@ -61,33 +61,92 @@ export const STUDENTS = gql`
 `
 
 export const SUBJECTS = gql`
-  query Subjects($page: Int, $limit: Int, $filter: String) {
-    subjects(page: $page, limit: $limit, filter: $filter) {
-      _id
-      name
-      description
-      slug
-      tags
-      schoolGrade
+  query Subjects(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $searchParams: String
+  ) {
+    subjects(
+      page: $page
+      limit: $limit
+      filter: $filter
+      searchParams: $searchParams
+    ) {
+      data {
+        _id
+        name
+        description
+        slug
+        tags
+      }
+      totalRecord
+      totalPage
     }
   }
 `
 
-export const GET_SUBJECT_TOPICS = gql`
-  query GetSubjectTopics($subjectId: ID!) {
-    getSubjectTopics(subjectId: $subjectId) {
-      _id
-      name
-      description
-      slug
-      levelId
-      worksheet {
+export const TOPICS = gql`
+  query Topics(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $searchParams: String
+  ) {
+    topics(
+      page: $page
+      limit: $limit
+      filter: $filter
+      searchParams: $searchParams
+    ) {
+      data {
+        _id
+        name
+        description
+        slug
+        levelId
+      }
+      totalRecord
+    }
+  }
+`
+export const WORKSHEETS = gql`
+  query Worksheets($page: Int, $limit: Int, $filter: String, $searchParams: String) {
+    worksheets(page: $page, limit: $limit, filter: $filter, searchParams: $searchParams) {
+      data {
         _id
         title
-        body
+        body {
+          text: ''
+        }
+        levelId
+        topicId
+        subjectId
         difficulty
       }
-      type
+      totalRecord
+      totalPage
+    }
+  }
+`
+
+export const SCHOOL_GRADES = gql`
+  query SchoolGrades(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $searchParams: String
+  ) {
+    schoolGrades(
+      page: $page
+      limit: $limit
+      filter: $filter
+      searchParams: $searchParams
+    ) {
+      _id
+      stage
+      ages
+      year
     }
   }
 `

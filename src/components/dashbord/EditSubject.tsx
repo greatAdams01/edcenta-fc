@@ -78,7 +78,7 @@ const EditSubject: React.FC<EditSubjectProps> = ({ subject }) => {
 
   return (
     <div>
-      <h2>Edit User</h2>
+      <h2>Edit Subject</h2>
       <form className="w-[800px]">
         <div className="flex space-x-5">
           <div>

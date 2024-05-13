@@ -7,24 +7,29 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import AdminLayout from '@/layout/AdminLayout'
 
-import { CREATE_SUBJECT } from '@/apollo/mutations/admin'
+import { CREATE_TOPIC } from '@/apollo/mutations/admin'
+import { TopicType } from '../../../../../../types'
 
 export default function Create() {
   const path = useRouter()
 
-  const [subjectName, setSubjectName] = useState('')
-  const [subjectDescription, setSubjectDescription] = useState('')
-  const [subjectSchoolGrade, setSubjectSchoolGrade] = useState('')
+  const [topicName, setTopicName] = useState('')
+  const [topicDescription, setTopicDescription] = useState('')
+  const [topicSchoolGrade, setTopicSchoolGrade] = useState('')
+  const subjectId = localStorage.getItem('subjectId')
 
-  const [createSubject, { loading }] = useMutation(CREATE_SUBJECT, {
+  const [createTopic, { loading }] = useMutation(CREATE_TOPIC, {
     variables: {
-      name: subjectName,
-      description: subjectDescription,
-      schoolGrade: subjectSchoolGrade,
+      name: topicName,
+      description: topicDescription,
+      schoolGrade: topicSchoolGrade,
+      type: TopicType,
+      levelId: topicSchoolGrade,
+      subjectId: subjectId,
     },
     onCompleted: (data) => {
       console.log(data)
-      toast.success('Subject created successfully.')
+      toast.success('Topic created successfully.')
       setTimeout(() => {
         path.push('/admin/subjects')
       }, 5000)
@@ -37,25 +42,25 @@ export default function Create() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (subjectName === '') {
+    if (topicName === '') {
       console.log('Subject name field cannot be empty')
       toast.error('Subject name field cannot be empty')
       return
     }
 
-    if (subjectDescription === '') {
+    if (topicDescription === '') {
       console.log('Description field cannot be empty')
       toast.error('Description field cannot be empty')
       return
     }
 
-    if (subjectSchoolGrade === '') {
+    if (topicSchoolGrade === '') {
       console.log('School grade field cannot be empty')
       toast.error('School grade field cannot be empty')
       return
     }
 
-    createSubject()
+    createTopic()
   }
 
   return (
@@ -65,7 +70,7 @@ export default function Create() {
           <div className="w-full">
             <form onSubmit={handleSubmit} className="w-full ">
               <div className="flex w-full items-center justify-between">
-                <h1 className="text-lg font-bold">Add Subject</h1>
+                <h1 className="text-lg font-bold">Add Topic</h1>
                 <button
                   type="submit"
                   className={`rounded-md bg-blue-500 p-2 px-4 font-bold text-white`}
@@ -77,12 +82,12 @@ export default function Create() {
               <div className="mt-6 justify-between md:grid md:grid-cols-2 md:gap-6">
                 <div className="flex w-full items-center justify-between">
                   <label htmlFor="First name" className="w-full">
-                    Subject name <span className="text-red-500">*</span>
+                    Topic name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
-                    value={subjectName}
-                    onChange={(e) => setSubjectName(e.target?.value)}
+                    value={topicName}
+                    onChange={(e) => setTopicName(e.target?.value)}
                     className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
@@ -92,8 +97,8 @@ export default function Create() {
                   </label>
                   <input
                     type="text"
-                    value={subjectDescription}
-                    onChange={(e) => setSubjectDescription(e.target?.value)}
+                    value={topicDescription}
+                    onChange={(e) => setTopicDescription(e.target?.value)}
                     className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
@@ -103,8 +108,8 @@ export default function Create() {
                   </label>
                   <input
                     type="text"
-                    value={subjectSchoolGrade}
-                    onChange={(e) => setSubjectSchoolGrade(e.target?.value)}
+                    value={topicSchoolGrade}
+                    onChange={(e) => setTopicSchoolGrade(e.target?.value)}
                     className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
