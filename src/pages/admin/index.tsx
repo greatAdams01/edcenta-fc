@@ -23,11 +23,6 @@ const AdminPage = () => {
   const user = userData?.user || []
   const students = studentsData?.students.data || []
 
-  if (!Array.isArray(students)) {
-    console.error('students is not an array:', students)
-    return
-  }
-
   const groupedStudents = students.reduce((groups: any, student: any) => {
     const groupKey = student.grade
     if (!groups[groupKey]) {
