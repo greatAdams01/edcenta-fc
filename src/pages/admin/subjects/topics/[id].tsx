@@ -159,7 +159,7 @@ const Topics: React.FC<TopicsProps> = () => {
                       <tr key={index} className="even:bg-gray-50">
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
                           <Link
-                            href={`subjects/topics/worksheets/${person._id}`}
+                            href={`worksheets/${person._id}`}
                             className="cursor-pointer text-indigo-600 hover:text-indigo-900"
                           >
                             {person.name}
