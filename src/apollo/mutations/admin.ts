@@ -99,7 +99,7 @@ export const UPDATE_WORKSHEET = gql`
       _id
       title
       body {
-        text: ""
+        text
       }
       levelId
       topicId

@@ -21,7 +21,9 @@ const Topics: React.FC<TopicsProps> = () => {
   const { id } = router.query
   React.useEffect(() => {
     if (id) {
-      localStorage.setItem('subjectId', id as string)
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('subjectId', id as string)
+      }
     }
   }, [id])
   const [page, setPage] = useState(1)

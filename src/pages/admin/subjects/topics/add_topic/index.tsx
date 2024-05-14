@@ -16,7 +16,10 @@ export default function Create() {
   const [topicName, setTopicName] = useState('')
   const [topicDescription, setTopicDescription] = useState('')
   const [topicSchoolGrade, setTopicSchoolGrade] = useState('')
-  const subjectId = localStorage.getItem('subjectId')
+  let subjectId
+  if (typeof window !== 'undefined') {
+    subjectId = localStorage.getItem('subjectId')
+  }
 
   const [createTopic, { loading }] = useMutation(CREATE_TOPIC, {
     variables: {
