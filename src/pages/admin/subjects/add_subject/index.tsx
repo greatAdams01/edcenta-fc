@@ -14,13 +14,11 @@ export default function Create() {
 
   const [subjectName, setSubjectName] = useState('')
   const [subjectDescription, setSubjectDescription] = useState('')
-  const [subjectSchoolGrade, setSubjectSchoolGrade] = useState('')
 
   const [createSubject, { loading }] = useMutation(CREATE_SUBJECT, {
     variables: {
       name: subjectName,
       description: subjectDescription,
-      schoolGrade: subjectSchoolGrade,
     },
     onCompleted: (data) => {
       console.log(data)
@@ -46,12 +44,6 @@ export default function Create() {
     if (subjectDescription === '') {
       console.log('Description field cannot be empty')
       toast.error('Description field cannot be empty')
-      return
-    }
-
-    if (subjectSchoolGrade === '') {
-      console.log('School grade field cannot be empty')
-      toast.error('School grade field cannot be empty')
       return
     }
 
@@ -94,17 +86,6 @@ export default function Create() {
                     type="text"
                     value={subjectDescription}
                     onChange={(e) => setSubjectDescription(e.target?.value)}
-                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
-                  />
-                </div>
-                <div className="flex w-full items-center justify-between">
-                  <label htmlFor="Last name" className="w-full">
-                    School Grades <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={subjectSchoolGrade}
-                    onChange={(e) => setSubjectSchoolGrade(e.target?.value)}
                     className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>

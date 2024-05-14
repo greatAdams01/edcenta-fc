@@ -109,17 +109,6 @@ export const UPDATE_WORKSHEET = gql`
   }
 `
 
-export const WORKSHEET_INPUT = gql`
-  input WorkSheetInput {
-    title: String!
-    body: [BodyInput!]!
-    levelId: ID!
-    topicId: ID!
-    subjectId: String!
-    difficulty: String!
-  }
-`
-
 export const DELETE_SUBJECT = gql`
   mutation DeleteSubject($id: ID!) {
     deleteSubject(id: $id)
@@ -140,20 +129,11 @@ export const DELETE_WORKSHEET = gql`
 `
 
 export const CREATE_SUBJECT = gql`
-  mutation CreateSubject(
-    $name: String!
-    $description: String!
-    $schoolGrade: String!
-  ) {
-    createSubject(
-      name: $name
-      description: $description
-      schoolGrade: $schoolGrade
-    ) {
+  mutation CreateSubject($name: String!, $description: String!) {
+    createSubject(name: $name, description: $description) {
       _id
       name
       description
-      schoolGrade
     }
   }
 `

@@ -234,9 +234,13 @@ export interface ITopic extends DefaultAttributes {
   levelId: string
 }
 
+export interface IBody {
+  __typename: string
+  text: string
+}
 export interface IWorksheet extends DefaultAttributes {
   title: string
-  body: []
+  body: IBody[]
   difficulty: string
 }
 
