@@ -90,10 +90,10 @@ const Topics: React.FC<WorksheetProps> = () => {
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
             <h1 className="text-base font-semibold leading-6 text-gray-900">
-              Topic
+              Worksheets
             </h1>
             <p className="mt-2 text-sm text-gray-700">
-              A list of all the topics available in the Subject.
+              A list of all the worksheets available in the Subject.
             </p>
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -101,7 +101,7 @@ const Topics: React.FC<WorksheetProps> = () => {
               href={'/admin/subjects/topics/add_topic'}
               className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Create topic
+              Create worksheet
             </a>
           </div>
         </div>
@@ -201,7 +201,7 @@ const Topics: React.FC<WorksheetProps> = () => {
               </div>
               <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                 <h3 className="text-base font-semibold leading-6 text-gray-900">
-                  Delete topic
+                  Delete Worksheet
                 </h3>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">

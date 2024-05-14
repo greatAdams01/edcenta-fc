@@ -12,14 +12,27 @@ interface EditWorksheetProps {
 const EditWorksheet: React.FC<EditWorksheetProps> = ({ worksheet }) => {
   const [editedWorksheet, setEditedWorksheet] = useState<IWorksheet>(worksheet)
 
+  interface IBody {
+    __typename: string
+    text: string
+  }
+
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const { name, value } = e.target
-    setEditedWorksheet((prevSubject) => ({
-      ...prevSubject,
-      [name]: value,
-    }))
+    const { name, value } = event.target
+
+    if (name === 'bodyText') {
+      setEditedWorksheet((prevState: IWorksheet) => ({
+        ...prevState,
+        body: [{ __typename: '', text: value }],
+      }))
+    } else {
+      setEditedWorksheet((prevState: IWorksheet) => ({
+        ...prevState,
+        [name]: value,
+      }))
+    }
   }
   const handleSave = () => {
     editWorksheetInfo()
@@ -29,8 +42,8 @@ const EditWorksheet: React.FC<EditWorksheetProps> = ({ worksheet }) => {
       id: editedWorksheet._id,
       input: {
         title: editedWorksheet.title,
-        body: editedWorksheet.body,
         difficulty: editedWorksheet.difficulty,
+        body: editedWorksheet.body,
       },
     },
     onCompleted: (data) => {
@@ -70,6 +83,31 @@ const EditWorksheet: React.FC<EditWorksheetProps> = ({ worksheet }) => {
                 onChange={handleInputChange}
                 className="md:text-md block w-full rounded-md border-0 px-2 py-2.5 text-gray-900 shadow-md ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:leading-6 lg:w-[400px]"
                 placeholder="Full name"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              htmlFor="bodyText"
+              className="text-md block font-medium leading-6 text-gray-900"
+            >
+              Body Text
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="bodyText"
+                id="bodyText"
+                value={
+                  editedWorksheet &&
+                  editedWorksheet.body &&
+                  editedWorksheet.body[0]
+                    ? editedWorksheet.body[0].text
+                    : ''
+                }
+                onChange={handleInputChange}
+                className="md:text-md block w-full rounded-md border-0 px-2 py-2.5 text-gray-900 shadow-md ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:leading-6 lg:w-[400px]"
+                placeholder="Body text"
               />
             </div>
           </div>
