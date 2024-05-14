@@ -49,7 +49,7 @@ const Topics: React.FC<TopicsProps> = () => {
     setOpen(!open)
   }
   const [getTopics, { loading, error, data }] = useLazyQuery(TOPICS, {
-    variables: { page, limit: 20, filter: topicType, searchParams: id },
+    variables: { page, limit: 20, filter: id, searchParams: id },
     onCompleted: (data) => {
       console.log('Data:', data)
       setTopics(data.topics.data)

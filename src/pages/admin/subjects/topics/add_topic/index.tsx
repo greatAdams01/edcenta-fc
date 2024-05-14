@@ -16,6 +16,7 @@ export default function Create() {
   const [topicName, setTopicName] = useState('')
   const [topicDescription, setTopicDescription] = useState('')
   const [topicSchoolGrade, setTopicSchoolGrade] = useState('')
+  const [selectType, setSelectType] = useState(TopicType.NATIONAL)
   let subjectId
   if (typeof window !== 'undefined') {
     subjectId = localStorage.getItem('subjectId')
@@ -26,7 +27,7 @@ export default function Create() {
       name: topicName,
       description: topicDescription,
       schoolGrade: topicSchoolGrade,
-      type: TopicType,
+      type: selectType,
       levelId: topicSchoolGrade,
       subjectId: subjectId,
     },
@@ -34,7 +35,7 @@ export default function Create() {
       console.log(data)
       toast.success('Topic created successfully.')
       setTimeout(() => {
-        path.push('/admin/subjects')
+        path.push('/admin/subjects/topics/subjectId')
       }, 5000)
     },
     onError: (error) => {
@@ -115,6 +116,19 @@ export default function Create() {
                     onChange={(e) => setTopicSchoolGrade(e.target?.value)}
                     className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
+                </div>
+                <div className="flex w-full items-center justify-between">
+                  <label htmlFor="Last name" className="w-full">
+                    Select type <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={selectType}
+                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
+                    onChange={(e) => setSelectType(e.target.value as TopicType)}
+                  >
+                    <option value={TopicType.NATIONAL}>National</option>
+                    <option value={TopicType.PRIVATE}>Private</option>
+                  </select>
                 </div>
               </div>
             </form>
