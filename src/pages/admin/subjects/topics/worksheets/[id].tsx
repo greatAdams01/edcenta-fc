@@ -45,7 +45,7 @@ const Topics: React.FC<WorksheetProps> = () => {
     variables: { page, limit: 20, filter: id, searchParams: id },
     onCompleted: (data) => {
       console.log('Data:', data)
-      setWorksheets(data.worksheet.data)
+      setWorksheets(data.worksheets.data)
     },
   })
 
@@ -148,7 +148,7 @@ const Topics: React.FC<WorksheetProps> = () => {
                         </td>
                         {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td> */}
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {person.body.text}
+                          {person.body[0].text}
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
                           <a
