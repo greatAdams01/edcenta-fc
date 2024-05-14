@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import AdminLayout from '@/layout/AdminLayout'
 
 import { CREATE_TOPIC } from '@/apollo/mutations/admin'
+import { STAGES } from '@/apollo/queries/dashboard'
 import { TopicType } from '../../../../../../types'
 
 export default function Create() {
@@ -17,10 +18,13 @@ export default function Create() {
   const [topicDescription, setTopicDescription] = useState('')
   const [topicSchoolGrade, setTopicSchoolGrade] = useState('')
   const [selectType, setSelectType] = useState(TopicType.NATIONAL)
-  let subjectId
+  let subjectId: string | null = null
   if (typeof window !== 'undefined') {
     subjectId = localStorage.getItem('subjectId')
   }
+
+  const { data } = useQuery(STAGES)
+  const stages = data?.schoolGrades || []
 
   const [createTopic, { loading }] = useMutation(CREATE_TOPIC, {
     variables: {
@@ -35,7 +39,11 @@ export default function Create() {
       console.log(data)
       toast.success('Topic created successfully.')
       setTimeout(() => {
-        path.push('/admin/subjects/topics/subjectId')
+        if (subjectId) {
+          path.push(`/admin/subjects/topics/${subjectId}`)
+        } else {
+          // Handle the case where subjectId is null or undefined
+        }
       }, 5000)
     },
     onError: (error) => {
@@ -110,12 +118,20 @@ export default function Create() {
                   <label htmlFor="Last name" className="w-full">
                     School Grades <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
+                  <select
                     value={topicSchoolGrade}
-                    onChange={(e) => setTopicSchoolGrade(e.target?.value)}
+                    onChange={(e) => {
+                      setTopicSchoolGrade(e.target.value)
+                    }}
                     className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
-                  />
+                  >
+                    <option value="">Select grade</option>
+                    {stages.map((stage: any) => (
+                      <option key={stage._id} value={stage._id}>
+                        {stage.year}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="flex w-full items-center justify-between">
                   <label htmlFor="Last name" className="w-full">

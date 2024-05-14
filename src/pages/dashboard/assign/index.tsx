@@ -74,20 +74,20 @@ export default function Assign() {
                   <tr>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-center text-sm font-semibold text-gray-900"
+                      className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900"
                     >
                       Year
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-center text-sm font-semibold text-gray-900"
+                      className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900"
                     >
                       Age
                     </th>
                     {subjects.map((subject, index) => (
                       <th
                         key={subject}
-                        className={`px-3 py-3.5 text-left text-center text-sm font-bold ${
+                        className={`px-3 py-3.5 text-center text-sm font-bold ${
                           index === 0
                             ? 'bg-yellow-500'
                             : index === 1
