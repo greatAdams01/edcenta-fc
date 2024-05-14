@@ -11,6 +11,10 @@ export enum FileType {
   AUDIO = 'AUDIO',
   DOCUMENT = 'DOCUMENT',
 }
+export enum TopicType {
+  NATIONAL = 'NATIONAL',
+  PRIVATE = 'PRIVATE',
+}
 export enum AccountType {
   STUDENT = 'STUDENT',
   OWNER = 'OWNER',
@@ -220,7 +224,6 @@ export interface ISubject extends DefaultAttributes {
   description: string
   slug: string
   tags: string[]
-  // topics: string[]
   schoolGrade: string
 }
 
@@ -229,8 +232,16 @@ export interface ITopic extends DefaultAttributes {
   description: string
   slug: string
   levelId: string
-  subject: string
-  type: string
+}
+
+export interface IBody {
+  __typename: string
+  text: string
+}
+export interface IWorksheet extends DefaultAttributes {
+  title: string
+  body: IBody[]
+  difficulty: string
 }
 
 export interface ISubtopic extends DefaultAttributes {
