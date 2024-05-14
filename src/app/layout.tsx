@@ -1,8 +1,6 @@
 import { type Metadata } from 'next'
 import { Manrope, Dosis } from 'next/font/google'
 
-import Animation from '@/utils/Animation'
-
 import '@/styles/tailwind.css'
 
 const manrope = Manrope({
@@ -40,9 +38,7 @@ export default function RootLayout({
         <title>Edcenta</title>
       </head>
       <body className="flex min-h-full">
-        {/* <Animation> */}
         <div className="flex w-full flex-col">{children}</div>
-         {/* </Animation> */}
       </body>
     </html>
   )

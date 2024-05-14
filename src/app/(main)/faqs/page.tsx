@@ -5,7 +5,6 @@ const faqs = [
     answer:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
   },
-  // More questions...
 ]
 
 export default function Example() {
