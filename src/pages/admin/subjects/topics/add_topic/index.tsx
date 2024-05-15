@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
+import { IoIosArrowBack } from 'react-icons/io'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -78,6 +79,12 @@ export default function Create() {
   return (
     <AdminLayout>
       <div className="grid justify-items-stretch">
+        <button
+          onClick={() => path.back()}
+          className="mb-6 flex items-center gap-1 text-left text-black"
+        >
+          <IoIosArrowBack /> <div>Back</div>
+        </button>
         <div className="flex w-full justify-self-center rounded-md border-2 p-8 px-4 sm:px-6 lg:px-8">
           <div className="w-full">
             <form onSubmit={handleSubmit} className="w-full ">
@@ -92,7 +99,7 @@ export default function Create() {
               </div>
 
               <div className="mt-6 justify-between md:grid md:grid-cols-2 md:gap-6">
-                <div className="flex w-full items-center justify-between">
+                <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="First name" className="w-full">
                     Topic name <span className="text-red-500">*</span>
                   </label>
@@ -100,10 +107,10 @@ export default function Create() {
                     type="text"
                     value={topicName}
                     onChange={(e) => setTopicName(e.target?.value)}
-                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
-                <div className="flex w-full items-center justify-between">
+                <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="Last name" className="w-full">
                     Description <span className="text-red-500">*</span>
                   </label>
@@ -111,10 +118,10 @@ export default function Create() {
                     type="text"
                     value={topicDescription}
                     onChange={(e) => setTopicDescription(e.target?.value)}
-                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
-                <div className="flex w-full items-center justify-between">
+                <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="Last name" className="w-full">
                     School Grades <span className="text-red-500">*</span>
                   </label>
@@ -123,7 +130,7 @@ export default function Create() {
                     onChange={(e) => {
                       setTopicSchoolGrade(e.target.value)
                     }}
-                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   >
                     <option value="">Select grade</option>
                     {stages.map((stage: any) => (
@@ -133,13 +140,13 @@ export default function Create() {
                     ))}
                   </select>
                 </div>
-                <div className="flex w-full items-center justify-between">
+                <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="Last name" className="w-full">
                     Select type <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={selectType}
-                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                     onChange={(e) => setSelectType(e.target.value as TopicType)}
                   >
                     <option value={TopicType.NATIONAL}>National</option>

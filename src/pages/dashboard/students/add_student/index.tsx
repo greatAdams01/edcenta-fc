@@ -115,7 +115,7 @@ export default function Create() {
               </div>
 
               <div className="mt-6 justify-between md:grid md:grid-cols-2 md:gap-6">
-                <div className="flex w-full items-center justify-between">
+                <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="First name" className="w-full">
                     Student name <span className="text-red-500">*</span>
                   </label>
@@ -123,10 +123,10 @@ export default function Create() {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target?.value)}
-                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
-                <div className="flex w-full items-center justify-between">
+                <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="Last name" className="w-full">
                     Username <span className="text-red-500">*</span>
                   </label>
@@ -134,10 +134,10 @@ export default function Create() {
                     type="text"
                     value={username}
                     onChange={(e) => setUserName(e.target?.value)}
-                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
-                <div className="flex w-full items-center justify-between">
+                <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="Last name" className="w-full">
                     Guardian Email <span className="text-red-500">*</span>
                   </label>
@@ -145,10 +145,10 @@ export default function Create() {
                     type="text"
                     value={email}
                     onChange={(e) => setEmail(e.target?.value)}
-                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
-                <div className="flex w-full items-center justify-between">
+                <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="Last name" className="w-full">
                     Password <span className="text-red-500">*</span>
                   </label>
@@ -156,10 +156,10 @@ export default function Create() {
                     type="text"
                     value={password}
                     onChange={(e) => setPassword(e.target?.value)}
-                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
-                <div className="flex w-full items-center justify-between">
+                <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="Last name" className="w-full">
                     {' '}
                     Age <span className="text-red-500">*</span>
@@ -168,17 +168,17 @@ export default function Create() {
                     type="number"
                     value={age}
                     onChange={(e) => setAge(e.target?.value)}
-                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
-                <div className="flex w-full items-center justify-between">
+                <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="Last name" className="w-full">
                     Year <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={grade}
                     onChange={(e) => setGrade(e.target.value)}
-                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   >
                     <option value={''}>Select class</option>
                     <option value={'65ee6115df691bf5cea750a6'}>
@@ -194,7 +194,7 @@ export default function Create() {
                     type="text"
                     value={creatorId}
                     onChange={(e) => setCreatorId(e.target?.value)}
-                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
               </div>

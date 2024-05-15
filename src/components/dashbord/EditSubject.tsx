@@ -78,10 +78,10 @@ const EditSubject: React.FC<EditSubjectProps> = ({ subject }) => {
 
   return (
     <div>
-      <h2>Edit Subject</h2>
+      <h2 className="mt-8">Edit Subject</h2>
       <form className="w-[800px]">
         <div className="flex space-x-5">
-          <div>
+          <div className="flex w-full flex-col items-start justify-between gap-y-1">
             <label
               htmlFor="name"
               className="text-md block font-medium leading-6 text-gray-900"
@@ -95,14 +95,14 @@ const EditSubject: React.FC<EditSubjectProps> = ({ subject }) => {
                 id="name"
                 value={editedSubject.name}
                 onChange={handleInputChange}
-                className="md:text-md block w-full rounded-md border-0 px-2 py-2.5 text-gray-900 shadow-md ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:leading-6 lg:w-[400px]"
+                className="md:text-md block w-full max-w-[400px] rounded-md border-0 px-2 py-2.5 text-gray-900 shadow-md ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:leading-6 lg:w-[400px]"
                 placeholder="Full name"
               />
             </div>
           </div>
         </div>
         <div className="mt-5 flex space-x-5">
-          <div>
+          <div className="flex w-full flex-col items-start justify-between gap-y-1">
             <label
               htmlFor="description"
               className="text-md block font-medium leading-6 text-gray-900"
@@ -116,11 +116,11 @@ const EditSubject: React.FC<EditSubjectProps> = ({ subject }) => {
                 placeholder="Enter description"
                 value={editedSubject.description}
                 onChange={handleInputChange}
-                className="md:text-md block w-full rounded-md border-0 px-2 py-2.5 text-gray-900 shadow-md ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:leading-6 lg:w-[400px]"
+                className="md:text-md block w-full max-w-[400px] rounded-md border-0 px-2 py-2.5 text-gray-900 shadow-md ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:leading-6 lg:w-[400px]"
               />
             </div>
           </div>
-          <div>
+          <div className="flex w-full flex-col items-start justify-between gap-y-1">
             <label
               htmlFor="slugs"
               className="text-md block font-medium leading-6 text-gray-900"
@@ -134,14 +134,14 @@ const EditSubject: React.FC<EditSubjectProps> = ({ subject }) => {
                 id="slug"
                 value={editedSubject.slug}
                 onChange={handleInputChange}
-                className="md:text-md block w-full rounded-md border-0 px-2 py-2.5 text-gray-900 shadow-md ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:leading-6 lg:w-[400px]"
+                className="md:text-md block w-full max-w-[400px] rounded-md border-0 px-2 py-2.5 text-gray-900 shadow-md ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:leading-6 lg:w-[400px]"
                 placeholder="Enter slugs"
               />
             </div>
           </div>
         </div>
         <div className="mt-5 flex space-x-5">
-          <div>
+          <div className="flex w-full flex-col items-start justify-between gap-y-1">
             <label
               htmlFor="tags"
               className="text-md block font-medium leading-6 text-gray-900"
