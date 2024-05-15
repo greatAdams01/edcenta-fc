@@ -27,7 +27,14 @@ interface Grade {
 }
 
 export default function Assign() {
-  const { data } = useQuery(SchoolGrades)
+  const { data } = useQuery(SchoolGrades, {
+    variables: {
+      page: 1,
+      limit: 20,
+      filter: '',
+      searchParams: '',
+    },
+  })
   const [selectedCategory, setSelectedCategory] = useState<
     'worksheet' | 'assessment'
   >('worksheet')

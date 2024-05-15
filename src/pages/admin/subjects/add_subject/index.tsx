@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
+import { IoIosArrowBack } from 'react-icons/io'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -11,7 +12,6 @@ import { CREATE_SUBJECT } from '@/apollo/mutations/admin'
 
 export default function Create() {
   const path = useRouter()
-
   const [subjectName, setSubjectName] = useState('')
   const [subjectDescription, setSubjectDescription] = useState('')
 
@@ -53,6 +53,12 @@ export default function Create() {
   return (
     <AdminLayout>
       <div className="grid justify-items-stretch">
+        <button
+          onClick={() => path.back()}
+          className="mb-6 flex items-center gap-1 text-left text-black"
+        >
+          <IoIosArrowBack /> <div>Back</div>
+        </button>
         <div className="flex w-full justify-self-center rounded-md border-2 p-8 px-4 sm:px-6 lg:px-8">
           <div className="w-full">
             <form onSubmit={handleSubmit} className="w-full ">
@@ -67,7 +73,7 @@ export default function Create() {
               </div>
 
               <div className="mt-6 justify-between md:grid md:grid-cols-2 md:gap-6">
-                <div className="flex w-full items-center justify-between">
+                <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="First name" className="w-full">
                     Subject name <span className="text-red-500">*</span>
                   </label>
@@ -75,10 +81,10 @@ export default function Create() {
                     type="text"
                     value={subjectName}
                     onChange={(e) => setSubjectName(e.target?.value)}
-                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
-                <div className="flex w-full items-center justify-between">
+                <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="Last name" className="w-full">
                     Description <span className="text-red-500">*</span>
                   </label>
@@ -86,7 +92,7 @@ export default function Create() {
                     type="text"
                     value={subjectDescription}
                     onChange={(e) => setSubjectDescription(e.target?.value)}
-                    className="my-2 h-12 w-[100%] rounded-md border-2 px-4 lg:w-[100rem]"
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
               </div>
