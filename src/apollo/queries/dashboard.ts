@@ -1,84 +1,60 @@
-import { gql } from '@apollo/client';
+import { gql } from '@apollo/client'
 
 export const SchoolGrades = gql`
-query SchoolGrades {
-  schoolGrades {
-    _id
-    stage
-    ages
-    year
-    subject {
+  query SchoolGrades(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $searchParams: String
+  ) {
+    schoolGrades(
+      page: $page
+      limit: $limit
+      filter: $filter
+      searchParams: $searchParams
+    ) {
       _id
-      name
-      worksheet {
-        _id
-        title
-        levelId
-        questions {
-          _id
-          title
-          body {
-            _id
-            text
-            img
-          }
-          isObjective
-          options {
-            _id
-            _id
-            option
-            isCorrect
-          }
-          explanation
-          worksheetId
-        }
-      }
-      topics {
+      stage
+      year
+      subject {
         _id
         name
-        slug
-        levelId
-        worksheet {
-          _id
-          title
-        }
       }
     }
   }
-}
 `
 
 export const STAGES = gql`
-query SchoolGrades {
-  schoolGrades {
-    _id
-    stage
-    year
+  query SchoolGrades {
+    schoolGrades {
+      _id
+      stage
+      year
+    }
   }
-}
 `
 
 export const USER = gql`
-query User {
-  user {
-    _id
-    firstName
-    lastName
-    email
-    phone
-    address
-    city
-    accountType
-    updatedAt
-    bName
-    bankName
-    acctNumber
-    occupation
-    isVerified
-    isActive
-    lastLoggedIn
+  query User {
+    user {
+      _id
+      firstName
+      lastName
+      email
+      phone
+      address
+      city
+      accountType
+      updatedAt
+      bName
+      bankName
+      acctNumber
+      occupation
+      isVerified
+      isActive
+      lastLoggedIn
+    }
   }
-}
 `
 export const TOPIC_QUERY = gql`
   query Topic($topicId: ID!) {
@@ -97,44 +73,44 @@ export const TOPIC_QUERY = gql`
 `
 
 export const QUESTION_QUERY = gql`
-query SchoolGrades($questionId: ID!) {
-  question(id: $questionId) {
-    _id
-    title
-    body {
+  query SchoolGrades($questionId: ID!) {
+    question(id: $questionId) {
       _id
-      text
-      img
+      title
+      body {
+        _id
+        text
+        img
+      }
+      isObjective
+      options {
+        _id
+        option
+        isCorrect
+      }
+      explanation
+      worksheetId
+      createdAt
     }
-    isObjective
-    options {
-      _id
-      option
-      isCorrect
-    }
-    explanation
-    worksheetId
-    createdAt
   }
-}
 `
 
 export const STUDENTS = gql`
-query Data {
-  students {
-    data {
-      _id
-    name
-    username
-    age
-    email
-    creatorId
-      grade {
-        year
-        ages
-        stage
+  query Data {
+    students {
+      data {
+        _id
+        name
+        username
+        age
+        email
+        creatorId
+        grade {
+          year
+          ages
+          stage
+        }
       }
     }
   }
-}
 `
