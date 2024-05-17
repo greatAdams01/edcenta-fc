@@ -2,46 +2,30 @@ import { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import Link from 'next/link'
 import AppLayout from '../../../layout/AppLayout'
-import { SchoolGrades } from '@/apollo/queries/dashboard'
+import { FETCH_LEARNING } from '@/apollo/queries/dashboard'
 
 interface Grade {
   _id: string
   stage: number
   year: string
   ages: string
-  subject: {
+  subjects: {
     _id: string
     name: string
-    worksheet: {
-      _id: string
-      title: string
-      levelId: string
-      questions: string
-    }[]
-    topics: {
-      _id: string
-      name: string
-      levelId: string
-    }[]
+    worksheet: number
+    topics: number
   }[]
 }
 
 export default function Assign() {
-  const { data } = useQuery(SchoolGrades, {
-    variables: {
-      page: 1,
-      limit: 20,
-      filter: '',
-      searchParams: '',
-    },
-  })
+  const { data } = useQuery(FETCH_LEARNING)
   const [selectedCategory, setSelectedCategory] = useState<
     'worksheet' | 'assessment'
   >('worksheet')
 
   const subjects: string[] =
-    data?.schoolGrades[0]?.subject.map(
-      (subject: { name: string }) => subject.name,
+    data?.fetchLearning[0]?.subjects.map(
+      (subjects: { name: string }) => subjects.name,
     ) || []
 
   return (
@@ -85,15 +69,9 @@ export default function Assign() {
                     >
                       Year
                     </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900"
-                    >
-                      Age
-                    </th>
-                    {subjects.map((subject, index) => (
+                    {subjects.map((subjects, index) => (
                       <th
-                        key={subject}
+                        key={subjects}
                         className={`px-3 py-3.5 text-center text-sm font-bold ${
                           index === 0
                             ? 'bg-yellow-500'
@@ -104,22 +82,19 @@ export default function Assign() {
                                 : 'bg-orange-500'
                         }`}
                       >
-                        {subject}
+                        {subjects}
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {data &&
-                    data.schoolGrades.map((grade: Grade) => (
+                    data.fetchLearning.map((grade: Grade) => (
                       <tr key={grade._id}>
                         <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                           {grade.year}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                          {grade.ages}
-                        </td>
-                        {grade.subject.map((subject, index) => (
+                        {grade.subjects.map((subject, index) => (
                           <td
                             key={subject._id}
                             className={`px-3 py-3.5 text-center text-sm font-semibold ${
@@ -133,25 +108,25 @@ export default function Assign() {
                             }`}
                           >
                             {selectedCategory === 'worksheet' &&
-                            subject.worksheet.length > 0 ? (
+                            subject.worksheet > 0 ? (
                               <Link
                                 href={`/dashboard/assign/worksheet/${subject._id}`}
                               >
                                 <p className="mr-2">
-                                  Worksheet: {subject.worksheet.length}
+                                  Worksheet: {subject.worksheet}
                                 </p>
                                 <p className="mr-2">
-                                  Topics: {subject.topics.length}
+                                  Topics: {subject.topics}
                                 </p>
                               </Link>
                             ) : selectedCategory === 'assessment' &&
-                              subject.topics.length > 0 ? (
+                              subject.topics > 0 ? (
                               <Link
                                 href={`/dashboard/assign/assessment/${subject._id}`}
                               >
                                 <p className="mr-2">
                                   Assessment:{' '}
-                                  {subject.worksheet[index].questions.length}
+                                  {subject.worksheet}
                                 </p>
                               </Link>
                             ) : (

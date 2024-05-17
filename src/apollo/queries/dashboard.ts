@@ -1,24 +1,33 @@
 import { gql } from '@apollo/client'
 
 export const SchoolGrades = gql`
-  query SchoolGrades(
-    $page: Int
-    $limit: Int
-    $filter: String
-    $searchParams: String
-  ) {
-    schoolGrades(
-      page: $page
-      limit: $limit
-      filter: $filter
-      searchParams: $searchParams
-    ) {
+  query SchoolGrades($page: Int, $limit: Int, $filter: String) {
+    schoolGrades(page: $page, limit: $limit, filter: $filter) {
+      data {
+        _id
+        ages
+        year
+        stage
+        createdAt
+        updatedAt
+      }
+      totalPage
+      totalRecord
+    }
+  }
+`
+
+export const FETCH_LEARNING =gql`
+  query FetchLearning {
+    fetchLearning {
       _id
-      stage
       year
-      subject {
+      createdAt
+      subjects {
         _id
         name
+        topics
+        worksheet
       }
     }
   }
@@ -114,3 +123,25 @@ export const STUDENTS = gql`
     }
   }
 `
+
+export const SUBJECTS_LIST = gql`
+  query Subjects($page: Int, $limit: Int) {
+    subjects(page: $page, limit: $limit) {
+      data {
+        _id
+        name
+        slug
+        tags
+        description
+        topics {
+          data {
+            _id
+            name
+            slug
+          }
+        }
+        createdAt
+      }
+    }
+  }
+` 
