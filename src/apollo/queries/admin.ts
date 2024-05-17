@@ -61,27 +61,18 @@ export const STUDENTS = gql`
 `
 
 export const SUBJECTS = gql`
-  query Subjects(
-    $page: Int
-    $limit: Int
-    $filter: String
-    $searchParams: String
-  ) {
-    subjects(
-      page: $page
-      limit: $limit
-      filter: $filter
-      searchParams: $searchParams
-    ) {
+query Subjects($page: Int, $limit: Int, $filter: String) {
+    subjects(page: $page, limit: $limit, filter: $filter) {
       data {
         _id
         name
-        description
         slug
         tags
+        description
+        createdAt
       }
-      totalRecord
       totalPage
+      totalRecord
     }
   }
 `
@@ -91,13 +82,11 @@ export const TOPICS = gql`
     $page: Int
     $limit: Int
     $filter: String
-    $searchParams: String
   ) {
     topics(
       page: $page
       limit: $limit
       filter: $filter
-      searchParams: $searchParams
     ) {
       data {
         _id
@@ -106,6 +95,7 @@ export const TOPICS = gql`
         slug
         levelId
       }
+      totalPage
       totalRecord
     }
   }
@@ -115,13 +105,11 @@ export const WORKSHEETS = gql`
     $page: Int
     $limit: Int
     $filter: String
-    $searchParams: String
   ) {
     worksheets(
       page: $page
       limit: $limit
       filter: $filter
-      searchParams: $searchParams
     ) {
       data {
         _id
