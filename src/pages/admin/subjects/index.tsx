@@ -41,7 +41,7 @@ function Subjects() {
   }
 
   const [getSubjects, { loading, error, data }] = useLazyQuery(SUBJECTS, {
-    variables: { page, limit: 20, filter: subjectType },
+    variables: { page, limit: 10, filter: subjectType },
     onCompleted: (data) => {
       setSubjects(data.subjects.data)
     },
@@ -52,6 +52,9 @@ function Subjects() {
 
   const handlePageChange = (pageNum: number) => {
     setPage(pageNum)
+    getSubjects({
+      variables: { page: pageNum, limit: 10, filter: subjectType },
+    })
   }
 
   const [deleteSubject, deleteStatus] = useMutation(DELETE_SUBJECT, {

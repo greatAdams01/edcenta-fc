@@ -17,7 +17,7 @@ export const SchoolGrades = gql`
   }
 `
 
-export const FETCH_LEARNING =gql`
+export const FETCH_LEARNING = gql`
   query FetchLearning {
     fetchLearning {
       _id
@@ -144,4 +144,4 @@ export const SUBJECTS_LIST = gql`
       }
     }
   }
-` 
+`

@@ -49,7 +49,7 @@ const Topics: React.FC<TopicsProps> = () => {
     setOpen(!open)
   }
   const [getTopics, { loading, error, data }] = useLazyQuery(TOPICS, {
-    variables: { page, limit: 20, filter: id, searchParams: id },
+    variables: { page, limit: 10, filter: id, searchParams: id },
     onCompleted: (data) => {
       console.log('Data:', data)
       setTopics(data.topics.data)
@@ -65,6 +65,7 @@ const Topics: React.FC<TopicsProps> = () => {
 
   const handlePageChange = (pageNum: number) => {
     setPage(pageNum)
+    getTopics({ variables: { page: pageNum, limit: 10, filter: id } })
   }
 
   const [deleteTopic, deleteStatus] = useMutation(DELETE_TOPIC, {
