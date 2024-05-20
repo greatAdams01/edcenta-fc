@@ -19,6 +19,8 @@ interface Grade {
 
 export default function Assign() {
   const { data } = useQuery(FETCH_LEARNING)
+  const { data: test } = useQuery(FETCH_LEARNING)
+  console.log(test)
   const [selectedCategory, setSelectedCategory] = useState<
     'worksheet' | 'assessment'
   >('worksheet')
@@ -71,7 +73,7 @@ export default function Assign() {
                     </th>
                     {subjects.map((subjects, index) => (
                       <th
-                        key={subjects}
+                        key={index}
                         className={`px-3 py-3.5 text-center text-sm font-bold ${
                           index === 0
                             ? 'bg-yellow-500'
@@ -96,7 +98,7 @@ export default function Assign() {
                         </td>
                         {grade.subjects.map((subject, index) => (
                           <td
-                            key={subject._id}
+                            key={`${grade.year}-${subject._id}`}
                             className={`px-3 py-3.5 text-center text-sm font-semibold ${
                               index === 0
                                 ? 'bg-yellow-500 hover:bg-yellow-800 hover:text-white'
@@ -115,9 +117,7 @@ export default function Assign() {
                                 <p className="mr-2">
                                   Worksheet: {subject.worksheet}
                                 </p>
-                                <p className="mr-2">
-                                  Topics: {subject.topics}
-                                </p>
+                                <p className="mr-2">Topics: {subject.topics}</p>
                               </Link>
                             ) : selectedCategory === 'assessment' &&
                               subject.topics > 0 ? (
@@ -125,8 +125,7 @@ export default function Assign() {
                                 href={`/dashboard/assign/assessment/${subject._id}`}
                               >
                                 <p className="mr-2">
-                                  Assessment:{' '}
-                                  {subject.worksheet}
+                                  Assessment: {subject.worksheet}
                                 </p>
                               </Link>
                             ) : (

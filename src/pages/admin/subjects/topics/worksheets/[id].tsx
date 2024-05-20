@@ -42,7 +42,7 @@ const Topics: React.FC<WorksheetProps> = () => {
     setOpen(!open)
   }
   const [getWorksheet, { loading, error, data }] = useLazyQuery(WORKSHEETS, {
-    variables: { page, limit: 20, filter: id },
+    variables: { page, limit: 10, filter: id },
     onCompleted: (data) => {
       console.log('Data:', data)
       setWorksheets(data.worksheets.data)
@@ -58,6 +58,7 @@ const Topics: React.FC<WorksheetProps> = () => {
 
   const handlePageChange = (pageNum: number) => {
     setPage(pageNum)
+    getWorksheet({ variables: { page: pageNum, limit: 10, filter: id } })
   }
 
   const [deleteTopic, deleteStatus] = useMutation(DELETE_WORKSHEET, {
