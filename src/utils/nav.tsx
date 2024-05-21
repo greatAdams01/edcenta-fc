@@ -94,26 +94,13 @@ export const adminNav = [
     children: [{ name: 'Subjects', href: '/admin/subjects' }],
   },
   {
-    name: 'PROGRESS',
-    href: '#',
-    icon: ClipboardDocumentCheckIcon,
-    current: false,
-    children: [
-      { name: 'Score', href: '#' },
-      { name: 'Reward', href: '/admin/reward' },
-      { name: 'Badges', href: '#' },
-    ],
-  },
-  {
     name: 'ACCOUNTS',
     href: '/admin/details',
     icon: UsersIcon,
     current: false,
     children: [
       { name: 'My Details', href: '/admin/details' },
-      { name: 'My Subscriptions', href: '/admin/subscription' },
       { name: 'Manage students', href: '/admin/students' },
-      { name: 'Manage groups', href: '/admin/group' },
       { name: 'Notifications', href: '/admin/notification' },
     ],
   },
