@@ -49,7 +49,7 @@ const Topics: React.FC<WorksheetProps> = () => {
     setOpen(!open)
   }
   const [getWorksheet, { loading, error, data }] = useLazyQuery(WORKSHEETS, {
-    variables: { page, limit: 10, filter: id },
+    variables: { page, limit: 10, filter: '', topicId: id },
     onCompleted: (data) => {
       console.log('Data:', data)
       setWorksheets(data.worksheets.data)
@@ -100,7 +100,7 @@ const Topics: React.FC<WorksheetProps> = () => {
               Worksheets
             </h1>
             <p className="mt-2 text-sm text-gray-700">
-              A list of all the worksheets available in the Subject.
+              A list of all the worksheets available in this topic.
             </p>
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -146,12 +146,9 @@ const Topics: React.FC<WorksheetProps> = () => {
                     {worksheetList.map((person, index) => (
                       <tr key={index} className="even:bg-gray-50">
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                          <Link
-                            href={`subjects/topics/${person._id}`}
-                            className="cursor-pointer text-indigo-600 hover:text-indigo-900"
-                          >
+                          <span className="text-indigo-600 hover:text-indigo-900">
                             {person.title}
-                          </Link>
+                          </span>
                         </td>
                         {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td> */}
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">

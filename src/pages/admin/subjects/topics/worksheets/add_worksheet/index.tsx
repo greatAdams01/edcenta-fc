@@ -10,7 +10,6 @@ import AdminLayout from '@/layout/AdminLayout'
 
 import { CREATE_WORKSHEET } from '@/apollo/mutations/admin'
 import { FETCH_LEARNING } from '@/apollo/queries/dashboard'
-import { TopicType } from '../../../../../../../types'
 
 export default function Create() {
   const path = useRouter()
@@ -46,7 +45,7 @@ export default function Create() {
       toast.success('Topic created successfully.')
       setTimeout(() => {
         if (subjectId) {
-          path.push(`/admin/subjects/topics/${subjectId}`)
+          path.push(`/admin/subjects/topics/worksheets/${topicId}`)
         } else {
           // Handle the case where subjectId is null or undefined
         }
@@ -56,7 +55,19 @@ export default function Create() {
       toast.error('Error creating subject: ' + error)
     },
   })
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
 
+    const reader = new FileReader()
+
+    reader.onloadend = () => {
+      setImg(reader.result?.toString() || '')
+    }
+
+    if (file) {
+      reader.readAsDataURL(file)
+    }
+  }
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -129,15 +140,13 @@ export default function Create() {
 
                 <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="img" className="w-full">
-                    Description image link{' '}
-                    <span className="text-red-500">*</span>
+                    Description image <span className="text-red-500">*</span>
                   </label>
                   <input
                     id="img"
-                    type="text"
-                    value={img}
-                    onChange={(e) => setImg(e.target?.value)}
-                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
+                    type="file"
+                    onChange={handleFileChange}
+                    className="my-2  w-[100%] max-w-[400px] px-4 lg:w-[100rem]"
                   />
                 </div>
                 <div className="flex w-full flex-col items-start justify-between gap-y-1">
@@ -184,9 +193,9 @@ export default function Create() {
                     className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   >
                     <option value="">Select difficulty</option>
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
+                    <option value="EASY">EASY</option>
+                    <option value="MEDIUM">MEDIUM</option>
+                    <option value="HARD">HARD</option>
                   </select>
                 </div>
               </div>

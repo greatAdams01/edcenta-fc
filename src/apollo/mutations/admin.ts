@@ -100,6 +100,7 @@ export const UPDATE_WORKSHEET = gql`
       title
       body {
         text
+        img
       }
       levelId
       topicId
