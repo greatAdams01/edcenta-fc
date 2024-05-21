@@ -20,6 +20,13 @@ type WorksheetProps = {
 const Topics: React.FC<WorksheetProps> = () => {
   const router = useRouter()
   const { id } = router.query
+  React.useEffect(() => {
+    if (id) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('topicId', id as string)
+      }
+    }
+  }, [id])
   const [page, setPage] = useState(1)
   const [worksheetType, setType] = useState('')
   const [worksheetList, setWorksheets] = useState<any[]>([])
@@ -42,16 +49,15 @@ const Topics: React.FC<WorksheetProps> = () => {
     setOpen(!open)
   }
   const [getWorksheet, { loading, error, data }] = useLazyQuery(WORKSHEETS, {
-    variables: { page, limit: 10, filter: id },
+    variables: { page, limit: 10, filter: '', topicId: id },
     onCompleted: (data) => {
       console.log('Data:', data)
       setWorksheets(data.worksheets.data)
     },
+    onError: (error) => {
+      console.log('Error:', error)
+    },
   })
-
-  if (error) {
-    console.log('Error:', error)
-  }
   useEffect(() => {
     console.log('worksheetList', worksheetList)
   }, [worksheetList])
@@ -94,12 +100,12 @@ const Topics: React.FC<WorksheetProps> = () => {
               Worksheets
             </h1>
             <p className="mt-2 text-sm text-gray-700">
-              A list of all the worksheets available in the Subject.
+              A list of all the worksheets available in this topic.
             </p>
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
             <a
-              href={'/admin/subjects/topics/add_topic'}
+              href={'/admin/subjects/topics/worksheets/add_worksheet'}
               className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Create worksheet
@@ -140,12 +146,9 @@ const Topics: React.FC<WorksheetProps> = () => {
                     {worksheetList.map((person, index) => (
                       <tr key={index} className="even:bg-gray-50">
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                          <Link
-                            href={`subjects/topics/${person._id}`}
-                            className="cursor-pointer text-indigo-600 hover:text-indigo-900"
-                          >
+                          <span className="text-indigo-600 hover:text-indigo-900">
                             {person.title}
-                          </Link>
+                          </span>
                         </td>
                         {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td> */}
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">

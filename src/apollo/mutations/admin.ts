@@ -100,6 +100,7 @@ export const UPDATE_WORKSHEET = gql`
       title
       body {
         text
+        img
       }
       levelId
       topicId
@@ -157,6 +158,39 @@ export const CREATE_TOPIC = gql`
       description
       slug
       levelId
+    }
+  }
+`
+export const CREATE_WORKSHEET = gql`
+  mutation CreateWorksheet(
+    $title: String!
+    $body: [BodyInput!]!
+    $levelId: ID!
+    $topicId: ID!
+    $subjectId: String!
+    $difficulty: String!
+  ) {
+    createWorksheet(
+      input: {
+        title: $title
+        body: $body
+        levelId: $levelId
+        topicId: $topicId
+        subjectId: $subjectId
+        difficulty: $difficulty
+      }
+    ) {
+      _id
+      title
+      body {
+        _id
+        text
+        img
+      }
+      levelId
+      topicId
+      subjectId
+      difficulty
     }
   }
 `

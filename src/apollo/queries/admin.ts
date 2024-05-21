@@ -61,7 +61,7 @@ export const STUDENTS = gql`
 `
 
 export const SUBJECTS = gql`
-query Subjects($page: Int, $limit: Int, $filter: String) {
+  query Subjects($page: Int, $limit: Int, $filter: String) {
     subjects(page: $page, limit: $limit, filter: $filter) {
       data {
         _id
@@ -78,16 +78,8 @@ query Subjects($page: Int, $limit: Int, $filter: String) {
 `
 
 export const TOPICS = gql`
-  query Topics(
-    $page: Int
-    $limit: Int
-    $filter: String
-  ) {
-    topics(
-      page: $page
-      limit: $limit
-      filter: $filter
-    ) {
+  query Topics($page: Int, $limit: Int, $filter: String) {
+    topics(page: $page, limit: $limit, filter: $filter) {
       data {
         _id
         name
@@ -101,16 +93,8 @@ export const TOPICS = gql`
   }
 `
 export const WORKSHEETS = gql`
-  query Worksheets(
-    $page: Int
-    $limit: Int
-    $filter: String
-  ) {
-    worksheets(
-      page: $page
-      limit: $limit
-      filter: $filter
-    ) {
+  query Worksheets($page: Int, $limit: Int, $filter: String, $topicId: String) {
+    worksheets(page: $page, limit: $limit, filter: $filter, topicId: $topicId) {
       data {
         _id
         title

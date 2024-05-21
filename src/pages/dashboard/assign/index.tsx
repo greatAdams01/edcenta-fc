@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import Link from 'next/link'
 import AppLayout from '../../../layout/AppLayout'
@@ -18,9 +18,15 @@ interface Grade {
 }
 
 export default function Assign() {
-  const { data } = useQuery(FETCH_LEARNING)
-  const { data: test } = useQuery(FETCH_LEARNING)
-  console.log(test)
+  const { data, refetch } = useQuery(FETCH_LEARNING, {
+    fetchPolicy: 'network-only',
+  })
+
+  useEffect(() => {
+    if (data) {
+      console.log(JSON.stringify(data, null, 2))
+    }
+  }, [data])
   const [selectedCategory, setSelectedCategory] = useState<
     'worksheet' | 'assessment'
   >('worksheet')
