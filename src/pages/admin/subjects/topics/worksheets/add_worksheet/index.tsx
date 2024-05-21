@@ -8,32 +8,38 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import AdminLayout from '@/layout/AdminLayout'
 
-import { CREATE_TOPIC } from '@/apollo/mutations/admin'
+import { CREATE_WORKSHEET } from '@/apollo/mutations/admin'
 import { FETCH_LEARNING } from '@/apollo/queries/dashboard'
-import { TopicType } from '../../../../../../types'
+import { TopicType } from '../../../../../../../types'
 
 export default function Create() {
   const path = useRouter()
 
-  const [topicName, setTopicName] = useState('')
-  const [topicDescription, setTopicDescription] = useState('')
+  const [title, setTitle] = useState('')
+  const [bodyText, setBodyText] = useState('')
+  const [img, setImg] = useState('')
   const [topicSchoolGrade, setTopicSchoolGrade] = useState('')
-  const [selectType, setSelectType] = useState(TopicType.NATIONAL)
+  const [difficulty, setDifficulty] = useState('')
   let subjectId: string | null = null
+  let topicId: string | null = null
   if (typeof window !== 'undefined') {
     subjectId = localStorage.getItem('subjectId')
+    topicId = localStorage.getItem('topicId')
   }
 
   const { data } = useQuery(FETCH_LEARNING)
 
-  const [createTopic, { loading }] = useMutation(CREATE_TOPIC, {
+  const [createWorksheet, { loading }] = useMutation(CREATE_WORKSHEET, {
     variables: {
-      name: topicName,
-      description: topicDescription,
-      schoolGrade: topicSchoolGrade,
-      type: selectType,
+      title: title,
+      body: {
+        text: bodyText,
+        img: img,
+      },
       levelId: topicSchoolGrade,
+      topicId: topicId,
       subjectId: subjectId,
+      difficulty: difficulty,
     },
     onCompleted: (data) => {
       console.log(data)
@@ -47,22 +53,22 @@ export default function Create() {
       }, 5000)
     },
     onError: (error) => {
-      toast.error('Error creating topic: ' + error)
+      toast.error('Error creating subject: ' + error)
     },
   })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (topicName === '') {
-      console.log('Topic name field cannot be empty')
-      toast.error('Topic name field cannot be empty')
+    if (title === '') {
+      console.log('Title field cannot be empty')
+      toast.error('Title field cannot be empty')
       return
     }
 
-    if (topicDescription === '') {
-      console.log('Description field cannot be empty')
-      toast.error('Description field cannot be empty')
+    if (bodyText === '') {
+      console.log('Body Text field cannot be empty')
+      toast.error('Body Text field cannot be empty')
       return
     }
 
@@ -71,8 +77,18 @@ export default function Create() {
       toast.error('School grade field cannot be empty')
       return
     }
+    if (img === '') {
+      console.log('Img link field cannot be empty')
+      toast.error('Img link field cannot be empty')
+      return
+    }
+    if (difficulty === '') {
+      console.log('Difficulty field cannot be empty')
+      toast.error('Difficulty field cannot be empty')
+      return
+    }
 
-    createTopic()
+    createWorksheet()
   }
 
   return (
@@ -88,7 +104,7 @@ export default function Create() {
           <div className="w-full">
             <form onSubmit={handleSubmit} className="w-full ">
               <div className="flex w-full items-center justify-between">
-                <h1 className="text-lg font-bold">Add Topic</h1>
+                <h1 className="text-lg font-bold">Add Worksheet</h1>
                 <button
                   type="submit"
                   className={`rounded-md bg-blue-500 p-2 px-4 font-bold text-white`}
@@ -97,27 +113,42 @@ export default function Create() {
                 </button>
               </div>
 
-              <div className="mt-6 justify-between md:grid md:grid-cols-2 md:gap-6">
+              <div className="mt-6 items-start justify-between md:grid md:grid-cols-2 md:gap-6">
                 <div className="flex w-full flex-col items-start justify-between gap-y-1">
-                  <label htmlFor="First name" className="w-full">
-                    Topic name <span className="text-red-500">*</span>
+                  <label htmlFor="title" className="w-full">
+                    Title <span className="text-red-500">*</span>
                   </label>
                   <input
+                    id="title"
                     type="text"
-                    value={topicName}
-                    onChange={(e) => setTopicName(e.target?.value)}
+                    value={title}
+                    onChange={(e) => setTitle(e.target?.value)}
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
+                  />
+                </div>
+
+                <div className="flex w-full flex-col items-start justify-between gap-y-1">
+                  <label htmlFor="img" className="w-full">
+                    Description image link{' '}
+                    <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="img"
+                    type="text"
+                    value={img}
+                    onChange={(e) => setImg(e.target?.value)}
                     className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
                 <div className="flex w-full flex-col items-start justify-between gap-y-1">
-                  <label htmlFor="Last name" className="w-full">
+                  <label htmlFor="description" className="w-full">
                     Description <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
-                    value={topicDescription}
-                    onChange={(e) => setTopicDescription(e.target?.value)}
-                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
+                  <textarea
+                    id="description"
+                    value={bodyText}
+                    onChange={(e) => setBodyText(e.target?.value)}
+                    className="h-40 w-full max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
                 <div className="flex w-full flex-col items-start justify-between gap-y-1">
@@ -141,16 +172,21 @@ export default function Create() {
                   </select>
                 </div>
                 <div className="flex w-full flex-col items-start justify-between gap-y-1">
-                  <label htmlFor="Last name" className="w-full">
-                    Select type <span className="text-red-500">*</span>
+                  <label htmlFor="difficulty" className="w-full">
+                    Select difficulty <span className="text-red-500">*</span>
                   </label>
                   <select
-                    value={selectType}
+                    id="difficulty"
+                    value={difficulty}
+                    onChange={(e) => {
+                      setDifficulty(e.target.value)
+                    }}
                     className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
-                    onChange={(e) => setSelectType(e.target.value as TopicType)}
                   >
-                    <option value={TopicType.NATIONAL}>National</option>
-                    <option value={TopicType.PRIVATE}>Private</option>
+                    <option value="">Select difficulty</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
                   </select>
                 </div>
               </div>

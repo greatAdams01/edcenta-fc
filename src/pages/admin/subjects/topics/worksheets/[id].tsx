@@ -20,6 +20,13 @@ type WorksheetProps = {
 const Topics: React.FC<WorksheetProps> = () => {
   const router = useRouter()
   const { id } = router.query
+  React.useEffect(() => {
+    if (id) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('topicId', id as string)
+      }
+    }
+  }, [id])
   const [page, setPage] = useState(1)
   const [worksheetType, setType] = useState('')
   const [worksheetList, setWorksheets] = useState<any[]>([])
@@ -47,11 +54,10 @@ const Topics: React.FC<WorksheetProps> = () => {
       console.log('Data:', data)
       setWorksheets(data.worksheets.data)
     },
+    onError: (error) => {
+      console.log('Error:', error)
+    },
   })
-
-  if (error) {
-    console.log('Error:', error)
-  }
   useEffect(() => {
     console.log('worksheetList', worksheetList)
   }, [worksheetList])
@@ -99,7 +105,7 @@ const Topics: React.FC<WorksheetProps> = () => {
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
             <a
-              href={'/admin/subjects/topics/add_topic'}
+              href={'/admin/subjects/topics/worksheets/add_worksheet'}
               className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Create worksheet
