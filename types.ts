@@ -235,7 +235,6 @@ export interface ITopic extends DefaultAttributes {
 }
 
 export interface IBody {
-  __typename: string
   text: string
   img: string
 }

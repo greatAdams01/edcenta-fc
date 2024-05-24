@@ -28,7 +28,6 @@ const Topics: React.FC<WorksheetProps> = () => {
     }
   }, [id])
   const [page, setPage] = useState(1)
-  const [worksheetType, setType] = useState('')
   const [worksheetList, setWorksheets] = useState<any[]>([])
   const [open, setOpen] = useState(false)
   const [toDelete, setDelete] = useState(false)
@@ -124,15 +123,6 @@ const Topics: React.FC<WorksheetProps> = () => {
                     >
                       Name
                     </th>
-                    {/* <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                    Title
-                  </th> */}
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Description
-                    </th>
                     <th
                       scope="col"
                       className="relative py-3.5 pl-3 pr-4 sm:pr-3"
@@ -149,10 +139,6 @@ const Topics: React.FC<WorksheetProps> = () => {
                           <span className="text-indigo-600 hover:text-indigo-900">
                             {person.title}
                           </span>
-                        </td>
-                        {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td> */}
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {person.body[0].text}
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
                           <a

@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
 import { IoIosArrowBack } from 'react-icons/io'
-import ReactQuill from 'react-quill'
+import dynamic from 'next/dynamic'
+
+const ReactQuill = dynamic(import('react-quill'), { ssr: false })
 import 'react-quill/dist/quill.snow.css'
 
 import { ToastContainer, toast } from 'react-toastify'
@@ -98,7 +100,6 @@ export default function Create() {
       toast.error('Title field cannot be empty')
       return
     }
-
     if (topicSchoolGrade === '') {
       console.log('School grade field cannot be empty')
       toast.error('School grade field cannot be empty')
@@ -108,6 +109,14 @@ export default function Create() {
       console.log('Difficulty field cannot be empty')
       toast.error('Difficulty field cannot be empty')
       return
+    }
+    // Check if any body item is empty
+    for (let item of bodyItems) {
+      if (item.text.trim() === '' || item.img.trim() === '') {
+        console.log('Body item cannot be empty')
+        toast.error('Body item cannot be empty')
+        return
+      }
     }
 
     createWorksheet()
