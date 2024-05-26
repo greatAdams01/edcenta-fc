@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
 import { IoIosArrowBack } from 'react-icons/io'
+import dynamic from 'next/dynamic'
+
+const ReactQuill = dynamic(import('react-quill'), { ssr: false })
+import 'react-quill/dist/quill.snow.css'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -15,8 +19,7 @@ export default function Create() {
   const path = useRouter()
 
   const [title, setTitle] = useState('')
-  const [bodyText, setBodyText] = useState('')
-  const [img, setImg] = useState('')
+  const [bodyItems, setBodyItems] = useState([{ text: '', img: '' }])
   const [topicSchoolGrade, setTopicSchoolGrade] = useState('')
   const [difficulty, setDifficulty] = useState('')
   let subjectId: string | null = null
@@ -31,10 +34,7 @@ export default function Create() {
   const [createWorksheet, { loading }] = useMutation(CREATE_WORKSHEET, {
     variables: {
       title: title,
-      body: {
-        text: bodyText,
-        img: img,
-      },
+      body: bodyItems,
       levelId: topicSchoolGrade,
       topicId: topicId,
       subjectId: subjectId,
@@ -55,13 +55,37 @@ export default function Create() {
       toast.error('Error creating subject: ' + error)
     },
   })
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+
+  const handleAddBodyItem = () => {
+    setBodyItems([...bodyItems, { text: '', img: '' }])
+  }
+
+  const handleRemoveBodyItem = (index: number) => {
+    setBodyItems(bodyItems.filter((_, i) => i !== index))
+  }
+
+  const handleBodyItemChange = (
+    index: number,
+    field: string,
+    value: string,
+  ) => {
+    setBodyItems(
+      bodyItems.map((item, i) =>
+        i === index ? { ...item, [field]: value } : item,
+      ),
+    )
+  }
+
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    const file = e.target.files?.[0] // Add null check for e.target.files
 
     const reader = new FileReader()
 
     reader.onloadend = () => {
-      setImg(reader.result?.toString() || '')
+      handleBodyItemChange(index, 'img', reader.result?.toString() || '')
     }
 
     if (file) {
@@ -76,27 +100,23 @@ export default function Create() {
       toast.error('Title field cannot be empty')
       return
     }
-
-    if (bodyText === '') {
-      console.log('Body Text field cannot be empty')
-      toast.error('Body Text field cannot be empty')
-      return
-    }
-
     if (topicSchoolGrade === '') {
       console.log('School grade field cannot be empty')
       toast.error('School grade field cannot be empty')
-      return
-    }
-    if (img === '') {
-      console.log('Img link field cannot be empty')
-      toast.error('Img link field cannot be empty')
       return
     }
     if (difficulty === '') {
       console.log('Difficulty field cannot be empty')
       toast.error('Difficulty field cannot be empty')
       return
+    }
+    // Check if any body item is empty
+    for (let item of bodyItems) {
+      if (item.text.trim() === '' || item.img.trim() === '') {
+        console.log('Body item cannot be empty')
+        toast.error('Body item cannot be empty')
+        return
+      }
     }
 
     createWorksheet()
@@ -124,7 +144,7 @@ export default function Create() {
                 </button>
               </div>
 
-              <div className="mt-6 items-start justify-between md:grid md:grid-cols-2 md:gap-6">
+              <div className="mb-2 mt-6 items-start justify-between md:grid md:grid-cols-2 md:gap-6">
                 <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="title" className="w-full">
                     Title <span className="text-red-500">*</span>
@@ -135,29 +155,6 @@ export default function Create() {
                     value={title}
                     onChange={(e) => setTitle(e.target?.value)}
                     className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
-                  />
-                </div>
-
-                <div className="flex w-full flex-col items-start justify-between gap-y-1">
-                  <label htmlFor="img" className="w-full">
-                    Description image <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id="img"
-                    type="file"
-                    onChange={handleFileChange}
-                    className="my-2  w-[100%] max-w-[400px] px-4 lg:w-[100rem]"
-                  />
-                </div>
-                <div className="flex w-full flex-col items-start justify-between gap-y-1">
-                  <label htmlFor="description" className="w-full">
-                    Description <span className="text-red-500">*</span>
-                  </label>
-                  <textarea
-                    id="description"
-                    value={bodyText}
-                    onChange={(e) => setBodyText(e.target?.value)}
-                    className="h-40 w-full max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                   />
                 </div>
                 <div className="flex w-full flex-col items-start justify-between gap-y-1">
@@ -199,6 +196,50 @@ export default function Create() {
                   </select>
                 </div>
               </div>
+              {bodyItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="mt-6 flex items-start justify-between"
+                >
+                  <div>
+                    <div className="flex w-full flex-col items-start justify-between gap-y-1">
+                      <label
+                        htmlFor={`description-${index}`}
+                        className="w-full"
+                      >
+                        Description <span className="text-red-500">*</span>
+                      </label>
+                      <ReactQuill
+                        id={`description-${index}`}
+                        value={item.text}
+                        onChange={(content, delta, source, editor) =>
+                          handleBodyItemChange(index, 'text', editor.getHTML())
+                        }
+                        className="w-full max-w-[400px] lg:w-[100rem]"
+                      />
+                    </div>
+                    <button onClick={() => handleRemoveBodyItem(index)}>
+                      Remove
+                    </button>
+                    <div className="mt-6">
+                      <button type="button" onClick={handleAddBodyItem}>
+                        Add Body Item
+                      </button>
+                    </div>
+                  </div>{' '}
+                  <div className="flex w-full flex-col items-start justify-between gap-y-1">
+                    <label htmlFor={`img-${index}`} className="w-full">
+                      Description image <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      id={`img-${index}`}
+                      type="file"
+                      onChange={(e) => handleFileChange(e, index)}
+                      className="my-2  w-[100%] max-w-[400px] px-4 lg:w-[100rem]"
+                    />
+                  </div>
+                </div>
+              ))}
             </form>
           </div>
         </div>

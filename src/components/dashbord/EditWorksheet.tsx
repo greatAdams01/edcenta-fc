@@ -4,6 +4,10 @@ import { useMutation, useQuery } from '@apollo/client'
 import { UPDATE_TOPIC, UPDATE_WORKSHEET } from '@/apollo/mutations/admin'
 import { showToast } from '@/utils/toast'
 import { FETCH_LEARNING } from '@/apollo/queries/dashboard'
+import dynamic from 'next/dynamic'
+
+const ReactQuill = dynamic(import('react-quill'), { ssr: false })
+import 'react-quill/dist/quill.snow.css'
 
 interface EditWorksheetProps {
   worksheet: IWorksheet
@@ -13,6 +17,7 @@ interface EditWorksheetProps {
 const EditWorksheet: React.FC<EditWorksheetProps> = ({ worksheet }) => {
   const [editedWorksheet, setEditedWorksheet] = useState<IWorksheet>(worksheet)
   const [topicSchoolGrade, setTopicSchoolGrade] = useState('')
+  const [bodyItems, setBodyItems] = useState([{ text: '', img: '' }])
   let subjectId: string | null = null
   let topicId: string | null = null
   if (typeof window !== 'undefined') {
@@ -40,18 +45,14 @@ const EditWorksheet: React.FC<EditWorksheetProps> = ({ worksheet }) => {
       }))
     }
   }
-  const handleSave = () => {
-    editWorksheetInfo()
-  }
+
   const [editWorksheetInfo, { loading }] = useMutation(UPDATE_WORKSHEET, {
     variables: {
       id: editedWorksheet._id,
       input: {
         title: editedWorksheet.title,
         difficulty: editedWorksheet.difficulty,
-        body: editedWorksheet.body.map(
-          ({ __typename, ...bodyItem }) => bodyItem,
-        ),
+        body: editedWorksheet.body,
         levelId: topicSchoolGrade,
         topicId: topicId,
         subjectId: subjectId,
@@ -68,23 +69,72 @@ const EditWorksheet: React.FC<EditWorksheetProps> = ({ worksheet }) => {
       // setLoading(false);
     },
   })
+  const handleSave = () => {
+    // Remove __typename field from each body item
+    const bodyWithoutTypename = editedWorksheet.body.map(
+      ({ __typename, ...item }) => item,
+    )
+
+    // Create a new worksheet object without __typename fields
+    const worksheetToSend = { ...editedWorksheet, body: bodyWithoutTypename }
+
+    // Then use `worksheetToSend` in your mutation
+    editWorksheetInfo({
+      variables: {
+        id: worksheetToSend._id,
+        input: {
+          title: worksheetToSend.title,
+          difficulty: worksheetToSend.difficulty,
+          body: worksheetToSend.body,
+          levelId: topicSchoolGrade,
+          topicId: topicId,
+          subjectId: subjectId,
+        },
+      },
+    })
+  }
 
   useEffect(() => {
     setEditedWorksheet(worksheet)
   }, [worksheet])
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+
+  const handleAddBodyItem = () => {
+    setEditedWorksheet({
+      ...editedWorksheet,
+      body: [...editedWorksheet.body, { __typename: '', text: '', img: '' }],
+    })
+  }
+
+  const handleRemoveBodyItem = (index: number) => {
+    setEditedWorksheet({
+      ...editedWorksheet,
+      body: editedWorksheet.body.filter((_, i) => i !== index),
+    })
+  }
+
+  const handleBodyItemChange = (
+    index: number,
+    field: 'text' | 'img',
+    value: string,
+  ) => {
+    setEditedWorksheet({
+      ...editedWorksheet,
+      body: editedWorksheet.body.map((item, i) =>
+        i === index ? { ...item, [field]: value } : item,
+      ),
+    })
+  }
+
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    const file = e.target.files?.[0] // Add null check for e.target.files
 
     const reader = new FileReader()
 
     reader.onloadend = () => {
-      setEditedWorksheet((prevState: IWorksheet) => ({
-        ...prevState,
-        body: prevState.body.map((bodyItem) => ({
-          ...bodyItem,
-          img: reader.result?.toString() || '',
-        })),
-      }))
+      handleBodyItemChange(index, 'img', reader.result?.toString() || '')
     }
 
     if (file) {
@@ -98,7 +148,7 @@ const EditWorksheet: React.FC<EditWorksheetProps> = ({ worksheet }) => {
         <div className="flex space-x-5">
           <div className="flex w-full flex-col items-start justify-between gap-y-1">
             <label
-              htmlFor="name"
+              htmlFor="title"
               className="text-md block font-medium leading-6 text-gray-900"
             >
               Worksheet Title
@@ -106,8 +156,8 @@ const EditWorksheet: React.FC<EditWorksheetProps> = ({ worksheet }) => {
             <div className="mt-2">
               <input
                 type="name"
-                name="name"
-                id="name"
+                name="title"
+                id="title"
                 value={editedWorksheet.title}
                 onChange={handleInputChange}
                 className="md:text-md block w-full max-w-[400px] rounded-md border-0 px-2 py-2.5 text-gray-900 shadow-md ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:leading-6 lg:w-[400px]"
@@ -115,33 +165,6 @@ const EditWorksheet: React.FC<EditWorksheetProps> = ({ worksheet }) => {
               />
             </div>
           </div>
-          <div className="flex w-full flex-col items-start justify-between gap-y-1">
-            <label
-              htmlFor="bodyText"
-              className="text-md block font-medium leading-6 text-gray-900"
-            >
-              Body Text
-            </label>
-            <div className="mt-2">
-              <input
-                type="text"
-                name="bodyText"
-                id="bodyText"
-                value={
-                  editedWorksheet &&
-                  editedWorksheet.body &&
-                  editedWorksheet.body[0]
-                    ? editedWorksheet.body[0].text
-                    : ''
-                }
-                onChange={handleInputChange}
-                className="md:text-md block w-full max-w-[400px] rounded-md border-0 px-2 py-2.5 text-gray-900 shadow-md ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:leading-6 lg:w-[400px]"
-                placeholder="Body text"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex space-x-5">
           <div className="flex w-full flex-col items-start justify-between gap-y-1">
             <label
               htmlFor="img"
@@ -165,24 +188,45 @@ const EditWorksheet: React.FC<EditWorksheetProps> = ({ worksheet }) => {
                 ))}
             </select>
           </div>
-          <div className="flex w-full flex-col items-start justify-between gap-y-1">
-            <label
-              htmlFor="img"
-              className="text-md block font-medium leading-6 text-gray-900"
-            >
-              Description image
-            </label>
-            <div className="mt-2">
+        </div>
+        {editedWorksheet.body.map((item, index) => (
+          <div key={index} className="mt-6 flex items-start justify-between">
+            <div>
+              <div className="flex w-full flex-col items-start justify-between gap-y-1">
+                <label htmlFor={`description-${index}`} className="w-full">
+                  Description <span className="text-red-500">*</span>
+                </label>
+                <ReactQuill
+                  id={`description-${index}`}
+                  value={item.text}
+                  onChange={(content, delta, source, editor) =>
+                    handleBodyItemChange(index, 'text', editor.getHTML())
+                  }
+                  className="w-full max-w-[400px] lg:w-[100rem]"
+                />
+              </div>
+              <button onClick={() => handleRemoveBodyItem(index)}>
+                Remove
+              </button>
+              <div className="mt-6">
+                <button type="button" onClick={handleAddBodyItem}>
+                  Add Body Item
+                </button>
+              </div>
+            </div>{' '}
+            <div className="flex w-full flex-col items-start justify-between gap-y-1">
+              <label htmlFor={`img-${index}`} className="w-full">
+                Description image <span className="text-red-500">*</span>
+              </label>
               <input
-                id="img"
+                id={`img-${index}`}
                 type="file"
-                name="img"
-                onChange={handleFileChange}
-                className="md:text-md block w-full max-w-[400px] px-2 py-2.5 text-gray-900 shadow-md ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:leading-6 lg:w-[400px]"
+                onChange={(e) => handleFileChange(e, index)}
+                className="my-2  w-[100%] max-w-[400px] px-4 lg:w-[100rem]"
               />
             </div>
           </div>
-        </div>
+        ))}
         <button
           type="button"
           className="mt-5 inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:ml-3 sm:w-auto"
