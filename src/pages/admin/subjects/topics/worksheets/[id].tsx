@@ -125,6 +125,12 @@ const Topics: React.FC<WorksheetProps> = () => {
                     </th>
                     <th
                       scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
+                    >
+                      Difficulty
+                    </th>
+                    <th
+                      scope="col"
                       className="relative py-3.5 pl-3 pr-4 sm:pr-3"
                     >
                       <span className="sr-only">Edit</span>
@@ -136,9 +142,15 @@ const Topics: React.FC<WorksheetProps> = () => {
                     {worksheetList.map((person, index) => (
                       <tr key={index} className="even:bg-gray-50">
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                          <span className="text-indigo-600 hover:text-indigo-900">
+                          <Link
+                            href={`worksheet/${person._id}`}
+                            className="cursor-pointer text-indigo-600 hover:text-indigo-900"
+                          >
                             {person.title}
-                          </span>
+                          </Link>
+                        </td>
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
+                          {person.difficulty}
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
                           <a
