@@ -149,7 +149,9 @@ export default function Create() {
                     className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                     onChange={(e) => setSelectType(e.target.value as TopicType)}
                   >
-                    <option value={TopicType.NATIONAL}>National</option>
+                    <option value={TopicType.NATIONAL}>
+                      National Curriculum
+                    </option>
                     <option value={TopicType.PRIVATE}>Private</option>
                   </select>
                 </div>
