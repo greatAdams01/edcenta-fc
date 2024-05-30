@@ -112,6 +112,20 @@ export const WORKSHEETS = gql`
   }
 `
 
+export const WORKSHEET_BY_ID = gql`
+  query Worksheet($id: ID!) {
+    worksheet(id: $id) {
+      _id
+      title
+      body {
+        text
+        img
+      }
+      difficulty
+    }
+  }
+`
+
 export const SCHOOL_GRADES = gql`
   query SchoolGrades(
     $page: Int
