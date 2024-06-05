@@ -59,7 +59,6 @@ export const studentNav = [
     children: [
       { name: 'Score', href: '#' },
       { name: 'Reward', href: '#' },
-      { name: 'Badges', href: '#' },
     ],
   },
 ]
