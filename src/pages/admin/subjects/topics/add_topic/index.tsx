@@ -153,6 +153,8 @@ export default function Create() {
                       National Curriculum
                     </option>
                     <option value={TopicType.PRIVATE}>Private</option>
+                    <option value={TopicType.ASSESSMENT}>Assesment</option>
+
                   </select>
                 </div>
               </div>
