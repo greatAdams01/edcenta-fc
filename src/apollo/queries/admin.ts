@@ -122,6 +122,8 @@ export const WORKSHEET_BY_ID = gql`
         img
       }
       difficulty
+      levelId
+      subjectId
     }
   }
 `

@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { WORKSHEET_BY_ID } from '@/apollo/queries/admin'
-import { IWorksheet } from '../../../../../types'
+import { IWorksheet2 } from '../../../../../types'
 import { motion } from 'framer-motion'
 import AppLayout from '@/layout/AppLayout'
 import ModalAuth from '@/components/ModalComp'
@@ -11,6 +11,7 @@ import { showToast } from '@/utils/toast'
 import { DELETE_WORKSHEET } from '@/apollo/mutations/admin'
 import EditWorksheet from '@/components/dashbord/EditWorksheet'
 import { IoIosArrowBack } from 'react-icons/io'
+import { QUESTIONS } from '@/apollo/queries/dashboard'
 
 type WorksheetProps = {
   _id: string
@@ -30,10 +31,13 @@ const Topics: React.FC<WorksheetProps> = () => {
   const [open, setOpen] = useState(false)
   const [toDelete, setDelete] = useState(false)
   const [itemId, setItemId] = useState('')
-  const [worksheet, setWorksheet] = useState<IWorksheet>({
+  const [questionsList, setQuestionsList] = useState([])
+  const [worksheet, setWorksheet] = useState<IWorksheet2>({
     title: '',
     body: [],
     difficulty: '',
+    levelId: '',
+    subjectId: '',
   })
 
   const handleDelete = (id?: string) => {
@@ -79,6 +83,34 @@ const Topics: React.FC<WorksheetProps> = () => {
   })
   useEffect(() => {
     getWorksheet()
+  }, [itemId, open])
+
+  const [
+    getQuestions,
+    { loading: questionsLoading, error: questionsError, data: questionsData },
+  ] = useLazyQuery(QUESTIONS, {
+    variables: {
+      page: 1,
+      limit: 10,
+      filter: '',
+      levelId: worksheet.levelId,
+      subjectId: worksheet.subjectId,
+      worksheetId: id,
+    },
+    onCompleted: (data) => {
+      console.log('Questions Data:', data)
+      setQuestionsList(data.questions.data)
+    },
+    onError: (error) => {
+      console.log('Questions Error:', error)
+    },
+  })
+
+  useEffect(() => {
+    console.log('questionsList', questionsList)
+  }, [questionsList])
+  useEffect(() => {
+    getQuestions()
   }, [itemId, open])
   return (
     <AppLayout>
