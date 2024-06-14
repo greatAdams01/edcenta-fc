@@ -14,6 +14,7 @@ export enum FileType {
 export enum TopicType {
   NATIONAL = 'NATIONAL',
   PRIVATE = 'PRIVATE',
+  ASSESSMENT  = 'ASSESSMENT '
 }
 export enum AccountType {
   STUDENT = 'STUDENT',
