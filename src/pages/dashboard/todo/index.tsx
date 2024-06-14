@@ -26,33 +26,23 @@ export default function Todo() {
   const [assignmentList, setAssignmentList] = useState<any[]>([])
   const [allOpen, setAllOpen] = useState(false)
 
-  const groupedStudents = students.reduce((groups: any, student: any) => {
-    const groupKey = student.grade.year
-    if (!groups[groupKey]) {
-      groups[groupKey] = []
-    }
-    groups[groupKey].push(student)
-    return groups
-  }, {})
-  const [accountType, setAccountType] = useState('' as string)
-  // Get Authdata from Cookies
   const authData: any = getCookie('Authdata')
+  let authDataId: string | null = null
+
+  if (authData) {
+    try {
+      authDataId = JSON.parse(authData)._id
+    } catch (error) {
+      console.error('Error parsing authData:', error)
+    }
+  }
 
   const [selectedCategory, setSelectedCategory] = useState<
     'all' | 'worksheet' | 'assessment'
   >('all')
 
-  useEffect(() => {
-    if (!authData) {
-      window.location.href = '/auth/login'
-      return
-    }
-    console.log(JSON.parse(authData).accountType)
-    setAccountType(JSON.parse(authData).accountType)
-  }, [authData])
-
   const [getAssignments, { loading, error, data }] = useLazyQuery(ASSIGNMENTS, {
-    variables: { page, limit: 10, filter: JSON.parse(authData)._id },
+    variables: { page, limit: 10, filter: authDataId },
     onCompleted: (data) => {
       console.log('Data:', data)
       setAssignmentList(data.assignments.data)
@@ -71,7 +61,7 @@ export default function Todo() {
       variables: {
         page: pageNum,
         limit: 10,
-        filter: JSON.parse(authData)._id,
+        filter: authDataId,
       },
     })
   }
