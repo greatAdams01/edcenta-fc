@@ -14,10 +14,11 @@ import AdminLayout from '@/layout/AdminLayout'
 
 import { CREATE_WORKSHEET } from '@/apollo/mutations/admin'
 import { FETCH_LEARNING } from '@/apollo/queries/dashboard'
+import ModalAuth from '@/components/ModalComp'
 
 export default function Create() {
   const path = useRouter()
-
+  const [open, setOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [bodyItems, setBodyItems] = useState([{ text: '', img: '' }])
   const [topicSchoolGrade, setTopicSchoolGrade] = useState('')
@@ -136,12 +137,15 @@ export default function Create() {
             <form onSubmit={handleSubmit} className="w-full ">
               <div className="flex w-full items-center justify-between">
                 <h1 className="text-lg font-bold">Add Worksheet</h1>
-                <button
-                  type="submit"
-                  className={`rounded-md bg-blue-500 p-2 px-4 font-bold text-white`}
-                >
-                  Create
-                </button>
+                <div className='w-[20%] flex justify-between'>
+                  <button
+                    type="submit"
+                    className={`rounded-md bg-blue-500 p-2 px-4 font-bold text-white`}
+                  >
+                    Create
+                  </button>
+                  <input value={"Preview"} onClick={() => setOpen(true)} className={`rounded-md cursor-pointer bg-blue-500 p-2 px-4 font-bold text-white`} type="button" />
+                </div>
               </div>
 
               <div className="mb-2 mt-6 items-start justify-between md:grid md:grid-cols-2 md:gap-6">
@@ -243,6 +247,49 @@ export default function Create() {
             </form>
           </div>
         </div>
+        <ModalAuth
+          isOpen={open}
+          XIcon={true}
+          onClose={() => (setOpen(false))}
+          styling={'w-[1000px] m-auto'}
+        >
+          <div className='overflow-y-scroll'>
+            <h1 className="w-full text-2xl font-semibold uppercase leading-6 text-gray-900">
+              {title}
+            </h1>
+            <div className="space-y-2 sm:flex sm:items-center sm:justify-between">
+              <p className=" text-sm text-gray-700">
+                Difficulty: {difficulty}
+              </p>
+              {/* <a
+                href="#"
+                className="text-indigo-600 hover:text-indigo-900"
+                onClick={() => handleEdit(worksheet._id)}
+              >
+                Edit
+              </a> */}
+            </div>
+            {bodyItems.map((item, index) => (
+              <div key={index}>
+                <div
+                  className="w-full"
+                  dangerouslySetInnerHTML={{ __html: item.text }}
+                />
+                <div className="flex w-full justify-center">
+                  {item.img && (
+                    <img
+                      src={item.img}
+                      alt="image"
+                      className="h-full max-h-[400px] w-1/2"
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </ModalAuth>
+
       </div>
     </AdminLayout>
   )
