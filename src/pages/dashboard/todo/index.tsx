@@ -8,11 +8,12 @@ import { FaArrowRightToBracket } from 'react-icons/fa6'
 import { getCookie } from 'cookies-next'
 
 import AppLayout from '../../../layout/AppLayout'
-import { STUDENTS } from '@/apollo/queries/dashboard'
-import { useQuery } from '@apollo/client'
+import { ASSIGNMENTS, STUDENTS } from '@/apollo/queries/dashboard'
+import { useLazyQuery, useQuery } from '@apollo/client'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { IoIosArrowBack } from 'react-icons/io'
+import Pagination from '@/components/dashbord/Pagination'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -21,6 +22,8 @@ function classNames(...classes: string[]) {
 export default function Todo() {
   const { data: studentsData } = useQuery(STUDENTS)
   const students = studentsData?.students.data || []
+  const [page, setPage] = useState(1)
+  const [assignmentList, setAssignmentList] = useState<any[]>([])
   const [allOpen, setAllOpen] = useState(false)
 
   const groupedStudents = students.reduce((groups: any, student: any) => {
@@ -48,25 +51,33 @@ export default function Todo() {
     setAccountType(JSON.parse(authData).accountType)
   }, [authData])
 
-  const Stats = [
-    {
-      title: 'Account Setup',
-      status: '90%',
+  const [getAssignments, { loading, error, data }] = useLazyQuery(ASSIGNMENTS, {
+    variables: { page, limit: 10, filter: JSON.parse(authData)._id },
+    onCompleted: (data) => {
+      console.log('Data:', data)
+      setAssignmentList(data.assignments.data)
     },
-    {
-      title: 'No. of Class',
-      status: Object.keys(groupedStudents).length,
+    onError: (error) => {
+      console.log('Error:', error)
     },
-    {
-      title: 'No. of Student',
-      status: students.length,
-    },
-    {
-      title: 'Curriculum completed',
-      status: '0',
-    },
-  ]
+  })
+  useEffect(() => {
+    console.log('assignmentList', assignmentList)
+  }, [assignmentList])
 
+  const handlePageChange = (pageNum: number) => {
+    setPage(pageNum)
+    getAssignments({
+      variables: {
+        page: pageNum,
+        limit: 10,
+        filter: JSON.parse(authData)._id,
+      },
+    })
+  }
+  useEffect(() => {
+    getAssignments()
+  }, [])
   return (
     <AppLayout>
       <motion.div className="space-y-8" animate={{}}>
@@ -111,33 +122,35 @@ export default function Todo() {
             <table className="w-full table-auto">
               <thead>
                 <tr>
-                  <td className="w-[65%] pb-4"></td>
-                  <td className="pb-4">Subject</td>
+                  <td className="w-[65%] pb-4">Title</td>
+                  <td className="pb-4">Time assigned</td>
                   <td className="pb-4"></td>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="pr-6 text-left">
-                    Match Words Used in Geometry to Their Definiti
-                  </td>
-                  <td className="pr-6 text-left">
-                    <button
-                      type="button"
-                      className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto"
-                    >
-                      Maths
-                    </button>
-                  </td>
-                  <td>
-                    <Link href={`todo/assigned/664cd84a9a0e6dc769f7bbd0`}>
-                      <FaArrowRightToBracket />
-                    </Link>
-                  </td>
-                </tr>
+                {assignmentList &&
+                  assignmentList.map((assignment) => (
+                    <tr key={assignment._id}>
+                      <td className="pr-6 text-left">
+                        {assignment.worksheetId.title}
+                      </td>
+                      <td className="pr-6 text-left">
+                        {new Date(
+                          parseInt(assignment.createdAt),
+                        ).toLocaleDateString()}
+                      </td>
+                      <td>
+                        <Link
+                          href={`todo/assigned/${assignment.worksheetId._id}`}
+                        >
+                          <FaArrowRightToBracket />
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
-            {!allOpen && (
+            {/* {!allOpen && (
               <div>
                 <button
                   onClick={() => setAllOpen(true)}
@@ -146,9 +159,14 @@ export default function Todo() {
                   <span>See all assigned activities</span>
                 </button>
               </div>
-            )}
+            )} */}
           </div>
         </section>
+        <Pagination
+          page={page}
+          count={data?.users?.totalPage}
+          handlePageChange={async (e) => handlePageChange(e)}
+        />
       </motion.div>
     </AppLayout>
   )

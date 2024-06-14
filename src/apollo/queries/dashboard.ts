@@ -104,6 +104,67 @@ export const QUESTION_QUERY = gql`
   }
 `
 
+export const ASSIGNMENTS = gql`
+  query Assignments($page: Int, $limit: Int, $filter: String) {
+    assignments(page: $page, limit: $limit, filter: $filter) {
+      data {
+        _id
+        worksheetId {
+          _id
+          title
+        }
+        answers {
+          _id
+        }
+        createdAt
+      }
+      totalPage
+      totalRecord
+    }
+  }
+`
+
+export const QUESTIONS = gql`
+  query Questions(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $levelId: String
+    $subjectId: String
+    $worksheetId: ID
+  ) {
+    questions(
+      page: $page
+      limit: $limit
+      filter: $filter
+      levelId: $levelId
+      subjectId: $subjectId
+      worksheetId: $worksheetId
+    ) {
+      data {
+        _id
+        title
+        body {
+          text
+          img
+        }
+        isObjective
+        options {
+          _id
+          option
+          isCorrect
+        }
+        explanation
+        worksheetId
+        createdAt
+        updatedAt
+      }
+      totalRecord
+      totalPage
+    }
+  }
+`
+
 export const STUDENTS = gql`
   query Data {
     students {
