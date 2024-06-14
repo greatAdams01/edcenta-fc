@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
 import { IoIosArrowBack } from 'react-icons/io'
@@ -18,6 +18,8 @@ import ModalAuth from '@/components/ModalComp'
 
 export default function Create() {
   const path = useRouter()
+  const uploadRef = useRef<HTMLInputElement>(null)
+
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [bodyItems, setBodyItems] = useState([{ text: '', img: '' }])
@@ -203,7 +205,7 @@ export default function Create() {
               {bodyItems.map((item, index) => (
                 <div
                   key={index}
-                  className="mt-6 flex items-start justify-between"
+                  className="mt-6 flex md:grid md:grid-cols-2 md:gap-6 items-start justify-between"
                 >
                   <div>
                     <div className="flex w-full flex-col items-start justify-between gap-y-1">
@@ -230,16 +232,19 @@ export default function Create() {
                         Add Body Item
                       </button>
                     </div>
-                  </div>{' '}
+                  </div>
                   <div className="flex w-full flex-col items-start justify-between gap-y-1">
                     <label htmlFor={`img-${index}`} className="w-full">
                       Description image <span className="text-red-500">*</span>
                     </label>
+                    <input value={'Upload Image'} className='cursor-pointer bg-blue-500 p-1 text-xs my-2 text-white px-6 rounded-md' type="button" onClick={() => uploadRef.current?.click()} />
+                    <img src={item.img} className='w-80 ' alt="" />
                     <input
                       id={`img-${index}`}
                       type="file"
                       onChange={(e) => handleFileChange(e, index)}
-                      className="my-2  w-[100%] max-w-[400px] px-4 lg:w-[100rem]"
+                      ref={uploadRef}
+                      className="my-2 w-[100%] hidden max-w-[400px] lg:w-[100rem]"
                     />
                   </div>
                 </div>
@@ -253,12 +258,12 @@ export default function Create() {
           onClose={() => (setOpen(false))}
           styling={'w-[1000px] m-auto'}
         >
-          <div className='overflow-y-scroll'>
+          <div className='overflow-y-scroll text-center'>
             <h1 className="w-full text-2xl font-semibold uppercase leading-6 text-gray-900">
               {title}
             </h1>
-            <div className="space-y-2 sm:flex sm:items-center sm:justify-between">
-              <p className=" text-sm text-gray-700">
+            <div className="">
+              <p className=" text-sm !text-center text-gray-700">
                 Difficulty: {difficulty}
               </p>
               {/* <a
