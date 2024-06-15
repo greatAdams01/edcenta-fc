@@ -161,6 +161,7 @@ export const CREATE_TOPIC = gql`
     }
   }
 `
+
 export const CREATE_WORKSHEET = gql`
   mutation CreateWorksheet(
     $title: String!
@@ -191,6 +192,59 @@ export const CREATE_WORKSHEET = gql`
       topicId
       subjectId
       difficulty
+    }
+  }
+`
+
+export const CREATE_QUESTION = gql`
+  mutation createQuestion(
+    $title: String!
+    $body: [BodyInput!]!
+    $isObjective: Boolean!
+    $worksheetId: ID!
+    $explanation: String!
+    $options: [QuestionOptionInput!]!
+  ) {
+    createQuestion(
+      input: {
+        title: $title
+        body: $body
+        isObjective: $isObjective
+        worksheetId: $worksheetId
+        explanation: $explanation
+        options: $options
+      }
+    ) {
+      _id
+      title
+      body {
+        _id
+        text
+        img
+      }
+      createdAt
+      explanation
+      isObjective
+    }
+  }
+`
+export const DELETE_QUESTION = gql`
+  mutation DeleteQuestion($id: ID!) {
+    deleteQuestion( id: $id ) {
+      _id
+    }
+}
+`
+export const EDIT_QUESTION = gql`
+  mutation UpdateQuestion(
+    $id: ID!
+    $input: QuestionInput!
+  ) {
+    updateQuestion(
+      id: $id
+      input: $input
+    ) {
+      _id
     }
   }
 `

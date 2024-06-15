@@ -3,6 +3,7 @@ import {
   UserCircleIcon,
   UsersIcon,
   ClipboardDocumentCheckIcon,
+  QueueListIcon
 } from '@heroicons/react/24/outline'
 
 export const navigation = [
@@ -93,6 +94,16 @@ export const adminNav = [
     children: [{ name: 'Subjects', href: '/admin/subjects' }],
   },
   {
+    name: 'Transactions',
+    href: '/admin',
+    icon: QueueListIcon,
+    children: [
+      { name: 'Plans', href: '/admin/plans' },
+      { name: 'Transactions', href: '/admin/transactions' },
+      { name: 'Subscription', href: '/admin/subscription' }
+    ],
+  },
+  {
     name: 'ACCOUNTS',
     href: '/admin/details',
     icon: UsersIcon,
@@ -102,7 +113,7 @@ export const adminNav = [
       { name: 'Manage students', href: '/admin/students' },
       { name: 'Notifications', href: '/admin/notification' },
     ],
-  },
+  }
 ]
 
 export const Notification = [
