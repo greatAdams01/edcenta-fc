@@ -1,15 +1,16 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
-import { WORKSHEET_BY_ID } from '@/apollo/queries/admin'
-import { IWorksheet } from '../../../../../../../types'
+import { GET_QUESTIONS, WORKSHEET_BY_ID } from '@/apollo/queries/admin'
+import { IWorksheet, IWorksheet2 } from '../../../../../../../types'
 import AdminLayout from '@/layout/AdminLayout'
 import ModalAuth from '@/components/ModalComp'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { showToast } from '@/utils/toast'
-import { DELETE_WORKSHEET } from '@/apollo/mutations/admin'
+import { DELETE_QUESTION, DELETE_WORKSHEET } from '@/apollo/mutations/admin'
 import EditWorksheet from '@/components/dashbord/EditWorksheet'
 import { IoIosArrowBack } from 'react-icons/io'
+import Link from 'next/link'
 
 type WorksheetProps = {
   _id: string
@@ -18,6 +19,8 @@ type WorksheetProps = {
 const Topics: React.FC<WorksheetProps> = () => {
   const router = useRouter()
   const path = useRouter()
+  const [questions, setQuestions] = useState([])
+  const [deleteQuestion, setDeleteQuestion] = useState(false)
   const { id } = router.query
   React.useEffect(() => {
     if (id) {
@@ -29,7 +32,7 @@ const Topics: React.FC<WorksheetProps> = () => {
   const [open, setOpen] = useState(false)
   const [toDelete, setDelete] = useState(false)
   const [itemId, setItemId] = useState('')
-  const [worksheet, setWorksheet] = useState<IWorksheet>({
+  const [worksheet, setWorksheet] = useState<IWorksheet2>({
     title: '',
     body: [],
     difficulty: '',
@@ -61,6 +64,21 @@ const Topics: React.FC<WorksheetProps> = () => {
     console.log('worksheet', worksheet)
   }, [worksheet])
 
+  const [getQuestions, { }] = useLazyQuery(
+    GET_QUESTIONS,
+    {
+      variables: { worksheetId: id, page: 1, limit: 10, filter: '', levelId: worksheet?.levelId, subjectId: worksheet?.subjectId },
+      onCompleted: (data) => {
+        console.log('Questions:', data.questions)
+        setQuestions(data.questions.data)
+        // setWorksheet(data.worksheet)
+      },
+      onError: (error) => {
+        console.log('Error:', error)
+      },
+    },
+  )
+
   const [deleteTopic, deleteStatus] = useMutation(DELETE_WORKSHEET, {
     variables: {
       id: itemId,
@@ -76,37 +94,60 @@ const Topics: React.FC<WorksheetProps> = () => {
       // setLoading(false);
     },
   })
+  const [questionDelete, deleteQuestionStatus] = useMutation(DELETE_QUESTION, {
+    variables: {
+      id: itemId,
+    },
+    onCompleted: (data) => {
+      console.log(data)
+      showToast('success', 'Question deleted')
+      window.location.reload()
+    },
+    onError: (error) => {
+      showToast('error', error.message)
+      // setLoading(false);
+    },
+  })
   useEffect(() => {
     getWorksheet()
+    getQuestions()
   }, [itemId, open])
   return (
     <AdminLayout>
       <div className="space-y-2 px-4 sm:px-6 lg:px-8">
-        <button
-          onClick={() => path.back()}
-          className="mb-6 flex items-center gap-1 text-left text-black"
-        >
-          <IoIosArrowBack /> <div>Back</div>
-        </button>
-        <h1 className="w-full text-center text-2xl font-semibold uppercase leading-6 text-gray-900">
+        <div className='flex mb-8 justify-between'>
+          <button
+            onClick={() => path.back()}
+            className="mb-6 flex items-center gap-1 text-left text-black"
+          >
+            <IoIosArrowBack /> <div>Back</div>
+          </button>
+          <div className='flex justify-between w-52'>
+            <a
+              href="#"
+              className="text-indigo-600 my-auto hover:text-indigo-900"
+              onClick={() => handleEdit(worksheet._id)}
+            >
+              Edit
+            </a>
+            <Link href={`/admin/subjects/topics/worksheets/add_question?worksheet=${id}`}>
+              <button className='rounded-md bg-indigo-600 p-2 px-4 font-bold text-white'>Add Question</button>
+            </Link>
+          </div>
+        </div>
+        <h1 className="w-full text-center text-3xl font-semibold uppercase leading-6 text-gray-900">
           {worksheet.title}
         </h1>
-        <div className="space-y-2 sm:flex sm:items-center sm:justify-between">
-          <p className=" text-sm text-gray-700">
+        <div className="text-center">
+          <p className=" text-base text-gray-700">
             Difficulty: {worksheet.difficulty}
           </p>
-          <a
-            href="#"
-            className="text-indigo-600 hover:text-indigo-900"
-            onClick={() => handleEdit(worksheet._id)}
-          >
-            Edit
-          </a>
+
         </div>
         {worksheet.body.map((item, index) => (
-          <div key={index}>
+          <div key={index} className='text-center my-4'>
             <div
-              className="w-full"
+              className="w-full text-lg"
               dangerouslySetInnerHTML={{ __html: item.text }}
             />
             <div className="flex w-full justify-center">
@@ -121,6 +162,91 @@ const Topics: React.FC<WorksheetProps> = () => {
           </div>
         ))}
       </div>
+      {questions.length >= 1 && <div>
+        <h1 className='text-3xl my-4'>Questions</h1>
+        <div className="mt-8 flow-root">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+              <table className="min-w-full divide-y divide-gray-300">
+                <thead>
+                  <tr>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
+                    >
+                      Title
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
+                    >
+                      Explanation
+                    </th>
+                    {/* <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Title
+                  </th> */}
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Is Objective
+                    </th>
+
+                    {/* <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Status
+                    </th> */}
+                    <th
+                      scope="col"
+                      className="relative py-3.5 pl-3 pr-4 sm:pr-3"
+                    >
+                      <span className="sr-only">Edit</span>
+                    </th>
+                  </tr>
+                </thead>
+                {data && (
+                  <tbody className="bg-white">
+                    {questions.map((question: any) => (
+                      <tr key={question._id} className="even:bg-gray-50">
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
+                          {question.title}
+                        </td>
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
+                          {question.explanation}
+                        </td>
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
+                          {question.isObjective ? 'true' : 'false'}
+                        </td>
+
+                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
+                          <a
+                            href="#"
+                            className="text-indigo-600 hover:text-indigo-900"
+                            onClick={() => router.push(`/admin/subjects/topics/worksheets/add_question?question=${question._id}`)}
+                          >
+                            Edit
+                          </a>
+                        </td>
+                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
+                          <a
+                            href="#"
+                            className="text-red-600 hover:text-red-900"
+                            onClick={() => { setDeleteQuestion(true), setItemId(question._id) }}
+                          >
+                            Delete
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                )}
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>}
       <ModalAuth
         isOpen={open}
         XIcon={true}
@@ -174,6 +300,54 @@ const Topics: React.FC<WorksheetProps> = () => {
             <EditWorksheet worksheet={worksheet} />
           </>
         )}
+      </ModalAuth>
+      <ModalAuth
+        isOpen={deleteQuestion}
+        XIcon={true}
+        onClose={() => (setDeleteQuestion(false))}
+        styling={'w-[500px] m-auto'}
+      >
+        <>
+          <div className="sm:flex sm:items-start">
+            <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+              <ExclamationTriangleIcon
+                className="h-6 w-6 text-red-600"
+                aria-hidden="true"
+              />
+            </div>
+            <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+              <h3 className="text-base font-semibold leading-6 text-gray-900">
+                Delete Question
+              </h3>
+              <div className="mt-2">
+                <p className="text-sm text-gray-500">
+                  Are you sure you want to delete this question? All
+                  of {`it's`} data will be permanently removed from our
+                  servers forever. This action cannot be undone.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+            <button
+              type="button"
+              disabled={deleteQuestionStatus.loading}
+              className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+              onClick={() => questionDelete()}
+            >
+              Delete
+            </button>
+            <button
+              type="button"
+              disabled={deleteQuestionStatus.loading}
+              className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+              onClick={() => setDeleteQuestion(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </>
+
       </ModalAuth>
     </AdminLayout>
   )

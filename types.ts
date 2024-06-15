@@ -250,8 +250,8 @@ export interface IWorksheet2 extends DefaultAttributes {
   title: string
   body: IBody[]
   difficulty: string
-  levelId: string
-  subjectId: string
+  levelId?: string
+  subjectId?: string
 }
 
 export interface ISubtopic extends DefaultAttributes {
