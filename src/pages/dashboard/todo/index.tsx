@@ -42,7 +42,13 @@ export default function Todo() {
   >('all')
 
   const [getAssignments, { loading, error, data }] = useLazyQuery(ASSIGNMENTS, {
-    variables: { page, limit: 10, filter: authDataId },
+    variables: {
+      page,
+      limit: 10,
+      filter: '',
+      studentId: authDataId,
+      worksheetId: '',
+    },
     onCompleted: (data) => {
       console.log('Data:', data)
       setAssignmentList(data.assignments.data)
