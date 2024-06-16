@@ -1,6 +1,8 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
+import { UPDATE_ASSIGNMENT } from '@/apollo/mutations/dashboard'
+import { getCookie } from 'cookies-next'
 import { WORKSHEET_BY_ID } from '@/apollo/queries/admin'
 import { IQuestion, IWorksheet2 } from '../../../../../types'
 import { motion } from 'framer-motion'
@@ -10,6 +12,7 @@ import { IoIosArrowBack } from 'react-icons/io'
 import { QUESTIONS } from '@/apollo/queries/dashboard'
 import ModalAuth from '@/components/ModalComp'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import { showToast } from '@/utils/toast'
 
 type WorksheetProps = {
   _id: string
@@ -19,7 +22,20 @@ const Assigned: React.FC<WorksheetProps> = () => {
   const router = useRouter()
   const path = useRouter()
   const { id } = router.query
+  let currentAssignmentId: string | null = null
+  if (typeof window !== 'undefined') {
+    currentAssignmentId = localStorage.getItem('currentAssignmentId')
+  }
+  const authData: any = getCookie('Authdata')
+  let authDataId: string | null = null
 
+  if (authData) {
+    try {
+      authDataId = JSON.parse(authData)._id
+    } catch (error) {
+      console.error('Error parsing authData:', error)
+    }
+  }
   const [questionsList, setQuestionsList] = useState<IQuestion[]>([])
   const [isSubmit, setIsSubmit] = useState(false)
   const [showExplanation, setShowExplanation] = useState(false)
@@ -68,13 +84,18 @@ const Assigned: React.FC<WorksheetProps> = () => {
     }
   })
   const [answers, setAnswers] = useState<
-    { optionId: string; correct: boolean }[]
+    { questionId: string; optionId: string; answer: string; correct: boolean }[]
   >(() => {
     if (typeof window !== 'undefined') {
       const savedAnswers = localStorage.getItem('answers')
       return savedAnswers
         ? JSON.parse(savedAnswers)
-        : new Array(questionsList.length).fill({ optionId: '', correct: false })
+        : new Array(questionsList.length).fill({
+            questionId: '',
+            optionId: '',
+            answer: '',
+            correct: false,
+          })
     } else {
       return []
     }
@@ -128,6 +149,36 @@ const Assigned: React.FC<WorksheetProps> = () => {
     }
   }, [selectedOptions])
 
+  const input = {
+    studentId: authDataId,
+    worksheetId: id,
+    status: score && score <= 35 ? 'FAILED' : 'DONE', // Or any other status based on your logic
+    score: score,
+    answers: answers.map((answer) => ({
+      questionId: answer.questionId,
+      answer: answer.optionId, // Assuming this is how you store the answer
+      isCorrect: answer.correct,
+    })),
+  }
+
+  const [updateAssignment, {}] = useMutation(UPDATE_ASSIGNMENT, {
+    variables: {
+      id: currentAssignmentId,
+      input,
+    },
+    onCompleted: (data) => {
+      setIsSubmit(false)
+      setStartQuestions(false)
+      setShowscore(true)
+      setShowExplanation(false)
+      showToast('success', 'Assignment updated successfully')
+      console.log('Assignment updated successfully')
+    },
+    onError: (error) => {
+      console.error('Error updating assignment:', error)
+      showToast('error', error.message)
+    },
+  })
   const handleSubmit = () => {
     let correctAnswers = 0
 
@@ -145,9 +196,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
       localStorage.setItem('score', JSON.stringify(scorePercentage))
     }
 
-    setStartQuestions(false)
-    setShowscore(true)
-    setShowExplanation(false)
+    updateAssignment()
   }
 
   const [getWorksheet, { loading, error, data }] = useLazyQuery(
@@ -215,7 +264,6 @@ const Assigned: React.FC<WorksheetProps> = () => {
   }
 
   const checkAnswer = () => {
-    console.log('kdfjld')
     const selectedOption = selectedOptions[currentQuestionIndex]
     if (selectedOption !== null) {
       const question = questionsList[currentQuestionIndex]
@@ -227,7 +275,9 @@ const Assigned: React.FC<WorksheetProps> = () => {
 
         // Update the answer for the current question index
         newAnswers[currentQuestionIndex] = {
+          questionId: question._id,
           optionId: selectedOption.toString(),
+          answer: question.options[selectedOption]?.option ?? '',
           correct: isCorrect,
         }
 
@@ -267,6 +317,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
     setCurrentQuestionIndex(0)
     setShowscore(false)
     setScore(null)
+    localStorage.removeItem('currentAssignmentId')
   }
 
   const question = questionsList[currentQuestionIndex]

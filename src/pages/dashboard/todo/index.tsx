@@ -135,7 +135,14 @@ export default function Todo() {
                           parseInt(assignment.createdAt),
                         ).toLocaleDateString()}
                       </td>
-                      <td>
+                      <td
+                        onClick={() =>
+                          localStorage.setItem(
+                            'currentAssignmentId',
+                            assignment._id,
+                          )
+                        }
+                      >
                         <Link
                           href={`todo/assigned/${assignment.worksheetId._id}`}
                         >

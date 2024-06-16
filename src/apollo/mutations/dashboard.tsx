@@ -54,4 +54,33 @@ export const ASSIGN_WORKSHEET = gql`
   mutation AssignWorksheets($studentIds: [ID!]!, $worksheetId: ID!) {
     assingStudentsWorksheet(studentIds: $studentIds, worksheetId: $worksheetId)
   }
+  input AssignmentInput {
+    studentId: ID!
+    worksheetId: ID!
+    status: String!
+    score: Float
+    answers: [AnswerInput!]!
+  }
+`
+export const UPDATE_ASSIGNMENT = gql`
+  mutation updateAssignment($id: ID!, $input: AssignmentInput!) {
+    updateAssignment(id: $id, input: $input) {
+      _id
+      worksheetId {
+        _id
+        title
+      }
+      answers {
+        _id
+        questionId
+        answer
+        isCorrect
+      }
+      createdAt
+      score
+      status
+      attemptedAt
+      updatedAt
+    }
+  }
 `

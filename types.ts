@@ -266,6 +266,7 @@ export interface IQuestionOption {
 }
 
 export interface IQuestion extends DefaultAttributes {
+  _id: string
   title: string
   body: IBody[]
   isObjective: boolean
