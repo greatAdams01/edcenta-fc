@@ -168,8 +168,6 @@ export const QUESTIONS = gql`
         }
         explanation
         worksheetId
-        createdAt
-        updatedAt
       }
       totalRecord
       totalPage
