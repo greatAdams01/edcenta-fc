@@ -290,9 +290,11 @@ const Assigned: React.FC<WorksheetProps> = () => {
             </div>
             <div className="flex flex-col items-center">
               <p className="text-lg text-gray-800">
-                {score && score >= 50
-                  ? 'Congrats!!!, you passed!'
-                  : 'Try again for a better score'}
+                {score && score >= 50 ? (
+                  <span>Congrats!!!, you passed!</span>
+                ) : (
+                  <span>Try again for a better score</span>
+                )}
               </p>
             </div>
           </div>
@@ -354,7 +356,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
           </div>
           <div className="w-full space-y-2 text-gray-700">
             <p className="w-full text-lg font-semibold">
-              Let's have a go at some questions now.
+              {"Let's have a go at some questions now."}
             </p>
             <div className="flex h-[97px] items-center justify-between border border-[#d8d8d8] px-4">
               <p className=" text-sm text-gray-700">
@@ -495,7 +497,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
                   setShowscore(true)
                 }}
               >
-                Go back
+                Finish
               </button>
             ) : (
               <button onClick={() => setIsSubmit(true)}>Submit</button>
@@ -533,7 +535,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
                   Are you sure you want to complete the activity?
                   {countUnansweredQuestions() > 0 && (
                     <span>
-                      You've skipped {countUnansweredQuestions()} questions.
+                      {` You've skipped ${countUnansweredQuestions()} questions.`}
                     </span>
                   )}
                 </p>

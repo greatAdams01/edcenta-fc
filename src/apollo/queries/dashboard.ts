@@ -129,6 +129,8 @@ export const ASSIGNMENTS = gql`
           _id
         }
         createdAt
+        score
+        status
       }
       totalPage
       totalRecord
