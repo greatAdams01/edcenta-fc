@@ -248,3 +248,31 @@ export const EDIT_QUESTION = gql`
     }
   }
 `
+export const DELETE_PLAN = gql`
+  mutation DeletePlan($id: ID!) {
+    deletePlan( id: $id ) {
+      _id
+    }
+  }
+`
+export const CREATE_PLAN = gql`
+  mutation CreatePlan($title: String! 
+  $pricePerCourse: Int!
+  $allowedCourseList: [String!]!
+  $priceOfFreeTrial: Float!
+  $subTitle: String! 
+  $planPrice: Float!
+  $type:PlanType!) {
+    createPlan(
+      title: $title 
+      pricePerCourse: $pricePerCourse
+      priceOfFreeTrial: $priceOfFreeTrial
+      allowedCourseList: $allowedCourseList
+      subTitle: $subTitle
+      planPrice: $planPrice
+      type: $type
+      ) {
+      _id
+    }
+  }
+`

@@ -220,3 +220,26 @@ export const GET_QUESTION = gql`
     }
   }
 `
+export const GET_PLANS = gql`
+  query GetPlans{
+    getPlans{
+      _id
+      planCode
+      planPrice
+      priceOfFreeTrial
+      pricePerCourse
+      subTitle
+      title
+      type
+      __typename
+      allowedCourseList {
+        _id
+        createdAt
+        description
+        name
+        slug
+        tags
+      }
+    }
+  }
+`
