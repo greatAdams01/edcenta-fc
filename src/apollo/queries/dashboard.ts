@@ -129,6 +129,8 @@ export const ASSIGNMENTS = gql`
           _id
         }
         createdAt
+        score
+        status
       }
       totalPage
       totalRecord
@@ -168,8 +170,6 @@ export const QUESTIONS = gql`
         }
         explanation
         worksheetId
-        createdAt
-        updatedAt
       }
       totalRecord
       totalPage
