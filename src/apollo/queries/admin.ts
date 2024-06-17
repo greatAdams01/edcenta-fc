@@ -243,3 +243,36 @@ export const GET_PLANS = gql`
     }
   }
 `
+
+export const GET_SUBSCRIPTION = gql`
+  query GetSubscription{
+    getSubscription {
+      autoRenew
+      cancellationDate
+      duration
+      endDate
+      id
+      paymentMethod
+      price
+      startDate
+      status
+      transactionRef
+      plan {
+        _id
+        title
+        planPrice
+        planCode
+        priceOfFreeTrial
+        pricePerCourse
+        subTitle
+        type
+      }
+      user {
+        _id
+        firstName
+        lastName
+        phone
+      }
+    }
+  }
+`
