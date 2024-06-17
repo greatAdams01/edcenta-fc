@@ -28,7 +28,6 @@ const Assigned: React.FC<WorksheetProps> = () => {
   }
   const authData: any = getCookie('Authdata')
   let authDataId: string | null = null
-
   if (authData) {
     try {
       authDataId = JSON.parse(authData)._id
@@ -57,7 +56,6 @@ const Assigned: React.FC<WorksheetProps> = () => {
     levelId: '',
     subjectId: '',
   })
-
   const [startQuestions, setStartQuestions] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       const savedStartQuestions = localStorage.getItem('startQuestions')
@@ -74,7 +72,6 @@ const Assigned: React.FC<WorksheetProps> = () => {
       return null
     }
   })
-
   const [showScore, setShowscore] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       const savedStartQuestions = localStorage.getItem('showScore')
@@ -141,8 +138,6 @@ const Assigned: React.FC<WorksheetProps> = () => {
   useEffect(() => {
     localStorage.setItem('score', JSON.stringify(score))
   }, [score])
-
-  // Save selectedOptions to localStorage whenever it changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('selectedOptions', JSON.stringify(selectedOptions))
@@ -152,15 +147,14 @@ const Assigned: React.FC<WorksheetProps> = () => {
   const input = {
     studentId: authDataId,
     worksheetId: id,
-    status: score && score <= 35 ? 'FAILED' : 'DONE', // Or any other status based on your logic
+    status: score && score <= 35 ? 'FAILED' : 'DONE',
     score: score,
     answers: answers.map((answer) => ({
       questionId: answer.questionId,
-      answer: answer.optionId, // Assuming this is how you store the answer
+      answer: answer.optionId,
       isCorrect: answer.correct,
     })),
   }
-
   const [updateAssignment, {}] = useMutation(UPDATE_ASSIGNMENT, {
     variables: {
       id: currentAssignmentId,
@@ -181,24 +175,19 @@ const Assigned: React.FC<WorksheetProps> = () => {
   })
   const handleSubmit = () => {
     let correctAnswers = 0
-
     questionsList.forEach((question, index) => {
       const userAnswer = answers[index]
       if (userAnswer && userAnswer.correct) {
         correctAnswers += 1
       }
     })
-
     const scorePercentage = (correctAnswers / questionsList.length) * 100
     setScore(scorePercentage)
-
     if (typeof window !== 'undefined') {
       localStorage.setItem('score', JSON.stringify(scorePercentage))
     }
-
     updateAssignment()
   }
-
   const [getWorksheet, { loading, error, data }] = useLazyQuery(
     WORKSHEET_BY_ID,
     {
@@ -270,10 +259,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
       const isCorrect = question.options[selectedOption]?.isCorrect ?? false
 
       setAnswers((prevAnswers) => {
-        // Create a copy of the previous answers array
         const newAnswers = [...prevAnswers]
-
-        // Update the answer for the current question index
         newAnswers[currentQuestionIndex] = {
           questionId: question._id,
           optionId: selectedOption.toString(),
@@ -285,8 +271,6 @@ const Assigned: React.FC<WorksheetProps> = () => {
       })
     }
   }
-
-  // Render loading state or empty state when questions are not yet fetched
   if (questionsList.length === 0 || questionsLoading) {
     return (
       <div className="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-gray-800 bg-opacity-75">
@@ -299,7 +283,6 @@ const Assigned: React.FC<WorksheetProps> = () => {
     setCurrentQuestionIndex(0)
     setShowscore(false)
   }
-
   const handleRetryActivity = () => {
     setSelectedOptions(new Array(questionsList.length).fill(null))
     setAnswers([])
@@ -308,7 +291,6 @@ const Assigned: React.FC<WorksheetProps> = () => {
     setShowscore(false)
     setScore(null)
   }
-
   const handleExitActivity = () => {
     router.push('/dashboard/todo')
     setSelectedOptions(new Array(questionsList.length).fill(null))
@@ -379,7 +361,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
             >
               <IoIosArrowBack /> <div>Back</div>
             </button>
-            <h1 className="w-full text-center text-2xl font-semibold uppercase leading-6 text-gray-900">
+            <h1 className="w-full text-center text-xl font-semibold uppercase leading-6 text-gray-900 sm:text-2xl">
               {worksheet.title}
             </h1>
             <div className="space-y-2 sm:flex sm:items-center sm:justify-between">
@@ -406,7 +388,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
             ))}
           </div>
           <div className="w-full space-y-2 text-gray-700">
-            <p className="w-full text-lg font-semibold">
+            <p className="text-md w-full font-semibold sm:text-lg">
               {"Let's have a go at some questions now."}
             </p>
             <div className="flex h-[97px] items-center justify-between border border-[#d8d8d8] px-4">
@@ -415,7 +397,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
               </p>
               <button
                 type="button"
-                className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto"
+                className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 max-md:w-[200px] sm:w-auto"
                 onClick={() => setStartQuestions(true)}
               >
                 Start
@@ -442,7 +424,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
               </div>
             ))}
           </div>
-          <h1 className="w-full pt-6 text-center text-2xl font-semibold uppercase leading-6 text-gray-900">
+          <h1 className="w-full pt-6 text-center text-xl font-semibold uppercase leading-6 text-gray-900 sm:text-2xl">
             {question && question.title}
           </h1>
           {question &&
@@ -520,7 +502,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
             </button>
             <button
               type="button"
-              className={`inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto`}
+              className={`inline-flex w-[200px] justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto`}
               onClick={() => {
                 answers[currentQuestionIndex] &&
                 Object.keys(answers[currentQuestionIndex]).length > 0

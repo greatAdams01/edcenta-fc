@@ -87,7 +87,9 @@ const TopicPage = () => {
   return (
     <AppLayout>
       <Fragment>
-        <h1 className="text-center text-2xl font-bold">{topic.name}</h1>
+        <h1 className="text-center text-xl font-bold sm:text-2xl">
+          {topic.name}
+        </h1>
         <p className="text-normal mx-2 my-2">{topic.description}</p>
         <div className="flex w-full justify-center">
           <button
