@@ -42,7 +42,13 @@ export default function Todo() {
   >('all')
 
   const [getAssignments, { loading, error, data }] = useLazyQuery(ASSIGNMENTS, {
-    variables: { page, limit: 10, filter: authDataId },
+    variables: {
+      page,
+      limit: 10,
+      filter: '',
+      studentId: authDataId,
+      worksheetId: '',
+    },
     onCompleted: (data) => {
       console.log('Data:', data)
       setAssignmentList(data.assignments.data)
@@ -129,7 +135,14 @@ export default function Todo() {
                           parseInt(assignment.createdAt),
                         ).toLocaleDateString()}
                       </td>
-                      <td>
+                      <td
+                        onClick={() =>
+                          localStorage.setItem(
+                            'currentAssignmentId',
+                            assignment._id,
+                          )
+                        }
+                      >
                         <Link
                           href={`todo/assigned/${assignment.worksheetId._id}`}
                         >

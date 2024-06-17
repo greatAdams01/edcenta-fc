@@ -105,8 +105,20 @@ export const QUESTION_QUERY = gql`
 `
 
 export const ASSIGNMENTS = gql`
-  query Assignments($page: Int, $limit: Int, $filter: String) {
-    assignments(page: $page, limit: $limit, filter: $filter) {
+  query Assignments(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $studentId: String
+    $worksheetId: String
+  ) {
+    assignments(
+      page: $page
+      limit: $limit
+      filter: $filter
+      studentId: $studentId
+      worksheetId: $worksheetId
+    ) {
       data {
         _id
         worksheetId {
@@ -117,6 +129,8 @@ export const ASSIGNMENTS = gql`
           _id
         }
         createdAt
+        score
+        status
       }
       totalPage
       totalRecord
@@ -156,8 +170,6 @@ export const QUESTIONS = gql`
         }
         explanation
         worksheetId
-        createdAt
-        updatedAt
       }
       totalRecord
       totalPage

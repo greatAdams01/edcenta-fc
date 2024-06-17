@@ -14,7 +14,7 @@ export enum FileType {
 export enum TopicType {
   NATIONAL = 'NATIONAL',
   PRIVATE = 'PRIVATE',
-  ASSESSMENT  = 'ASSESSMENT '
+  ASSESSMENT = 'ASSESSMENT ',
 }
 export enum AccountType {
   STUDENT = 'STUDENT',
@@ -260,6 +260,21 @@ export interface ISubtopic extends DefaultAttributes {
   topicId: string
 }
 
+export interface IQuestionOption {
+  option: string
+  isCorrect: boolean
+}
+
+export interface IQuestion extends DefaultAttributes {
+  _id: string
+  title: string
+  body: IBody[]
+  isObjective: boolean
+  options: IQuestionOption[]
+  explanation: string
+  worksheetId: string
+}
+
 export interface IFile {
   file: string
   type: FileType
@@ -288,7 +303,7 @@ export interface IWorkSheet extends DefaultAttributes {
 
 export interface IQuestion extends DefaultAttributes {
   title: string
-  body: ISheet[]
+  body: IBody[]
   isObjective: boolean
   options: IQuestionOption[]
   worksheetId: string
