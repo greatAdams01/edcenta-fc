@@ -1,5 +1,6 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'
@@ -8,29 +9,61 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { manrope } from '@/utils/font'
 
-import { SchoolGrades, USER, STUDENTS } from '@/apollo/queries/dashboard'
+import { TOPICS, USER, STUDENTS, SUBJECT } from '@/apollo/queries/dashboard'
 import AppLayout from '../../../../layout/AppLayout'
 import { ASSIGN_WORKSHEET } from '@/apollo/mutations/dashboard'
 import { useQuery, useMutation } from '@apollo/client'
+import Pagination from '@/components/dashbord/Pagination'
+import { Tractor } from 'lucide-react'
+import { TracingChannel } from 'diagnostics_channel'
 
-interface WorksheetProps {
+type WorksheetProps = {
   _id: string
 }
 
-const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
-  const [check, setCheck] = useState<boolean>(true)
+const Worksheet: React.FC<WorksheetProps> = () => {
+  const router = useRouter()
+  const { id } = router.query
   const [selectedSubjects, setSelectedSubjects] = useState('')
   const [checkStudent, setCheckStudent] = useState<boolean>(true)
   const [selectedStudent, setSelectedStudent] = useState<string[]>([])
+  const [page, setPage] = useState(1)
   const [showClass, setShowClass] = useState(false)
-  const [worksheet, setWorksheet] = useState('topic')
-  const { data } = useQuery(SchoolGrades, {
-    variables: { _id },
+  const [worksheet, setWorksheet] = useState('private')
+  const { data } = useQuery(TOPICS, {
+    variables: {
+      page,
+      limit: 10,
+      filter: '',
+      levelId: '',
+      subjectId: id,
+    },
   })
+  const {
+    data: subjectData,
+    loading,
+    error,
+  } = useQuery(SUBJECT, {
+    variables: { subjectId: id },
+  })
+
+  const handlePageChange = (pageNum: number) => {
+    setPage(pageNum)
+    data({
+      variables: {
+        page: pageNum,
+        limit: 10,
+        filter: '',
+        levelId: '',
+        subjectId: id,
+      },
+    })
+  }
 
   const [assignWorksheet] = useMutation(ASSIGN_WORKSHEET)
 
-  const schoolGrades = data?.schoolGrades || []
+  const schoolGrades = data?.topics.data || []
+  console.log(schoolGrades)
   const { data: userData } = useQuery(USER)
   const { data: studentsData } = useQuery(STUDENTS)
   const user = userData?.user || []
@@ -110,9 +143,7 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
         <form onSubmit={handleSubmit}>
           <div className="flex w-full items-center">
             <div className="ml-4 flex w-full bg-[#00AE9A] bg-opacity-70 px-3 py-3.5 font-bold text-white lg:ml-0">
-              {schoolGrades.length > 0 &&
-                schoolGrades[0].subject.length > 0 &&
-                schoolGrades[0].subject[0].name}
+              {subjectData?.subject.name}
             </div>
             <div className="ml-6 sm:ml-16 sm:mt-0 sm:flex-none">
               <Link
@@ -126,10 +157,10 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
           </div>
           <div className="flex justify-start gap-1 pt-3.5">
             <button
-              onClick={() => setWorksheet('topic')}
-              className={`ml-4 flex w-full ${worksheet == 'topic' ? 'bg-[#00AE9A] bg-opacity-70 text-white hover:bg-opacity-100' : 'bg-[#EEEEEE] text-black'} px-3 py-3.5 font-bold lg:ml-0`}
+              onClick={() => setWorksheet('private')}
+              className={`ml-4 flex w-full ${worksheet == 'private' ? 'bg-[#00AE9A] bg-opacity-70 text-white hover:bg-opacity-100' : 'bg-[#EEEEEE] text-black'} px-3 py-3.5 font-bold lg:ml-0`}
             >
-              Topic
+              Private Curriculum
             </button>
             <button
               onClick={() => setWorksheet('curriculum')}
@@ -144,29 +175,50 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
               Assessment
             </button>
           </div>
-          {worksheet === 'topic' ? (
-            <div className="">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead className="ml-4">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-bold text-gray-900"
-                    >
-                      Title
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-center text-sm font-bold text-gray-900"
-                    >
-                      Worksheet
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {schoolGrades.map((grade: any) =>
-                    grade.subject.map((subject: any) =>
-                      subject.topics.map((topic: any, index: number) => (
+          <div className="">
+            <table className="min-w-full divide-y divide-gray-300">
+              <thead className="ml-4">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-bold text-gray-900"
+                  >
+                    Title
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-center text-sm font-bold text-gray-900"
+                  >
+                    Worksheet
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {schoolGrades && schoolGrades.length > 0 ? (
+                  schoolGrades.filter((topic: any) => {
+                    if (worksheet === 'private') {
+                      return topic.type === 'PRIVATE'
+                    } else if (worksheet === 'curriculum') {
+                      return topic.type === 'NATIONAL'
+                    } else if (worksheet === 'assessment') {
+                      return topic.type === 'ASSESSMENT'
+                    } else {
+                      return false
+                    }
+                  }).length > 0 ? (
+                    schoolGrades
+                      .filter((topic: any) => {
+                        if (worksheet === 'private') {
+                          return topic.type === 'PRIVATE'
+                        } else if (worksheet === 'curriculum') {
+                          return topic.type === 'NATIONAL'
+                        } else if (worksheet === 'assessment') {
+                          return topic.type === 'ASSESSMENT'
+                        } else {
+                          return false
+                        }
+                      })
+                      .map((topic: any) => (
                         <tr key={topic._id}>
                           <td className="cursor-pointer px-3 py-3.5 text-left text-sm text-gray-900 hover:text-green-500 hover:underline">
                             <a
@@ -176,7 +228,7 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
                             </a>
                           </td>
                           <td className="px-3 py-3.5 text-center text-sm text-gray-900">
-                            {topic.worksheet.length}
+                            {/* {topic.worksheet.length} */}
                           </td>
                           <td>
                             <button
@@ -190,26 +242,33 @@ const Worksheet: React.FC<WorksheetProps> = ({ _id }) => {
                             </button>
                           </td>
                         </tr>
-                      )),
-                    ),
-                  )}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div>
-              <div className="flex h-96 items-center justify-center">
-                <div className="text-center">
-                  <h1 className="text-2xl font-semibold">
-                    No {worksheet} available
-                  </h1>
-                  <p className="text-gray-500">
-                    No {worksheet} available for this grade
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+                      ))
+                  ) : (
+                    <tr>
+                      <td colSpan={3}>
+                        <div className="flex h-96 items-center justify-center">
+                          <div className="text-center">
+                            <h1 className="text-2xl font-semibold">
+                              No {worksheet} available
+                            </h1>
+                            <p className="text-gray-500">
+                              No {worksheet} available for this grade
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                ) : null}
+              </tbody>
+            </table>
+          </div>
+
+          <Pagination
+            page={page}
+            count={data?.users?.totalPage}
+            handlePageChange={async (e) => handlePageChange(e)}
+          />
           {showClass && (
             <div>
               <Transition.Root show={showClass} as={Fragment}>

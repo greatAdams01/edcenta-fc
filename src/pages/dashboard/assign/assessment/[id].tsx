@@ -1,15 +1,20 @@
 import React from 'react'
 import { Fragment, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'
+import Pagination from '@/components/dashbord/Pagination'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 import { manrope } from '@/utils/font'
-import { SchoolGrades } from '@/apollo/queries/dashboard'
 import AppLayout from '../../../../layout/AppLayout'
-import { USER, STUDENTS } from '@/apollo/queries/dashboard'
-import { useQuery } from '@apollo/client'
+import { USER, STUDENTS, SUBJECT } from '@/apollo/queries/dashboard'
+import { useMutation, useQuery } from '@apollo/client'
+import { ASSIGN_WORKSHEET } from '@/apollo/mutations/dashboard'
+import { WORKSHEETS } from '@/apollo/queries/admin'
 
 interface AssessmentProps {
   _id: string
@@ -19,18 +24,50 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
+const Assessment: React.FC<AssessmentProps> = () => {
+  const router = useRouter()
+  const { id } = router.query
   const [check, setCheck] = useState<boolean>(true)
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([])
   const [checkStudent, setCheckStudent] = useState<boolean>(true)
   const [selectedStudent, setSelectedStudent] = useState<string[]>([])
   const [showClass, setShowClass] = useState(false)
-
-  const { data } = useQuery(SchoolGrades, {
-    variables: { _id },
+  const [page, setPage] = useState(1)
+  const [assignWorksheet] = useMutation(ASSIGN_WORKSHEET)
+  const { data } = useQuery(WORKSHEETS, {
+    variables: {
+      page,
+      limit: 10,
+      filter: '',
+      topicId: '',
+      levelId: '',
+      subjectId: id,
+    },
   })
 
-  const schoolGrades = data?.schoolGrades || []
+  const {
+    data: subjectData,
+    loading,
+    error,
+  } = useQuery(SUBJECT, {
+    variables: { subjectId: id },
+  })
+
+  const handlePageChange = (pageNum: number) => {
+    setPage(pageNum)
+    data({
+      variables: {
+        page,
+        limit: 10,
+        filter: '',
+        topicId: '',
+        levelId: '',
+        subjectId: id,
+      },
+    })
+  }
+
+  const schoolGrades = data?.worksheets.data || []
 
   const [open, setOpen] = useState(true)
 
@@ -86,18 +123,20 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
   const checkBoxHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     const isChecked = e.target.checked
-    const studentIsChecked = e.target.checked
+    const type = e.target.getAttribute('data-type')
 
-    if (isChecked) {
-      setSelectedSubjects([...selectedSubjects, value])
-    } else {
-      setSelectedSubjects((prevData) => prevData.filter((id) => id !== value))
-    }
-
-    if (studentIsChecked) {
-      setSelectedStudent([...selectedStudent, value])
-    } else {
-      setSelectedStudent((prevData) => prevData.filter((id) => id !== value))
+    if (type === 'subject') {
+      if (isChecked) {
+        setSelectedSubjects([...selectedSubjects, value])
+      } else {
+        setSelectedSubjects((prevData) => prevData.filter((id) => id !== value))
+      }
+    } else if (type === 'student') {
+      if (isChecked) {
+        setSelectedStudent([...selectedStudent, value])
+      } else {
+        setSelectedStudent((prevData) => prevData.filter((id) => id !== value))
+      }
     }
   }
 
@@ -110,15 +149,29 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
     return groups
   }, {})
 
+  const handleAssignWorksheet = async () => {
+    try {
+      await assignWorksheet({
+        variables: {
+          studentIds: selectedStudent,
+          worksheetId: selectedSubjects,
+        },
+      })
+      toast.success('Worksheet Assigned successfully')
+      setShowClass(false)
+    } catch (error) {
+      toast.error('Error assigning worksheet ' + error)
+      console.log(error)
+    }
+    console.log(selectedStudent, selectedSubjects)
+  }
   return (
     <AppLayout>
       <div className="p-4">
         <form onSubmit={handleSubmit}>
           <div className="flex w-full">
             <div className="ml-4 flex w-full bg-[#00AE9A] bg-opacity-70 px-3 py-3.5 font-bold text-white lg:ml-0">
-              {schoolGrades.length > 0 &&
-                schoolGrades[0].subject.length > 0 &&
-                schoolGrades[0].subject[0].name}
+              {subjectData?.subject.name}
             </div>
             <div className="ml-6 sm:ml-16 sm:mt-0 sm:flex-none">
               <Link
@@ -145,7 +198,7 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
                     scope="col"
                     className="px-3 py-3.5 text-center text-sm font-bold text-gray-900"
                   >
-                    Assessment
+                    Difficulty
                   </th>
                   <th>
                     <input
@@ -169,53 +222,47 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {schoolGrades.map((grade: any) =>
-                  grade.subject.map((subject: any) =>
-                    subject.worksheet.map((worksheet: any) =>
-                      worksheet.questions.map(
-                        (question: any, index: number) => (
-                          <Fragment key={question._id}>
-                            <tr>
-                              <td className="cursor-pointer px-3 py-3.5 text-left text-sm text-gray-900 hover:text-green-500 hover:underline">
-                                <a
-                                  href={`/dashboard/assign/assessment/questions/${question._id}`}
-                                >
-                                  {question.title}
-                                </a>
-                              </td>
-                              <td className="px-3 py-3.5 text-center text-sm text-gray-900">
-                                {worksheet.questions.length}
-                              </td>
-                              <td className="px-3 py-3.5 text-center text-sm text-gray-900">
-                                <input
-                                  type="checkbox"
-                                  data-type="subject"
-                                  checked={selectedSubjects.includes(
-                                    question._id,
-                                  )}
-                                  value={question._id}
-                                  onChange={checkBoxHandler}
-                                />
-                              </td>
-                              <td>
-                                <button
-                                  onClick={() => setShowClass(true)}
-                                  className="my-2 ml-4 rounded-md bg-[#00AE9A] bg-opacity-20 px-3 py-3 text-left text-sm font-bold text-gray-900 hover:bg-opacity-50"
-                                >
-                                  Assign
-                                </button>
-                              </td>
-                            </tr>
-                          </Fragment>
-                        ),
-                      ),
-                    ),
-                  ),
-                )}
+                {schoolGrades.map((worksheet: any, index: number) => (
+                  <Fragment key={worksheet._id}>
+                    <tr>
+                      <td className="cursor-pointer px-3 py-3.5 text-left text-sm text-gray-900 hover:text-green-500 hover:underline">
+                        <a
+                          href={`/dashboard/assign/assessment/questions/${worksheet._id}`}
+                        >
+                          {worksheet.title}
+                        </a>
+                      </td>
+                      <td className="px-3 py-3.5 text-center text-sm text-gray-900">
+                        {worksheet.difficulty}
+                      </td>
+                      <td className="px-3 py-3.5 text-center text-sm text-gray-900">
+                        <input
+                          type="checkbox"
+                          data-type="subject"
+                          checked={selectedSubjects.includes(worksheet._id)}
+                          value={worksheet._id}
+                          onChange={checkBoxHandler}
+                        />
+                      </td>
+                      <td>
+                        <button
+                          onClick={() => setShowClass(true)}
+                          className="my-2 ml-4 rounded-md bg-[#00AE9A] bg-opacity-20 px-3 py-3 text-left text-sm font-bold text-gray-900 hover:bg-opacity-50"
+                        >
+                          Assign
+                        </button>
+                      </td>
+                    </tr>
+                  </Fragment>
+                ))}
               </tbody>
             </table>
           </div>
-
+          <Pagination
+            page={page}
+            count={data?.users?.totalPage}
+            handlePageChange={async (e) => handlePageChange(e)}
+          />
           {showClass && (
             <div>
               <Transition.Root show={showClass} as={Fragment}>
@@ -369,7 +416,7 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
                             <button
                               type="button"
                               className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:ml-3 sm:w-auto"
-                              onClick={() => setShowClass(false)}
+                              onClick={handleAssignWorksheet}
                             >
                               Confirm
                             </button>
@@ -383,6 +430,7 @@ const Assessment: React.FC<AssessmentProps> = ({ _id }) => {
             </div>
           )}
         </form>
+        <ToastContainer />
       </div>
     </AppLayout>
   )

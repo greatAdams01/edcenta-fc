@@ -48,7 +48,14 @@ const Topics: React.FC<WorksheetProps> = () => {
     setOpen(!open)
   }
   const [getWorksheet, { loading, error, data }] = useLazyQuery(WORKSHEETS, {
-    variables: { page, limit: 10, filter: '', topicId: id },
+    variables: {
+      page,
+      limit: 10,
+      filter: '',
+      topicId: id,
+      levelId: '',
+      subjectId: '',
+    },
     onCompleted: (data) => {
       console.log('Data:', data)
       setWorksheets(data.worksheets.data)

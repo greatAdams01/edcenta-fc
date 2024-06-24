@@ -51,15 +51,8 @@ export const CREATE_STUDENT = gql`
 `
 
 export const ASSIGN_WORKSHEET = gql`
-  mutation AssignWorksheets($studentIds: [ID!]!, $worksheetId: ID!) {
+  mutation AssingStudentsWorksheet($studentIds: [ID!]!, $worksheetId: ID!) {
     assingStudentsWorksheet(studentIds: $studentIds, worksheetId: $worksheetId)
-  }
-  input AssignmentInput {
-    studentId: ID!
-    worksheetId: ID!
-    status: String!
-    score: Float
-    answers: [AnswerInput!]!
   }
 `
 export const UPDATE_ASSIGNMENT = gql`
