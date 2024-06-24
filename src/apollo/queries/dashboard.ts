@@ -73,10 +73,6 @@ export const TOPIC_QUERY = gql`
       description
       slug
       levelId
-      subject {
-        _id
-        name
-      }
     }
   }
 `
@@ -215,6 +211,41 @@ export const SUBJECTS_LIST = gql`
         }
         createdAt
       }
+    }
+  }
+`
+
+export const TOPICS = gql`
+  query Topics(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $levelId: String
+    $subjectId: String
+  ) {
+    topics(
+      page: $page
+      limit: $limit
+      filter: $filter
+      levelId: $levelId
+      subjectId: $subjectId
+    ) {
+      data {
+        _id
+        name
+        subject
+        type
+      }
+      totalPage
+      totalRecord
+    }
+  }
+`
+
+export const SUBJECT = gql`
+  query Subject($subjectId: ID!) {
+    subject(id: $subjectId) {
+      name
     }
   }
 `

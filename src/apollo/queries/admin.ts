@@ -149,7 +149,6 @@ export const SCHOOL_GRADES = gql`
   }
 `
 
-
 export const GET_QUESTIONS = gql`
   query Questions(
     $page: Int
@@ -158,7 +157,7 @@ export const GET_QUESTIONS = gql`
     $levelId: String
     $subjectId: String
     $worksheetId: ID
-    ) {
+  ) {
     questions(
       page: $page
       limit: $limit
@@ -192,31 +191,27 @@ export const GET_QUESTIONS = gql`
   }
 `
 export const GET_QUESTION = gql`
-  query Question(
-    $id: ID!
-    ) {
-    question(
-      id: $id
-    ) {
+  query Question($id: ID!) {
+    question(id: $id) {
+      _id
+      body {
         _id
-        body {
-          _id
-          img
-          text
-          __typename
-        }
-        createdAt
-        explanation
-        isObjective
-        title
-        updatedAt
-        worksheetId
+        img
+        text
         __typename
-        options {
-          _id
-          isCorrect
-          option
-        }
+      }
+      createdAt
+      explanation
+      isObjective
+      title
+      updatedAt
+      worksheetId
+      __typename
+      options {
+        _id
+        isCorrect
+        option
+      }
     }
   }
 `

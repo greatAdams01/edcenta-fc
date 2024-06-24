@@ -1,29 +1,37 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'
 
 import { manrope } from '@/utils/font'
-import { useQuery } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 import { useRouter } from 'next/router'
 
 import { TOPIC_QUERY, STUDENTS } from '@/apollo/queries/dashboard'
+import { ASSIGN_WORKSHEET } from '@/apollo/mutations/dashboard'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { IoIosArrowBack } from 'react-icons/io'
 
 import AppLayout from '@/layout/AppLayout'
 
 const TopicPage = () => {
-  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([])
+  const router = useRouter()
+  const path = useRouter()
+  const { id } = router.query
+  const [selectedSubjects, setSelectedSubjects] = useState(id)
   const [checkStudent, setCheckStudent] = useState<boolean>(true)
   const [selectedStudent, setSelectedStudent] = useState<string[]>([])
   const [showClass, setShowClass] = useState(false)
-
-  const router = useRouter()
-  const { id } = router.query
   const { data: studentsData } = useQuery(STUDENTS)
 
   const { data } = useQuery(TOPIC_QUERY, {
     variables: { topicId: id },
   })
+  useEffect(() => {
+    setSelectedSubjects(id)
+  }, [id])
+  console.log(selectedSubjects)
 
   const topic = data?.topic || {}
 
@@ -36,10 +44,6 @@ const TopicPage = () => {
     const newOpenSubtables = [...openSubtables]
     newOpenSubtables[index] = !newOpenSubtables[index]
     setOpenSubtables(newOpenSubtables)
-  }
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
   }
 
   function checkAllStudent() {
@@ -58,14 +62,7 @@ const TopicPage = () => {
     const value = e.target.value
     const isChecked = e.target.checked
     const type = e.target.getAttribute('data-type')
-
-    if (type === 'subject') {
-      if (isChecked) {
-        setSelectedSubjects([...selectedSubjects, value])
-      } else {
-        setSelectedSubjects((prevData) => prevData.filter((id) => id !== value))
-      }
-    } else if (type === 'student') {
+    if (type === 'student') {
       if (isChecked) {
         setSelectedStudent([...selectedStudent, value])
       } else {
@@ -82,183 +79,220 @@ const TopicPage = () => {
     groups[groupKey].push(student)
     return groups
   }, {})
-  // console.log(topic.worksheet.length)
+
+  const [assignWorksheet] = useMutation(ASSIGN_WORKSHEET)
+  const handleAssignWorksheet = async () => {
+    try {
+      await assignWorksheet({
+        variables: {
+          studentIds: selectedStudent,
+          worksheetId: selectedSubjects,
+        },
+      })
+      toast.success('Worksheet Assigned successfully')
+      setShowClass(false)
+    } catch (error) {
+      toast.error('Error assigning worksheet ' + error)
+      console.log(error)
+    }
+
+    console.log(selectedStudent, selectedSubjects)
+  }
 
   return (
     <AppLayout>
-      <Fragment>
-        <h1 className="text-center text-xl font-bold sm:text-2xl">
-          {topic.name}
-        </h1>
-        <p className="text-normal mx-2 my-2">{topic.description}</p>
-        <div className="flex w-full justify-center">
-          <button
-            onClick={() => setShowClass(true)}
-            className="rounded-md bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-400 "
-          >
-            Assign it
-          </button>
-        </div>
+      <div className="p-4">
+        <div>
+          <Fragment>
+            <button
+              onClick={() => path.back()}
+              className="mb-6 flex items-center gap-1 text-left text-black"
+            >
+              <IoIosArrowBack /> <div>Back</div>
+            </button>
+            <h1 className="text-center text-xl font-bold sm:text-2xl">
+              {topic.name}
+            </h1>
+            <p className="text-normal mx-2 my-2">{topic.description}</p>
+            <div className="flex w-full justify-center">
+              <button
+                onClick={() => setShowClass(true)}
+                className="rounded-md bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-400 "
+              >
+                Assign it
+              </button>
+            </div>
 
-        {showClass && (
-          <div>
-            <Transition.Root show={showClass} as={Fragment}>
-              <Dialog as="div" className="relative z-10" onClose={setShowClass}>
-                <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-300"
-                  enterFrom="opacity-0"
-                  enterTo="opacity-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                >
-                  <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-                </Transition.Child>
-
-                <div className="fixed inset-0 z-10 w-screen overflow-y-scroll">
-                  <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            {showClass && (
+              <div>
+                <Transition.Root show={showClass} as={Fragment}>
+                  <Dialog
+                    as="div"
+                    className="relative z-10"
+                    onClose={setShowClass}
+                  >
                     <Transition.Child
                       as={Fragment}
                       enter="ease-out duration-300"
-                      enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                      enterTo="opacity-100 translate-y-0 sm:scale-100"
+                      enterFrom="opacity-0"
+                      enterTo="opacity-100"
                       leave="ease-in duration-200"
-                      leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                      leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
                     >
-                      <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                        <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
-                          <button
-                            type="button"
-                            className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            onClick={() => setShowClass(false)}
-                          >
-                            <span className="sr-only">Close</span>
-                            <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                          </button>
-                        </div>
-                        <div className="w-full sm:flex sm:items-start">
-                          <div className="mt-3 w-full text-center sm:ml-4 sm:mt-0 sm:text-left">
-                            <Dialog.Title
-                              as="h3"
-                              className={`${manrope.className} flex text-base font-semibold leading-6 text-gray-900`}
-                            >
-                              Assign {}
-                            </Dialog.Title>
-                            <div className={`${manrope.className} mt-2`}>
-                              <p className="text-sm text-gray-500">
-                                Select class or students below to assign
-                                Worksheet
-                              </p>
-                              {Object.keys(groupedStudents).map(
-                                (grade, index) => (
-                                  <Fragment key={grade}>
-                                    <section className="my-4 flex w-full justify-between rounded-md border border-purple-500 bg-gray-200 px-4 py-6">
-                                      <div className="flex font-bold">
-                                        <div className="mr-2 flex w-5 items-center justify-center text-green-500">
-                                          <PlusIcon
-                                            onClick={() =>
-                                              toggleDropdown(index)
-                                            }
-                                          />
-                                        </div>
-                                        {grade} ({groupedStudents[grade].length}{' '}
-                                        {groupedStudents[grade].length === 1
-                                          ? 'student'
-                                          : 'students'}
-                                        )
-                                      </div>
-                                      <div className="flex items-center">
-                                        <input
-                                          type="checkbox"
-                                          onClick={
-                                            !checkStudent
-                                              ? uncheckAllStudent
-                                              : checkAllStudent
-                                          }
-                                          className="mr-2"
-                                        />{' '}
-                                        Assign to all
-                                      </div>
-                                    </section>
-                                    {openSubtables[index] && (
-                                      <section className="shadow-opacity-50 truncate bg-gray-200 text-sm font-medium leading-6 shadow-sm shadow-black">
-                                        <form>
-                                          <table className="w-full border-collapse border-gray-300">
-                                            <thead className="w-full bg-purple-500 bg-opacity-50">
-                                              <tr
-                                                className={`${manrope.className} w-full`}
-                                              >
-                                                <th className="px-4 py-4">
-                                                  Name
-                                                </th>
-                                                <th>Best Score</th>
-                                                <th>Assigned</th>
-                                                <th>Check</th>
-                                              </tr>
-                                            </thead>
-                                            <tbody className="border-b border-white/10 font-bold">
-                                              {groupedStudents[grade].map(
-                                                (student: any) => (
-                                                  <tr
-                                                    key={student._id}
-                                                    className={`${manrope.className}`}
-                                                  >
-                                                    <td className="px-4 py-4">
-                                                      {student.name}
-                                                    </td>
-                                                    <td className="text-center">
-                                                      20
-                                                    </td>
-                                                    <td className="text-center">
-                                                      1
-                                                    </td>
-                                                    <td className="border px-4 py-2 text-center">
-                                                      <input
-                                                        type="checkbox"
-                                                        data-type="student"
-                                                        checked={selectedStudent.includes(
-                                                          student._id,
-                                                        )}
-                                                        value={student._id}
-                                                        onChange={
-                                                          checkBoxHandler
-                                                        }
-                                                      />
-                                                    </td>
-                                                  </tr>
-                                                ),
-                                              )}
-                                            </tbody>
-                                          </table>
-                                        </form>
-                                      </section>
-                                    )}
-                                  </Fragment>
-                                ),
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                          <button
-                            type="button"
-                            className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:ml-3 sm:w-auto"
-                            onClick={() => setShowClass(false)}
-                          >
-                            Confirm
-                          </button>
-                        </div>
-                      </Dialog.Panel>
+                      <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
                     </Transition.Child>
-                  </div>
-                </div>
-              </Dialog>
-            </Transition.Root>
-          </div>
-        )}
-      </Fragment>
+
+                    <div className="fixed inset-0 z-10 w-screen overflow-y-scroll">
+                      <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                        <Transition.Child
+                          as={Fragment}
+                          enter="ease-out duration-300"
+                          enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                          enterTo="opacity-100 translate-y-0 sm:scale-100"
+                          leave="ease-in duration-200"
+                          leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                          leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                        >
+                          <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                            <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
+                              <button
+                                type="button"
+                                className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                onClick={() => setShowClass(false)}
+                              >
+                                <span className="sr-only">Close</span>
+                                <XMarkIcon
+                                  className="h-6 w-6"
+                                  aria-hidden="true"
+                                />
+                              </button>
+                            </div>
+                            <div className="w-full sm:flex sm:items-start">
+                              <div className="mt-3 w-full text-center sm:ml-4 sm:mt-0 sm:text-left">
+                                <Dialog.Title
+                                  as="h3"
+                                  className={`${manrope.className} flex text-base font-semibold leading-6 text-gray-900`}
+                                >
+                                  Assign {}
+                                </Dialog.Title>
+                                <div className={`${manrope.className} mt-2`}>
+                                  <p className="text-sm text-gray-500">
+                                    Select class or students below to assign
+                                    Worksheet
+                                  </p>
+                                  {Object.keys(groupedStudents).map(
+                                    (grade, index) => (
+                                      <Fragment key={grade}>
+                                        <section className="my-4 flex w-full justify-between rounded-md border border-purple-500 bg-gray-200 px-4 py-6">
+                                          <div className="flex font-bold">
+                                            <div className="mr-2 flex w-5 items-center justify-center text-green-500">
+                                              <PlusIcon
+                                                onClick={() =>
+                                                  toggleDropdown(index)
+                                                }
+                                              />
+                                            </div>
+                                            {grade} (
+                                            {groupedStudents[grade].length}{' '}
+                                            {groupedStudents[grade].length === 1
+                                              ? 'student'
+                                              : 'students'}
+                                            )
+                                          </div>
+                                          <div className="flex items-center">
+                                            <input
+                                              type="checkbox"
+                                              onClick={
+                                                !checkStudent
+                                                  ? uncheckAllStudent
+                                                  : checkAllStudent
+                                              }
+                                              className="mr-2"
+                                            />{' '}
+                                            Assign to all
+                                          </div>
+                                        </section>
+                                        {openSubtables[index] && (
+                                          <section className="shadow-opacity-50 truncate bg-gray-200 text-sm font-medium leading-6 shadow-sm shadow-black">
+                                            <form>
+                                              <table className="w-full border-collapse border-gray-300">
+                                                <thead className="w-full bg-purple-500 bg-opacity-50">
+                                                  <tr
+                                                    className={`${manrope.className} w-full`}
+                                                  >
+                                                    <th className="px-4 py-4">
+                                                      Name
+                                                    </th>
+                                                    <th>Best Score</th>
+                                                    <th>Assigned</th>
+                                                    <th>Check</th>
+                                                  </tr>
+                                                </thead>
+                                                <tbody className="border-b border-white/10 font-bold">
+                                                  {groupedStudents[grade].map(
+                                                    (student: any) => (
+                                                      <tr
+                                                        key={student._id}
+                                                        className={`${manrope.className}`}
+                                                      >
+                                                        <td className="px-4 py-4">
+                                                          {student.name}
+                                                        </td>
+                                                        <td className="text-center">
+                                                          20
+                                                        </td>
+                                                        <td className="text-center">
+                                                          1
+                                                        </td>
+                                                        <td className="border px-4 py-2 text-center">
+                                                          <input
+                                                            type="checkbox"
+                                                            data-type="student"
+                                                            checked={selectedStudent.includes(
+                                                              student._id,
+                                                            )}
+                                                            value={student._id}
+                                                            onChange={
+                                                              checkBoxHandler
+                                                            }
+                                                          />
+                                                        </td>
+                                                      </tr>
+                                                    ),
+                                                  )}
+                                                </tbody>
+                                              </table>
+                                            </form>
+                                          </section>
+                                        )}
+                                      </Fragment>
+                                    ),
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                              <button
+                                type="button"
+                                className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:ml-3 sm:w-auto"
+                                onClick={handleAssignWorksheet}
+                              >
+                                Confirm
+                              </button>
+                            </div>
+                          </Dialog.Panel>
+                        </Transition.Child>
+                      </div>
+                    </div>
+                  </Dialog>
+                </Transition.Root>
+              </div>
+            )}
+          </Fragment>
+        </div>
+        <ToastContainer />
+      </div>
     </AppLayout>
   )
 }
