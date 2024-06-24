@@ -212,7 +212,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
   ] = useLazyQuery(QUESTIONS, {
     variables: {
       page: 1,
-      limit: 10,
+      limit: 50,
       filter: '',
       levelId: worksheet.levelId,
       subjectId: worksheet.subjectId,

@@ -1,30 +1,74 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'
 
 import { manrope } from '@/utils/font'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
 
-import { QUESTION_QUERY, STUDENTS } from '@/apollo/queries/dashboard'
+import {
+  QUESTIONS,
+  STUDENTS,
+  WORKSHEET_BY_ID,
+} from '@/apollo/queries/dashboard'
 import AppLayout from '@/layout/AppLayout'
+import { ASSIGN_WORKSHEET } from '@/apollo/mutations/dashboard'
+
+import Pagination from '@/components/dashbord/Pagination'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { IoIosArrowBack } from 'react-icons/io'
 
 const QuestionPage = () => {
-  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([])
+  const router = useRouter()
+  const path = useRouter()
+  const { id } = router.query
+  const [selectedSubjects, setSelectedSubjects] = useState(id)
   const [checkStudent, setCheckStudent] = useState<boolean>(true)
   const [selectedStudent, setSelectedStudent] = useState<string[]>([])
+  const [page, setPage] = useState(1)
   const [showClass, setShowClass] = useState(false)
 
-  const router = useRouter()
-  const { id } = router.query
   const { data: studentsData } = useQuery(STUDENTS)
+  const [assignWorksheet] = useMutation(ASSIGN_WORKSHEET)
+  const { data } = useQuery(QUESTIONS, {
+    variables: {
+      page,
+      limit: 10,
+      filter: '',
+      levelId: '',
+      subjectId: '',
+      worksheetId: id,
+    },
+  })
+  useEffect(() => {
+    setSelectedSubjects(id)
+  }, [id])
 
-  const { data } = useQuery(QUESTION_QUERY, {
-    variables: { questionId: id },
+  const {
+    data: worksheetData,
+    loading,
+    error,
+  } = useQuery(WORKSHEET_BY_ID, {
+    variables: { worksheetId2: id },
   })
 
-  const question = data?.question || {}
+  const handlePageChange = (pageNum: number) => {
+    setPage(pageNum)
+    data({
+      variables: {
+        page,
+        limit: 10,
+        filter: '',
+        levelId: '',
+        subjectId: '',
+        worksheetId: id,
+      },
+    })
+  }
+
+  const questions = data?.questions.data || []
 
   const students = studentsData?.students.data || []
   const [openSubtables, setOpenSubtables] = useState<boolean[]>(
@@ -35,10 +79,6 @@ const QuestionPage = () => {
     const newOpenSubtables = [...openSubtables]
     newOpenSubtables[index] = !newOpenSubtables[index]
     setOpenSubtables(newOpenSubtables)
-  }
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
   }
 
   function checkAllStudent() {
@@ -58,13 +98,7 @@ const QuestionPage = () => {
     const isChecked = e.target.checked
     const type = e.target.getAttribute('data-type')
 
-    if (type === 'subject') {
-      if (isChecked) {
-        setSelectedSubjects([...selectedSubjects, value])
-      } else {
-        setSelectedSubjects((prevData) => prevData.filter((id) => id !== value))
-      }
-    } else if (type === 'student') {
+    if (type === 'student') {
       if (isChecked) {
         setSelectedStudent([...selectedStudent, value])
       } else {
@@ -81,23 +115,81 @@ const QuestionPage = () => {
     groups[groupKey].push(student)
     return groups
   }, {})
-
+  const handleAssignWorksheet = async () => {
+    try {
+      await assignWorksheet({
+        variables: {
+          studentIds: selectedStudent,
+          worksheetId: selectedSubjects,
+        },
+      })
+      toast.success('Worksheet Assigned successfully')
+      setShowClass(false)
+    } catch (error) {
+      toast.error('Error assigning worksheet ' + error)
+      console.log(error)
+    }
+    console.log(selectedStudent, selectedSubjects)
+  }
   return (
     <AppLayout>
       <Fragment>
-        <h1 className="text-center text-2xl font-bold">{question.title}</h1>
-        <div>
-          <p>{question.body?.text}</p>
-        </div>
-        <div className="flex w-full justify-center">
+        <button
+          onClick={() => path.back()}
+          className="mb-6 flex items-center gap-1 text-left text-black"
+        >
+          <IoIosArrowBack /> <div>Back</div>
+        </button>
+        <h1 className="mb-2 text-center text-2xl font-bold">
+          {worksheetData?.worksheet.title}
+        </h1>
+        <div className="mb-4 flex w-full justify-end">
           <button
             onClick={() => setShowClass(true)}
             className="rounded-md bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-400 "
           >
-            Asign it
+            Assign it
           </button>
         </div>
-
+        <div className="">
+          <table className="min-w-full divide-y divide-gray-300">
+            <thead className="ml-4">
+              <tr>
+                <th
+                  scope="col"
+                  className="w-4/12 px-3 py-3.5 text-left text-sm font-bold text-gray-900"
+                >
+                  Questions{' '}
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-sm font-bold text-gray-900"
+                >
+                  Explanation
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {questions.map((question: any, index: number) => (
+                <Fragment key={question._id}>
+                  <tr>
+                    <td className="cursor-pointer px-3 py-3.5 text-left text-sm text-gray-900">
+                      {question.title}
+                    </td>
+                    <td className="px-3 py-3.5 text-left text-sm text-gray-900">
+                      {question.explanation}
+                    </td>
+                  </tr>
+                </Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <Pagination
+          page={page}
+          count={data?.users?.totalPage}
+          handlePageChange={async (e) => handlePageChange(e)}
+        />
         {showClass && (
           <div>
             <Transition.Root show={showClass} as={Fragment}>
@@ -243,7 +335,7 @@ const QuestionPage = () => {
                           <button
                             type="button"
                             className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:ml-3 sm:w-auto"
-                            onClick={() => setShowClass(false)}
+                            onClick={handleAssignWorksheet}
                           >
                             Confirm
                           </button>
@@ -257,6 +349,7 @@ const QuestionPage = () => {
           </div>
         )}
       </Fragment>
+      <ToastContainer />
     </AppLayout>
   )
 }

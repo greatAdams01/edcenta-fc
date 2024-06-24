@@ -1,8 +1,18 @@
 import { gql } from '@apollo/client'
 
 export const SchoolGrades = gql`
-  query SchoolGrades($page: Int, $limit: Int, $filter: String) {
-    schoolGrades(page: $page, limit: $limit, filter: $filter) {
+  query SchoolGrades(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $searchParams: String
+  ) {
+    schoolGrades(
+      page: $page
+      limit: $limit
+      filter: $filter
+      searchParams: $searchParams
+    ) {
       data {
         _id
         ages
@@ -246,6 +256,14 @@ export const SUBJECT = gql`
   query Subject($subjectId: ID!) {
     subject(id: $subjectId) {
       name
+    }
+  }
+`
+
+export const WORKSHEET_BY_ID = gql`
+  query Worksheet($worksheetId2: ID!) {
+    worksheet(id: $worksheetId2) {
+      title
     }
   }
 `

@@ -93,8 +93,22 @@ export const TOPICS = gql`
   }
 `
 export const WORKSHEETS = gql`
-  query Worksheets($page: Int, $limit: Int, $filter: String, $topicId: String) {
-    worksheets(page: $page, limit: $limit, filter: $filter, topicId: $topicId) {
+  query Worksheets(
+    $subjectId: String
+    $page: Int
+    $limit: Int
+    $filter: String
+    $levelId: String
+    $topicId: String
+  ) {
+    worksheets(
+      subjectId: $subjectId
+      page: $page
+      limit: $limit
+      filter: $filter
+      levelId: $levelId
+      topicId: $topicId
+    ) {
       data {
         _id
         title
