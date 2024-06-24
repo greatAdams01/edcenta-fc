@@ -31,7 +31,6 @@ const TopicPage = () => {
   useEffect(() => {
     setSelectedSubjects(id)
   }, [id])
-  console.log(selectedSubjects)
 
   const topic = data?.topic || {}
 
