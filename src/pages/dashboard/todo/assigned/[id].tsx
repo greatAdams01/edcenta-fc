@@ -17,6 +17,10 @@ import { showToast } from '@/utils/toast'
 type WorksheetProps = {
   _id: string
 }
+interface DifficultyIndicatorProps {
+  difficulty: 'EASY' | 'MEDIUM' | 'HARD'
+}
+type DifficultyLevel = 'EASY' | 'MEDIUM' | 'HARD'
 
 const Assigned: React.FC<WorksheetProps> = () => {
   const router = useRouter()
@@ -307,6 +311,34 @@ const Assigned: React.FC<WorksheetProps> = () => {
   const countUnansweredQuestions = () => {
     return selectedOptions.filter((option) => option === null).length
   }
+
+  const DifficultyIndicator: React.FC<DifficultyIndicatorProps> = ({
+    difficulty,
+  }) => {
+    const boxCount =
+      {
+        EASY: 1,
+        MEDIUM: 2,
+        HARD: 3,
+      }[difficulty as 'EASY' | 'MEDIUM' | 'HARD'] || 0
+
+    return (
+      <div className="flex">
+        {[...Array(3)].map((_, index) => (
+          <div
+            key={index}
+            className={`m-1 h-[20px] w-[28px] rounded-[2.86px] ${index < boxCount ? 'bg-[#23BDBD]' : 'bg-gray-200'}`}
+          ></div>
+        ))}
+      </div>
+    )
+  }
+  function isDifficultyLevel(
+    difficulty: string,
+  ): difficulty is DifficultyLevel {
+    return ['EASY', 'MEDIUM', 'HARD'].includes(difficulty)
+  }
+  const difficulty: string = worksheet.difficulty
   return (
     <AppLayout>
       {showScore ? (
@@ -334,7 +366,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
           <div className="flex space-x-4">
             <button
               onClick={handleReviewAnswers}
-              className="inline-flex justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-400"
+              className="inline-flex justify-center rounded-md bg-[#23BDBD] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-400"
             >
               Review Answers
             </button>
@@ -365,9 +397,12 @@ const Assigned: React.FC<WorksheetProps> = () => {
               {worksheet.title}
             </h1>
             <div className="space-y-2 sm:flex sm:items-center sm:justify-between">
-              <p className="text-sm text-gray-700">
-                Difficulty: {worksheet.difficulty}
-              </p>
+              <div className=" justifiy-start flex items-center gap-2 text-base text-gray-700">
+                <div>Difficulty:</div>
+                {isDifficultyLevel(difficulty) && (
+                  <DifficultyIndicator difficulty={difficulty} />
+                )}
+              </div>
             </div>
             {worksheet.body.map((item, index) => (
               <div key={index}>

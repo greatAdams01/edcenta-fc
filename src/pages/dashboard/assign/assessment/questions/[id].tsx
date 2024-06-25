@@ -19,6 +19,12 @@ import Pagination from '@/components/dashbord/Pagination'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { IoIosArrowBack } from 'react-icons/io'
+import { IWorksheet2 } from '../../../../../../types'
+
+interface DifficultyIndicatorProps {
+  difficulty: 'EASY' | 'MEDIUM' | 'HARD'
+}
+type DifficultyLevel = 'EASY' | 'MEDIUM' | 'HARD'
 
 const QuestionPage = () => {
   const router = useRouter()
@@ -29,6 +35,12 @@ const QuestionPage = () => {
   const [selectedStudent, setSelectedStudent] = useState<string[]>([])
   const [page, setPage] = useState(1)
   const [showClass, setShowClass] = useState(false)
+  const [showQuestions, setShowQuestions] = useState(false)
+  const [worksheet, setWorksheet] = useState<IWorksheet2>({
+    title: '',
+    body: [],
+    difficulty: '',
+  })
 
   const { data: studentsData } = useQuery(STUDENTS)
   const [assignWorksheet] = useMutation(ASSIGN_WORKSHEET)
@@ -52,6 +64,10 @@ const QuestionPage = () => {
     error,
   } = useQuery(WORKSHEET_BY_ID, {
     variables: { worksheetId2: id },
+    onCompleted: (data) => {
+      console.log('Data:', worksheetData)
+      setWorksheet(data.worksheet)
+    },
   })
 
   const handlePageChange = (pageNum: number) => {
@@ -131,6 +147,33 @@ const QuestionPage = () => {
     }
     console.log(selectedStudent, selectedSubjects)
   }
+  const DifficultyIndicator: React.FC<DifficultyIndicatorProps> = ({
+    difficulty,
+  }) => {
+    const boxCount =
+      {
+        EASY: 1,
+        MEDIUM: 2,
+        HARD: 3,
+      }[difficulty as 'EASY' | 'MEDIUM' | 'HARD'] || 0
+
+    return (
+      <div className="flex">
+        {[...Array(3)].map((_, index) => (
+          <div
+            key={index}
+            className={`m-1 h-[20px] w-[28px] rounded-[2.86px] ${index < boxCount ? 'bg-[#23BDBD]' : 'bg-gray-200'}`}
+          ></div>
+        ))}
+      </div>
+    )
+  }
+  function isDifficultyLevel(
+    difficulty: string,
+  ): difficulty is DifficultyLevel {
+    return ['EASY', 'MEDIUM', 'HARD'].includes(difficulty)
+  }
+  const difficulty: string = worksheet.difficulty
   return (
     <AppLayout>
       <Fragment>
@@ -140,9 +183,7 @@ const QuestionPage = () => {
         >
           <IoIosArrowBack /> <div>Back</div>
         </button>
-        <h1 className="mb-2 text-center text-2xl font-bold">
-          {worksheetData?.worksheet.title}
-        </h1>
+
         <div className="mb-4 flex w-full justify-end">
           <button
             onClick={() => setShowClass(true)}
@@ -151,39 +192,90 @@ const QuestionPage = () => {
             Assign it
           </button>
         </div>
-        <div className="">
-          <table className="min-w-full divide-y divide-gray-300">
-            <thead className="ml-4">
-              <tr>
-                <th
-                  scope="col"
-                  className="w-4/12 px-3 py-3.5 text-left text-sm font-bold text-gray-900"
-                >
-                  Questions{' '}
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-bold text-gray-900"
-                >
-                  Explanation
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {questions.map((question: any, index: number) => (
-                <Fragment key={question._id}>
-                  <tr>
-                    <td className="cursor-pointer px-3 py-3.5 text-left text-sm text-gray-900">
-                      {question.title}
-                    </td>
-                    <td className="px-3 py-3.5 text-left text-sm text-gray-900">
-                      {question.explanation}
-                    </td>
-                  </tr>
-                </Fragment>
-              ))}
-            </tbody>
-          </table>
+        <div>
+          <h1 className="mb-4 w-full text-center text-xl font-semibold uppercase leading-6 text-gray-900 sm:text-2xl">
+            {worksheet.title}
+          </h1>
+          <div className="mb-6 text-left">
+            <div className=" justifiy-start flex items-center gap-2 text-base text-gray-700">
+              <div>Difficulty:</div>
+              {isDifficultyLevel(difficulty) && (
+                <DifficultyIndicator difficulty={difficulty} />
+              )}
+            </div>
+          </div>
+          {worksheet.body.map((item, index) => (
+            <div key={index} className="my-4 text-left">
+              <div
+                className="w-full text-lg"
+                dangerouslySetInnerHTML={{ __html: item.text }}
+              />
+              <div className="flex w-full justify-center">
+                {item.img && (
+                  <img
+                    src={item.img}
+                    alt="image"
+                    className="h-full max-h-[400px] w-auto"
+                  />
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div>
+          <button
+            onClick={() => setShowQuestions(!showQuestions)}
+            className="mb-4 inline-flex items-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
+          >
+            {showQuestions ? 'Hide Questions' : 'Show Questions'}
+          </button>
+
+          {showQuestions && (
+            <div>
+              {questions.length > 0 ? (
+                <table className="min-w-full divide-y divide-gray-300">
+                  <thead className="ml-4">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="w-4/12 px-3 py-3.5 text-left text-sm font-bold text-gray-900"
+                      >
+                        Questions{' '}
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-bold text-gray-900"
+                      >
+                        Explanation
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {questions.map((question: any, index: number) => (
+                      <Fragment key={question._id}>
+                        <tr>
+                          <td className="cursor-pointer px-3 py-3.5 text-left text-sm text-gray-900">
+                            {question.title}
+                          </td>
+                          <td className="px-3 py-3.5 text-left text-sm text-gray-900">
+                            {question.explanation}
+                          </td>
+                        </tr>
+                      </Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="flex h-20 items-center justify-center">
+                  <div className="text-center">
+                    <h1 className="text-lg font-semibold text-gray-500 sm:text-xl">
+                      No questions available for this worksheet.
+                    </h1>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <Pagination
           page={page}

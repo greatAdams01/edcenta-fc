@@ -24,6 +24,11 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
+interface DifficultyIndicatorProps {
+  difficulty: 'EASY' | 'MEDIUM' | 'HARD'
+}
+type DifficultyLevel = 'EASY' | 'MEDIUM' | 'HARD'
+
 const Assessment: React.FC<AssessmentProps> = () => {
   const router = useRouter()
   const { id } = router.query
@@ -165,6 +170,33 @@ const Assessment: React.FC<AssessmentProps> = () => {
     }
     console.log(selectedStudent, selectedSubjects)
   }
+
+  const DifficultyIndicator: React.FC<DifficultyIndicatorProps> = ({
+    difficulty,
+  }) => {
+    const boxCount =
+      {
+        EASY: 1,
+        MEDIUM: 2,
+        HARD: 3,
+      }[difficulty as 'EASY' | 'MEDIUM' | 'HARD'] || 0
+
+    return (
+      <div className="flex justify-center">
+        {[...Array(3)].map((_, index) => (
+          <div
+            key={index}
+            className={`m-1 h-[20px] w-[28px] rounded-[2.86px] ${index < boxCount ? 'bg-[#23BDBD]' : 'bg-gray-200'}`}
+          ></div>
+        ))}
+      </div>
+    )
+  }
+  function isDifficultyLevel(
+    difficulty: string,
+  ): difficulty is DifficultyLevel {
+    return ['EASY', 'MEDIUM', 'HARD'].includes(difficulty)
+  }
   return (
     <AppLayout>
       <div className="p-4">
@@ -233,7 +265,11 @@ const Assessment: React.FC<AssessmentProps> = () => {
                         </a>
                       </td>
                       <td className="px-3 py-3.5 text-center text-sm text-gray-900">
-                        {worksheet.difficulty}
+                        {isDifficultyLevel(worksheet.difficulty) && (
+                          <DifficultyIndicator
+                            difficulty={worksheet.difficulty}
+                          />
+                        )}
                       </td>
                       <td className="px-3 py-3.5 text-center text-sm text-gray-900">
                         <input
