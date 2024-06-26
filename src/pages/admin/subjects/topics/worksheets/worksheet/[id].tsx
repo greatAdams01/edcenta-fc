@@ -15,6 +15,10 @@ import Link from 'next/link'
 type WorksheetProps = {
   _id: string
 }
+interface DifficultyIndicatorProps {
+  difficulty: 'EASY' | 'MEDIUM' | 'HARD'
+}
+type DifficultyLevel = 'EASY' | 'MEDIUM' | 'HARD'
 
 const Topics: React.FC<WorksheetProps> = () => {
   const router = useRouter()
@@ -64,20 +68,24 @@ const Topics: React.FC<WorksheetProps> = () => {
     console.log('worksheet', worksheet)
   }, [worksheet])
 
-  const [getQuestions, { }] = useLazyQuery(
-    GET_QUESTIONS,
-    {
-      variables: { worksheetId: id, page: 1, limit: 10, filter: '', levelId: worksheet?.levelId, subjectId: worksheet?.subjectId },
-      onCompleted: (data) => {
-        console.log('Questions:', data.questions)
-        setQuestions(data.questions.data)
-        // setWorksheet(data.worksheet)
-      },
-      onError: (error) => {
-        console.log('Error:', error)
-      },
+  const [getQuestions, {}] = useLazyQuery(GET_QUESTIONS, {
+    variables: {
+      worksheetId: id,
+      page: 1,
+      limit: 10,
+      filter: '',
+      levelId: worksheet?.levelId,
+      subjectId: worksheet?.subjectId,
     },
-  )
+    onCompleted: (data) => {
+      console.log('Questions:', data.questions)
+      setQuestions(data.questions.data)
+      // setWorksheet(data.worksheet)
+    },
+    onError: (error) => {
+      console.log('Error:', error)
+    },
+  })
 
   const [deleteTopic, deleteStatus] = useMutation(DELETE_WORKSHEET, {
     variables: {
@@ -112,26 +120,58 @@ const Topics: React.FC<WorksheetProps> = () => {
     getWorksheet()
     getQuestions()
   }, [itemId, open])
+
+  const DifficultyIndicator: React.FC<DifficultyIndicatorProps> = ({
+    difficulty,
+  }) => {
+    const boxCount =
+      {
+        EASY: 1,
+        MEDIUM: 2,
+        HARD: 3,
+      }[difficulty as 'EASY' | 'MEDIUM' | 'HARD'] || 0
+
+    return (
+      <div className="flex">
+        {[...Array(3)].map((_, index) => (
+          <div
+            key={index}
+            className={`m-1 h-[20px] w-[28px] rounded-[2.86px] ${index < boxCount ? 'bg-[#23BDBD]]' : 'bg-gray-200'}`}
+          ></div>
+        ))}
+      </div>
+    )
+  }
+  function isDifficultyLevel(
+    difficulty: string,
+  ): difficulty is DifficultyLevel {
+    return ['EASY', 'MEDIUM', 'HARD'].includes(difficulty)
+  }
+  const difficulty: string = worksheet.difficulty
   return (
     <AdminLayout>
       <div className="space-y-2 px-4 sm:px-6 lg:px-8">
-        <div className='flex mb-8 justify-between'>
+        <div className="mb-8 flex justify-between">
           <button
             onClick={() => path.back()}
             className="mb-6 flex items-center gap-1 text-left text-black"
           >
             <IoIosArrowBack /> <div>Back</div>
           </button>
-          <div className='flex justify-between w-52'>
+          <div className="flex w-52 justify-between">
             <a
               href="#"
-              className="text-indigo-600 my-auto hover:text-indigo-900"
+              className="my-auto text-indigo-600 hover:text-indigo-900"
               onClick={() => handleEdit(worksheet._id)}
             >
               Edit
             </a>
-            <Link href={`/admin/subjects/topics/worksheets/add_question?worksheet=${id}`}>
-              <button className='rounded-md bg-indigo-600 p-2 px-4 font-bold text-white'>Add Question</button>
+            <Link
+              href={`/admin/subjects/topics/worksheets/add_question?worksheet=${id}`}
+            >
+              <button className="rounded-md bg-indigo-600 p-2 px-4 font-bold text-white">
+                Add Question
+              </button>
             </Link>
           </div>
         </div>
@@ -139,13 +179,15 @@ const Topics: React.FC<WorksheetProps> = () => {
           {worksheet.title}
         </h1>
         <div className="text-center">
-          <p className=" text-base text-gray-700">
-            Difficulty: {worksheet.difficulty}
-          </p>
-
+          <div className=" justifiy-start flex items-center gap-2 text-base text-gray-700">
+            <div>Difficulty:</div>
+            {isDifficultyLevel(difficulty) && (
+              <DifficultyIndicator difficulty={difficulty} />
+            )}
+          </div>
         </div>
         {worksheet.body.map((item, index) => (
-          <div key={index} className='text-center my-4'>
+          <div key={index} className="my-4 text-center">
             <div
               className="w-full text-lg"
               dangerouslySetInnerHTML={{ __html: item.text }}
@@ -162,91 +204,99 @@ const Topics: React.FC<WorksheetProps> = () => {
           </div>
         ))}
       </div>
-      {questions.length >= 1 && <div>
-        <h1 className='text-3xl my-4'>Questions</h1>
-        <div className="mt-8 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead>
-                  <tr>
-                    <th
-                      scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
-                    >
-                      Title
-                    </th>
-                    <th
-                      scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
-                    >
-                      Explanation
-                    </th>
-                    {/* <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+      {questions.length >= 1 && (
+        <div>
+          <h1 className="my-4 text-3xl">Questions</h1>
+          <div className="mt-8 flow-root">
+            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                <table className="min-w-full divide-y divide-gray-300">
+                  <thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
+                      >
+                        Title
+                      </th>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
+                      >
+                        Explanation
+                      </th>
+                      {/* <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Title
                   </th> */}
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Is Objective
-                    </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Is Objective
+                      </th>
 
-                    {/* <th
+                      {/* <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
                       Status
                     </th> */}
-                    <th
-                      scope="col"
-                      className="relative py-3.5 pl-3 pr-4 sm:pr-3"
-                    >
-                      <span className="sr-only">Edit</span>
-                    </th>
-                  </tr>
-                </thead>
-                {data && (
-                  <tbody className="bg-white">
-                    {questions.map((question: any) => (
-                      <tr key={question._id} className="even:bg-gray-50">
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                          {question.title}
-                        </td>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                          {question.explanation}
-                        </td>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                          {question.isObjective ? 'true' : 'false'}
-                        </td>
+                      <th
+                        scope="col"
+                        className="relative py-3.5 pl-3 pr-4 sm:pr-3"
+                      >
+                        <span className="sr-only">Edit</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  {data && (
+                    <tbody className="bg-white">
+                      {questions.map((question: any) => (
+                        <tr key={question._id} className="even:bg-gray-50">
+                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
+                            {question.title}
+                          </td>
+                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
+                            {question.explanation}
+                          </td>
+                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
+                            {question.isObjective ? 'true' : 'false'}
+                          </td>
 
-                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
-                          <a
-                            href="#"
-                            className="text-indigo-600 hover:text-indigo-900"
-                            onClick={() => router.push(`/admin/subjects/topics/worksheets/add_question?question=${question._id}`)}
-                          >
-                            Edit
-                          </a>
-                        </td>
-                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
-                          <a
-                            href="#"
-                            className="text-red-600 hover:text-red-900"
-                            onClick={() => { setDeleteQuestion(true), setItemId(question._id) }}
-                          >
-                            Delete
-                          </a>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                )}
-              </table>
+                          <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
+                            <a
+                              href="#"
+                              className="text-indigo-600 hover:text-indigo-900"
+                              onClick={() =>
+                                router.push(
+                                  `/admin/subjects/topics/worksheets/add_question?question=${question._id}`,
+                                )
+                              }
+                            >
+                              Edit
+                            </a>
+                          </td>
+                          <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
+                            <a
+                              href="#"
+                              className="text-red-600 hover:text-red-900"
+                              onClick={() => {
+                                setDeleteQuestion(true), setItemId(question._id)
+                              }}
+                            >
+                              Delete
+                            </a>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  )}
+                </table>
+              </div>
             </div>
           </div>
         </div>
-      </div>}
+      )}
       <ModalAuth
         isOpen={open}
         XIcon={true}
@@ -304,7 +354,7 @@ const Topics: React.FC<WorksheetProps> = () => {
       <ModalAuth
         isOpen={deleteQuestion}
         XIcon={true}
-        onClose={() => (setDeleteQuestion(false))}
+        onClose={() => setDeleteQuestion(false)}
         styling={'w-[500px] m-auto'}
       >
         <>
@@ -321,9 +371,9 @@ const Topics: React.FC<WorksheetProps> = () => {
               </h3>
               <div className="mt-2">
                 <p className="text-sm text-gray-500">
-                  Are you sure you want to delete this question? All
-                  of {`it's`} data will be permanently removed from our
-                  servers forever. This action cannot be undone.
+                  Are you sure you want to delete this question? All of {`it's`}{' '}
+                  data will be permanently removed from our servers forever.
+                  This action cannot be undone.
                 </p>
               </div>
             </div>
@@ -347,7 +397,6 @@ const Topics: React.FC<WorksheetProps> = () => {
             </button>
           </div>
         </>
-
       </ModalAuth>
     </AdminLayout>
   )

@@ -160,7 +160,7 @@ const Worksheet: React.FC<WorksheetProps> = () => {
               onClick={() => setWorksheet('private')}
               className={`ml-4 flex w-full ${worksheet == 'private' ? 'bg-[#00AE9A] bg-opacity-70 text-white hover:bg-opacity-100' : 'bg-[#EEEEEE] text-black'} px-3 py-3.5 font-bold lg:ml-0`}
             >
-              Private Curriculum
+              Topics
             </button>
             <button
               onClick={() => setWorksheet('curriculum')}
@@ -248,7 +248,7 @@ const Worksheet: React.FC<WorksheetProps> = () => {
                       <td colSpan={3}>
                         <div className="flex h-96 items-center justify-center">
                           <div className="text-center">
-                            <h1 className="text-2xl font-semibold">
+                            <h1 className="text-lg font-semibold sm:text-2xl">
                               No {worksheet} available
                             </h1>
                             <p className="text-gray-500">

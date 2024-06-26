@@ -263,7 +263,15 @@ export const SUBJECT = gql`
 export const WORKSHEET_BY_ID = gql`
   query Worksheet($worksheetId2: ID!) {
     worksheet(id: $worksheetId2) {
+      _id
       title
+      body {
+        text
+        img
+      }
+      difficulty
+      levelId
+      subjectId
     }
   }
 `
