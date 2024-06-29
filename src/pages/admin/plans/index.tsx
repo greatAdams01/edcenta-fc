@@ -119,7 +119,7 @@ const Plans = () => {
                         <a
                           href="#"
                           className="text-indigo-600 hover:text-indigo-900"
-                          onClick={() => { }}
+                          onClick={() => {router.push(`/admin/plans/add_plan?edit=${plan._id}`)}}
                         >
                           Edit
                         </a>

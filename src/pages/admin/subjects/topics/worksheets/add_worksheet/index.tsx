@@ -258,7 +258,7 @@ export default function Create() {
           onClose={() => (setOpen(false))}
           styling={'w-[1000px] m-auto'}
         >
-          <div className='overflow-y-scroll text-center'>
+          <div className=' text-center'>
             <h1 className="w-full text-2xl font-semibold uppercase leading-6 text-gray-900">
               {title}
             </h1>
