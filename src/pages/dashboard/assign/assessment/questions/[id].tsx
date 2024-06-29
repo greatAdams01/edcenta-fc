@@ -1,30 +1,90 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'
 
 import { manrope } from '@/utils/font'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
 
-import { QUESTION_QUERY, STUDENTS } from '@/apollo/queries/dashboard'
+import {
+  QUESTIONS,
+  STUDENTS,
+  WORKSHEET_BY_ID,
+} from '@/apollo/queries/dashboard'
 import AppLayout from '@/layout/AppLayout'
+import { ASSIGN_WORKSHEET } from '@/apollo/mutations/dashboard'
+
+import Pagination from '@/components/dashbord/Pagination'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { IoIosArrowBack } from 'react-icons/io'
+import { IWorksheet2 } from '../../../../../../types'
+
+interface DifficultyIndicatorProps {
+  difficulty: 'EASY' | 'MEDIUM' | 'HARD'
+}
+type DifficultyLevel = 'EASY' | 'MEDIUM' | 'HARD'
 
 const QuestionPage = () => {
-  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([])
+  const router = useRouter()
+  const path = useRouter()
+  const { id } = router.query
+  const [selectedSubjects, setSelectedSubjects] = useState(id)
   const [checkStudent, setCheckStudent] = useState<boolean>(true)
   const [selectedStudent, setSelectedStudent] = useState<string[]>([])
+  const [page, setPage] = useState(1)
   const [showClass, setShowClass] = useState(false)
-
-  const router = useRouter()
-  const { id } = router.query
-  const { data: studentsData } = useQuery(STUDENTS)
-
-  const { data } = useQuery(QUESTION_QUERY, {
-    variables: { questionId: id },
+  const [showQuestions, setShowQuestions] = useState(false)
+  const [worksheet, setWorksheet] = useState<IWorksheet2>({
+    title: '',
+    body: [],
+    difficulty: '',
   })
 
-  const question = data?.question || {}
+  const { data: studentsData } = useQuery(STUDENTS)
+  const [assignWorksheet] = useMutation(ASSIGN_WORKSHEET)
+  const { data } = useQuery(QUESTIONS, {
+    variables: {
+      page,
+      limit: 10,
+      filter: '',
+      levelId: '',
+      subjectId: '',
+      worksheetId: id,
+    },
+  })
+  useEffect(() => {
+    setSelectedSubjects(id)
+  }, [id])
+
+  const {
+    data: worksheetData,
+    loading,
+    error,
+  } = useQuery(WORKSHEET_BY_ID, {
+    variables: { worksheetId2: id },
+    onCompleted: (data) => {
+      console.log('Data:', worksheetData)
+      setWorksheet(data.worksheet)
+    },
+  })
+
+  const handlePageChange = (pageNum: number) => {
+    setPage(pageNum)
+    data({
+      variables: {
+        page,
+        limit: 10,
+        filter: '',
+        levelId: '',
+        subjectId: '',
+        worksheetId: id,
+      },
+    })
+  }
+
+  const questions = data?.questions.data || []
 
   const students = studentsData?.students.data || []
   const [openSubtables, setOpenSubtables] = useState<boolean[]>(
@@ -35,10 +95,6 @@ const QuestionPage = () => {
     const newOpenSubtables = [...openSubtables]
     newOpenSubtables[index] = !newOpenSubtables[index]
     setOpenSubtables(newOpenSubtables)
-  }
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
   }
 
   function checkAllStudent() {
@@ -58,13 +114,7 @@ const QuestionPage = () => {
     const isChecked = e.target.checked
     const type = e.target.getAttribute('data-type')
 
-    if (type === 'subject') {
-      if (isChecked) {
-        setSelectedSubjects([...selectedSubjects, value])
-      } else {
-        setSelectedSubjects((prevData) => prevData.filter((id) => id !== value))
-      }
-    } else if (type === 'student') {
+    if (type === 'student') {
       if (isChecked) {
         setSelectedStudent([...selectedStudent, value])
       } else {
@@ -81,23 +131,157 @@ const QuestionPage = () => {
     groups[groupKey].push(student)
     return groups
   }, {})
+  const handleAssignWorksheet = async () => {
+    try {
+      await assignWorksheet({
+        variables: {
+          studentIds: selectedStudent,
+          worksheetId: selectedSubjects,
+        },
+      })
+      toast.success('Worksheet Assigned successfully')
+      setShowClass(false)
+    } catch (error) {
+      toast.error('Error assigning worksheet ' + error)
+      console.log(error)
+    }
+    console.log(selectedStudent, selectedSubjects)
+  }
+  const DifficultyIndicator: React.FC<DifficultyIndicatorProps> = ({
+    difficulty,
+  }) => {
+    const boxCount =
+      {
+        EASY: 1,
+        MEDIUM: 2,
+        HARD: 3,
+      }[difficulty as 'EASY' | 'MEDIUM' | 'HARD'] || 0
 
+    return (
+      <div className="flex">
+        {[...Array(3)].map((_, index) => (
+          <div
+            key={index}
+            className={`m-1 h-[20px] w-[28px] rounded-[2.86px] ${index < boxCount ? 'bg-[#23BDBD]' : 'bg-gray-200'}`}
+          ></div>
+        ))}
+      </div>
+    )
+  }
+  function isDifficultyLevel(
+    difficulty: string,
+  ): difficulty is DifficultyLevel {
+    return ['EASY', 'MEDIUM', 'HARD'].includes(difficulty)
+  }
+  const difficulty: string = worksheet.difficulty
   return (
     <AppLayout>
       <Fragment>
-        <h1 className="text-center text-2xl font-bold">{question.title}</h1>
-        <div>
-          <p>{question.body?.text}</p>
-        </div>
-        <div className="flex w-full justify-center">
+        <button
+          onClick={() => path.back()}
+          className="mb-6 flex items-center gap-1 text-left text-black"
+        >
+          <IoIosArrowBack /> <div>Back</div>
+        </button>
+
+        <div className="mb-4 flex w-full justify-end">
           <button
             onClick={() => setShowClass(true)}
             className="rounded-md bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-400 "
           >
-            Asign it
+            Assign it
           </button>
         </div>
+        <div>
+          <h1 className="mb-4 w-full text-center text-xl font-semibold uppercase leading-6 text-gray-900 sm:text-2xl">
+            {worksheet.title}
+          </h1>
+          <div className="mb-6 text-left">
+            <div className=" justifiy-start flex items-center gap-2 text-base text-gray-700">
+              <div>Difficulty:</div>
+              {isDifficultyLevel(difficulty) && (
+                <DifficultyIndicator difficulty={difficulty} />
+              )}
+            </div>
+          </div>
+          {worksheet.body.map((item, index) => (
+            <div key={index} className="my-4 text-left">
+              <div
+                className="w-full text-lg"
+                dangerouslySetInnerHTML={{ __html: item.text }}
+              />
+              <div className="flex w-full justify-center">
+                {item.img && (
+                  <img
+                    src={item.img}
+                    alt="image"
+                    className="h-full max-h-[400px] w-auto"
+                  />
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div>
+          <button
+            onClick={() => setShowQuestions(!showQuestions)}
+            className="mb-4 inline-flex items-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
+          >
+            {showQuestions ? 'Hide Questions' : 'Show Questions'}
+          </button>
 
+          {showQuestions && (
+            <div>
+              {questions.length > 0 ? (
+                <table className="min-w-full divide-y divide-gray-300">
+                  <thead className="ml-4">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="w-4/12 px-3 py-3.5 text-left text-sm font-bold text-gray-900"
+                      >
+                        Questions{' '}
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-bold text-gray-900"
+                      >
+                        Explanation
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {questions.map((question: any, index: number) => (
+                      <Fragment key={question._id}>
+                        <tr>
+                          <td className="cursor-pointer px-3 py-3.5 text-left text-sm text-gray-900">
+                            {question.title}
+                          </td>
+                          <td className="px-3 py-3.5 text-left text-sm text-gray-900">
+                            {question.explanation}
+                          </td>
+                        </tr>
+                      </Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="flex h-20 items-center justify-center">
+                  <div className="text-center">
+                    <h1 className="text-lg font-semibold text-gray-500 sm:text-xl">
+                      No questions available for this worksheet.
+                    </h1>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        <Pagination
+          page={page}
+          count={data?.users?.totalPage}
+          handlePageChange={async (e) => handlePageChange(e)}
+        />
         {showClass && (
           <div>
             <Transition.Root show={showClass} as={Fragment}>
@@ -243,7 +427,7 @@ const QuestionPage = () => {
                           <button
                             type="button"
                             className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:ml-3 sm:w-auto"
-                            onClick={() => setShowClass(false)}
+                            onClick={handleAssignWorksheet}
                           >
                             Confirm
                           </button>
@@ -257,6 +441,7 @@ const QuestionPage = () => {
           </div>
         )}
       </Fragment>
+      <ToastContainer />
     </AppLayout>
   )
 }

@@ -125,32 +125,38 @@ export default function Todo() {
               </thead>
               <tbody>
                 {assignmentList &&
-                  assignmentList.map((assignment) => (
-                    <tr key={assignment._id}>
-                      <td className="pr-6 text-left">
-                        {assignment.worksheetId.title}
-                      </td>
-                      <td className="pr-6 text-left">
-                        {new Date(
-                          parseInt(assignment.createdAt),
-                        ).toLocaleDateString()}
-                      </td>
-                      <td
-                        onClick={() =>
-                          localStorage.setItem(
-                            'currentAssignmentId',
-                            assignment._id,
-                          )
-                        }
-                      >
-                        <Link
-                          href={`todo/assigned/${assignment.worksheetId._id}`}
+                  assignmentList
+                    .filter(
+                      (assignment) =>
+                        assignment.status === 'ASSIGNED' ||
+                        assignment.status === 'PENDING',
+                    )
+                    .map((assignment) => (
+                      <tr key={assignment._id}>
+                        <td className="pr-6 text-left">
+                          {assignment.worksheetId.title}
+                        </td>
+                        <td className="pr-6 text-left">
+                          {new Date(
+                            parseInt(assignment.createdAt),
+                          ).toLocaleDateString()}
+                        </td>
+                        <td
+                          onClick={() =>
+                            localStorage.setItem(
+                              'currentAssignmentId',
+                              assignment._id,
+                            )
+                          }
                         >
-                          <FaArrowRightToBracket />
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
+                          <Link
+                            href={`todo/assigned/${assignment.worksheetId._id}`}
+                          >
+                            <FaArrowRightToBracket />
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
               </tbody>
             </table>
             {/* {!allOpen && (

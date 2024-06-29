@@ -1,8 +1,18 @@
 import { gql } from '@apollo/client'
 
 export const SchoolGrades = gql`
-  query SchoolGrades($page: Int, $limit: Int, $filter: String) {
-    schoolGrades(page: $page, limit: $limit, filter: $filter) {
+  query SchoolGrades(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $searchParams: String
+  ) {
+    schoolGrades(
+      page: $page
+      limit: $limit
+      filter: $filter
+      searchParams: $searchParams
+    ) {
       data {
         _id
         ages
@@ -73,10 +83,6 @@ export const TOPIC_QUERY = gql`
       description
       slug
       levelId
-      subject {
-        _id
-        name
-      }
     }
   }
 `
@@ -215,6 +221,57 @@ export const SUBJECTS_LIST = gql`
         }
         createdAt
       }
+    }
+  }
+`
+
+export const TOPICS = gql`
+  query Topics(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $levelId: String
+    $subjectId: String
+  ) {
+    topics(
+      page: $page
+      limit: $limit
+      filter: $filter
+      levelId: $levelId
+      subjectId: $subjectId
+    ) {
+      data {
+        _id
+        name
+        subject
+        type
+      }
+      totalPage
+      totalRecord
+    }
+  }
+`
+
+export const SUBJECT = gql`
+  query Subject($subjectId: ID!) {
+    subject(id: $subjectId) {
+      name
+    }
+  }
+`
+
+export const WORKSHEET_BY_ID = gql`
+  query Worksheet($worksheetId2: ID!) {
+    worksheet(id: $worksheetId2) {
+      _id
+      title
+      body {
+        text
+        img
+      }
+      difficulty
+      levelId
+      subjectId
     }
   }
 `
