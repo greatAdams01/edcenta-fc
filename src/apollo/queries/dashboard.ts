@@ -135,6 +135,7 @@ export const ASSIGNMENTS = gql`
           _id
         }
         createdAt
+        attemptedAt
         score
         status
       }

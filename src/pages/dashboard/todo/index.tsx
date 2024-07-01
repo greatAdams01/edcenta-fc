@@ -125,6 +125,11 @@ export default function Todo() {
               </thead>
               <tbody>
                 {assignmentList &&
+                assignmentList.some(
+                  (assignment) =>
+                    assignment.status === 'ASSIGNED' ||
+                    assignment.status === 'PENDING',
+                ) ? (
                   assignmentList
                     .filter(
                       (assignment) =>
@@ -134,7 +139,8 @@ export default function Todo() {
                     .map((assignment) => (
                       <tr key={assignment._id}>
                         <td className="pr-6 text-left">
-                          {assignment.worksheetId.title}
+                          {assignment.worksheetId &&
+                            assignment.worksheetId.title}
                         </td>
                         <td className="pr-6 text-left">
                           {new Date(
@@ -149,26 +155,31 @@ export default function Todo() {
                             )
                           }
                         >
-                          <Link
-                            href={`todo/assigned/${assignment.worksheetId._id}`}
-                          >
-                            <FaArrowRightToBracket />
-                          </Link>
+                          {assignment.worksheetId && (
+                            <Link
+                              href={`todo/assigned/${assignment.worksheetId._id}`}
+                            >
+                              <FaArrowRightToBracket />
+                            </Link>
+                          )}
                         </td>
                       </tr>
-                    ))}
+                    ))
+                ) : (
+                  <tr>
+                    <td colSpan={3} className="text-center">
+                      <div className="flex h-20 items-center justify-center">
+                        <div>
+                          <h1 className="text-lg font-semibold text-gray-500 sm:text-xl">
+                            No assigned task available
+                          </h1>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
-            {/* {!allOpen && (
-              <div>
-                <button
-                  onClick={() => setAllOpen(true)}
-                  className="inline-flex w-[300px] cursor-pointer items-center justify-center rounded-md border border-[#EEEEEE] p-[10px] hover:border-indigo-900"
-                >
-                  <span>See all assigned activities</span>
-                </button>
-              </div>
-            )} */}
           </div>
         </section>
         <Pagination
