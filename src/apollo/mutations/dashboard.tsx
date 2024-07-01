@@ -86,3 +86,13 @@ export const UPDATE_ASSIGNMENT_SCORE = gql`
     updateAssignmentScore(id: $updateAssignmentScoreId, score: $score)
   }
 `
+
+export const SUBSCRIBE_TO_PLAN = gql`
+  mutation SubscribeToPlan($planCode: String!) {
+    subscribeToPlan(planCode: $planCode) {
+      authorization_url
+      access_code
+      reference
+    }
+  }
+`
