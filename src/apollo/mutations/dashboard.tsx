@@ -77,3 +77,12 @@ export const UPDATE_ASSIGNMENT = gql`
     }
   }
 `
+
+export const UPDATE_ASSIGNMENT_SCORE = gql`
+  mutation UpdateAssignmentScore(
+    $updateAssignmentScoreId: ID!
+    $score: String!
+  ) {
+    updateAssignmentScore(id: $updateAssignmentScoreId, score: $score)
+  }
+`

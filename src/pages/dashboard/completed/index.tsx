@@ -4,8 +4,8 @@ import { TfiWrite } from 'react-icons/tfi'
 import { getCookie } from 'cookies-next'
 
 import AppLayout from '../../../layout/AppLayout'
-import { USER, STUDENTS } from '@/apollo/queries/dashboard'
-import { useQuery } from '@apollo/client'
+import { USER, STUDENTS, ASSIGNMENTS } from '@/apollo/queries/dashboard'
+import { useLazyQuery, useQuery } from '@apollo/client'
 import { motion } from 'framer-motion'
 // import { Stats } from '@/utils/nav';
 
@@ -21,6 +21,7 @@ export default function Completed() {
   const [page, setPage] = useState(1)
   const user = userData?.user || []
   const students = studentsData?.students.data || []
+  const [assignmentList, setAssignmentList] = useState<any[]>([])
 
   const groupedStudents = students.reduce((groups: any, student: any) => {
     const groupKey = student.grade.year
@@ -42,8 +43,16 @@ export default function Completed() {
     setOpenSubtables(newOpenSubtables)
   }
 
-  // Get Authdata from Cookies
   const authData: any = getCookie('Authdata')
+  let authDataId: string | null = null
+
+  if (authData) {
+    try {
+      authDataId = JSON.parse(authData)._id
+    } catch (error) {
+      console.error('Error parsing authData:', error)
+    }
+  }
 
   useEffect(() => {
     if (!authData) {
@@ -58,9 +67,39 @@ export default function Completed() {
     'all' | 'worksheet' | 'assessment'
   >('all')
 
+  const [getAssignments, { loading, error, data }] = useLazyQuery(ASSIGNMENTS, {
+    variables: {
+      page,
+      limit: 10,
+      filter: '',
+      studentId: authDataId,
+      worksheetId: '',
+    },
+    onCompleted: (data) => {
+      console.log('Data:', data)
+      setAssignmentList(data.assignments.data)
+    },
+    onError: (error) => {
+      console.log('Error:', error)
+    },
+  })
+  useEffect(() => {
+    console.log('assignmentList', assignmentList)
+  }, [assignmentList])
+
   const handlePageChange = (pageNum: number) => {
     setPage(pageNum)
+    getAssignments({
+      variables: {
+        page: pageNum,
+        limit: 10,
+        filter: authDataId,
+      },
+    })
   }
+  useEffect(() => {
+    getAssignments()
+  }, [])
 
   return (
     <AppLayout>
@@ -99,97 +138,65 @@ export default function Completed() {
               <thead>
                 <tr>
                   <td className="w-[65%] pb-4">Title</td>
-                  <td className="pb-4">Subject</td>
+                  <td className="pb-4">Review</td>
                   <td className="pb-4">Attempted</td>
                   <td className="pb-4">Score</td>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="pr-6 text-left">
-                    Match Words Used in Geometry to Their Definiti
-                  </td>
-                  <td className="pr-6 text-left">
-                    <button className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                      11+
-                    </button>
-                  </td>
-                  <td>05-Jun-2024</td>
-                  <td>
-                    <button className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                      10/10
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="pr-6 text-left">
-                    Match Words Used in Geometry to Their Definiti
-                  </td>
-                  <td className="pr-6 text-left">
-                    <button className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                      11+
-                    </button>
-                  </td>
-                  <td>05-Jun-2024</td>
-                  <td>
-                    <button className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                      10/10
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="pr-6 text-left">
-                    Match Words Used in Geometry to Their Definiti
-                  </td>
-                  <td className="pr-6 text-left">
-                    <button className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                      11+
-                    </button>
-                  </td>
-                  <td>05-Jun-2024</td>
-                  <td>
-                    <button className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                      10/10
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="pr-6 text-left">
-                    Match Words Used in Geometry to Their Definiti
-                  </td>
-                  <td className="pr-6 text-left">
-                    <button className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                      11+
-                    </button>
-                  </td>
-                  <td>05-Jun-2024</td>
-                  <td>
-                    <button className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                      10/10
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="pr-6 text-left">
-                    Match Words Used in Geometry to Their Definiti
-                  </td>
-                  <td className="pr-6 text-left">
-                    <button className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                      11+
-                    </button>
-                  </td>
-                  <td>05-Jun-2024</td>
-                  <td>
-                    <button className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                      10/10
-                    </button>
-                  </td>
-                </tr>
+                {assignmentList &&
+                assignmentList.some(
+                  (assignment) =>
+                    assignment.status === 'DONE' ||
+                    assignment.status === 'FAILED',
+                ) ? (
+                  assignmentList
+                    .filter(
+                      (assignment) =>
+                        assignment.status === 'DONE' ||
+                        assignment.status === 'FAILED',
+                    )
+                    .map((assignment) => (
+                      <tr key={assignment._id}>
+                        <td className="pr-6 text-left">
+                          {assignment.worksheetId &&
+                            assignment.worksheetId.title}
+                        </td>
+                        <td className="pr-6 text-left">
+                          <button className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
+                            {assignment.status}
+                          </button>
+                        </td>
+                        <td>
+                          {new Date(
+                            parseInt(assignment.attemptedAt),
+                          ).toLocaleDateString()}
+                        </td>
+                        <td>
+                          <button className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
+                            {assignment.score}
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                ) : (
+                  <tr>
+                    <td colSpan={3} className="text-center">
+                      <div className="flex h-20 items-center justify-center">
+                        <div>
+                          <h1 className="text-lg font-semibold text-gray-500 sm:text-xl">
+                            No assessment has been completed
+                          </h1>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
             <Pagination
               page={page}
-              count={5}
+              count={data?.users?.totalPage}
               handlePageChange={async (e) => handlePageChange(e)}
             />
           </div>

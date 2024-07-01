@@ -1,7 +1,10 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
-import { UPDATE_ASSIGNMENT } from '@/apollo/mutations/dashboard'
+import {
+  UPDATE_ASSIGNMENT,
+  UPDATE_ASSIGNMENT_SCORE,
+} from '@/apollo/mutations/dashboard'
 import { getCookie } from 'cookies-next'
 import { WORKSHEET_BY_ID } from '@/apollo/queries/admin'
 import { IQuestion, IWorksheet2 } from '../../../../../types'
@@ -68,6 +71,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
       return false
     }
   })
+  const [scoreData, setScoreData] = useState<number | null>(null)
   const [score, setScore] = useState<number | null>(() => {
     if (typeof window !== 'undefined') {
       const savedScore = localStorage.getItem('score')
@@ -140,29 +144,37 @@ const Assigned: React.FC<WorksheetProps> = () => {
     )
   }, [currentQuestionIndex])
   useEffect(() => {
-    localStorage.setItem('score', JSON.stringify(score))
-  }, [score])
-  useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('selectedOptions', JSON.stringify(selectedOptions))
     }
   }, [selectedOptions])
+  useEffect(() => {
+    if (scoreData !== null) {
+      const scorePercentage = (scoreData / questionsList.length) * 100
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('score', JSON.stringify(scorePercentage))
+      }
+      setScore(scorePercentage)
+      console.log(scoreData, scorePercentage)
+    }
+  }, [scoreData, questionsList.length])
 
-  const input = {
-    studentId: authDataId,
-    worksheetId: id,
-    status: score && score <= 35 ? 'FAILED' : 'DONE',
-    score: score,
-    answers: answers.map((answer) => ({
-      questionId: answer.questionId,
-      answer: answer.optionId,
-      isCorrect: answer.correct,
-    })),
-  }
-  const [updateAssignment, {}] = useMutation(UPDATE_ASSIGNMENT, {
+  // const input = {
+  //   studentId: authDataId,
+  //   worksheetId: id,
+  //   status: score && score <= 35 ? 'FAILED' : 'DONE',
+  //   score: scoreData,
+  //   answers: answers.map((answer) => ({
+  //     questionId: answer.questionId,
+  //     answer: answer.optionId,
+  //     isCorrect: answer.correct,
+  //   })),
+  // }
+
+  const [updateAssignment, {}] = useMutation(UPDATE_ASSIGNMENT_SCORE, {
     variables: {
-      id: currentAssignmentId,
-      input,
+      updateAssignmentScoreId: currentAssignmentId,
+      score: `${scoreData}`,
     },
     onCompleted: (data) => {
       setIsSubmit(false)
@@ -177,6 +189,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
       showToast('error', error.message)
     },
   })
+
   const handleSubmit = () => {
     let correctAnswers = 0
     questionsList.forEach((question, index) => {
@@ -185,13 +198,14 @@ const Assigned: React.FC<WorksheetProps> = () => {
         correctAnswers += 1
       }
     })
-    const scorePercentage = (correctAnswers / questionsList.length) * 100
-    setScore(scorePercentage)
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('score', JSON.stringify(scorePercentage))
-    }
-    updateAssignment()
+    setScoreData(correctAnswers)
   }
+  useEffect(() => {
+    if (scoreData !== null) {
+      updateAssignment()
+    }
+  }, [scoreData])
+
   const [getWorksheet, { loading, error, data }] = useLazyQuery(
     WORKSHEET_BY_ID,
     {
@@ -294,6 +308,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
     setCurrentQuestionIndex(0)
     setShowscore(false)
     setScore(null)
+    setScoreData(null)
   }
   const handleExitActivity = () => {
     router.push('/dashboard/todo')
@@ -303,6 +318,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
     setCurrentQuestionIndex(0)
     setShowscore(false)
     setScore(null)
+    setScoreData(null)
     localStorage.removeItem('currentAssignmentId')
   }
 
@@ -500,7 +516,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
                 />
                 <label
                   htmlFor={`option-${currentQuestionIndex}-${optionIndex}`} // Associate label with input using htmlFor
-                  className={`flex w-[180px] items-center justify-center rounded-[8px] p-2 capitalize ${
+                  className={`flex w-max max-w-[370px] items-center justify-center rounded-[8px] p-2 capitalize ${
                     answers[currentQuestionIndex] &&
                     Object.keys(answers[currentQuestionIndex]).length > 0 &&
                     (selectedOptions[currentQuestionIndex] === optionIndex ||
