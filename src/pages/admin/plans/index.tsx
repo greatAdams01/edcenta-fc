@@ -119,7 +119,7 @@ const Plans = () => {
                         <a
                           href="#"
                           className="text-indigo-600 hover:text-indigo-900"
-                          onClick={() => {router.push(`/admin/plans/add_plan?edit=${plan._id}`)}}
+                          onClick={() => { router.push(`/admin/plans/add_plan?edit=${plan._id}&id=${index}`) }}
                         >
                           Edit
                         </a>
@@ -162,7 +162,7 @@ const Plans = () => {
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
                     Are you sure you want to delete this Plan?
-                     All
+                    All
                     of {`it's`} data will be permanently removed from our
                     servers forever. This action cannot be undone.
                   </p>
