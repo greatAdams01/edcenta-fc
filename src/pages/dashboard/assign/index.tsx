@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client'
 import Link from 'next/link'
 import AppLayout from '../../../layout/AppLayout'
 import { FETCH_LEARNING } from '@/apollo/queries/dashboard'
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 interface Grade {
   _id: string
@@ -18,6 +19,7 @@ interface Grade {
 }
 
 export default function Assign() {
+  const [open, setOpen] = useState(false)
   const { data, refetch } = useQuery(FETCH_LEARNING, {
     fetchPolicy: 'network-only',
   })
@@ -35,6 +37,49 @@ export default function Assign() {
     data?.fetchLearning[0]?.subjects.map(
       (subjects: { name: string }) => subjects.name,
     ) || []
+
+  if (!data) {
+    return (
+      <div
+        className={`fixed inset-0 z-50 flex items-start justify-center bg-[#010B1ACC]`}
+      >
+        <div className={`z-10 m-auto w-[500px] rounded-md bg-white p-6 py-12`}>
+          <div className="sm:flex sm:items-start">
+            <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+              <ExclamationTriangleIcon
+                className="h-6 w-6 text-red-600"
+                aria-hidden="true"
+              />
+            </div>
+            <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+              <h3 className="text-base font-semibold leading-6 text-gray-900">
+                You have no subscription
+              </h3>
+              <div className="mt-2">
+                <p className="text-sm text-gray-500">
+                  Subcribe to one of our plans
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-5 gap-x-3 sm:mt-4 sm:flex sm:flex-row-reverse">
+            <Link
+              href={`/dashboard`}
+              className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+            >
+              Go Back
+            </Link>{' '}
+            <Link
+              href={`/dashboard/subscription`}
+              className="mt-3 inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+            >
+              View plans
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <AppLayout>

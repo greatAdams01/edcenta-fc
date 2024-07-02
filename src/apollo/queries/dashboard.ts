@@ -135,6 +135,7 @@ export const ASSIGNMENTS = gql`
           _id
         }
         createdAt
+        attemptedAt
         score
         status
       }
@@ -272,6 +273,88 @@ export const WORKSHEET_BY_ID = gql`
       difficulty
       levelId
       subjectId
+    }
+  }
+`
+
+export const GET_SUBSCRIPTION = gql`
+  query GetSubscription {
+    getSubscription {
+      id
+      plan {
+        _id
+        title
+        pricePerCourse
+        allowedCourseList {
+          _id
+          name
+          description
+          slug
+          tags
+          createdAt
+          updatedAt
+        }
+        priceOfFreeTrial
+        subTitle
+        planPrice
+        planCode
+        type
+      }
+      startDate
+      endDate
+      cancellationDate
+      transactionRef
+      duration
+      autoRenew
+      status
+      price
+      paymentMethod
+      user {
+        _id
+        firstName
+        lastName
+        email
+        phone
+        address
+        city
+        state
+        otp
+        dob
+        sex
+        isVerified
+        ninverified
+        isActive
+        lastLoggedIn
+        accountType
+        createdAt
+        updatedAt
+        bName
+        bankName
+        bank
+        acctNumber
+        bankCode
+        occupation
+        customerID
+      }
+    }
+  }
+`
+
+export const GET_PLANS = gql`
+  query GetPlans {
+    getPlans {
+      _id
+      title
+      pricePerCourse
+      allowedCourseList {
+        _id
+        name
+      }
+      priceOfFreeTrial
+      subTitle
+      planPrice
+      planCode
+      type
     }
   }
 `

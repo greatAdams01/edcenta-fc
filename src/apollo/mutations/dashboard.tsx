@@ -77,3 +77,22 @@ export const UPDATE_ASSIGNMENT = gql`
     }
   }
 `
+
+export const UPDATE_ASSIGNMENT_SCORE = gql`
+  mutation UpdateAssignmentScore(
+    $updateAssignmentScoreId: ID!
+    $score: String!
+  ) {
+    updateAssignmentScore(id: $updateAssignmentScoreId, score: $score)
+  }
+`
+
+export const SUBSCRIBE_TO_PLAN = gql`
+  mutation SubscribeToPlan($planCode: String!) {
+    subscribeToPlan(planCode: $planCode) {
+      authorization_url
+      access_code
+      reference
+    }
+  }
+`
