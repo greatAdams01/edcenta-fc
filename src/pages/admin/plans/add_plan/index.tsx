@@ -1,5 +1,5 @@
 import { CREATE_PLAN, UPDATE_PLAN } from '@/apollo/mutations/admin';
-import { SUBJECTS } from '@/apollo/queries/admin';
+import { GET_PLANS, SUBJECTS } from '@/apollo/queries/admin';
 import AdminLayout from '@/layout/AdminLayout';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useSearchParams } from 'next/navigation';
@@ -22,7 +22,7 @@ const AddPlan = () => {
   const [subjects, setSubjects] = useState([])
   const [courses, setCourses] = useState<any | []>([])
   const page = useSearchParams()?.get("edit")
-  console.log(page)
+  const id = useSearchParams()?.get("id")
 
   const [createPlan, { loading }] = useMutation(CREATE_PLAN, {
     variables: {
@@ -46,6 +46,25 @@ const AddPlan = () => {
     },
   })
 
+  const [getPlans, { data }] = useLazyQuery(GET_PLANS, {
+    onCompleted: (data) => {
+      console.log(data.getPlans)
+      if (id) {
+        setTitle(data.getPlans[id].title)
+        setType(data.getPlans[id].type)
+        setPrice(data.getPlans[id].planPrice)
+        // setCourses(data.getPlans[id].allowedCourseList)
+        setFreePrice(data.getPlans[id].priceOfFreeTrial)
+        setPriceCourse(data.getPlans[id].pricePerCourse)
+        setSubTitle(data.getPlans[id].subTitle)
+      }
+    },
+  })
+
+  useEffect(() => {
+    getPlans()
+  }, [])
+
   const [updatePlan] = useMutation(UPDATE_PLAN, {
     variables: {
       updatePlanId: page,
@@ -65,6 +84,7 @@ const AddPlan = () => {
       }, 5000)
     },
     onError: (error) => {
+      console.log(error)
       toast.error('Error updating Plan: ' + error)
     },
   })
@@ -194,7 +214,7 @@ const AddPlan = () => {
             <label htmlFor="type" className="w-full">
               Type <span className="text-red-500">*</span>
             </label>
-            <select onChange={(e) => setType(e.target.value)} id="type" className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"            >
+            <select onChange={(e) => setType(e.target.value)} id="type" value={type} className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"            >
               <option className='hidden' value="">Select type</option>
               <option value="PARENT">Parent</option>
               <option value="TUTOR">Tutor</option>
