@@ -14,7 +14,7 @@ interface ModelProps{
 const ModalAuth = ({ isOpen, onClose, children, styling, XIcon }: ModelProps) => {
   return (
     <div
-      className={`fixed inset-0 flex items-start justify-center z-50  ${
+      className={`fixed inset-0 flex overflow-y-scroll items-start justify-center z-50  ${
         isOpen ? '' : 'hidden'
       }`}
     >

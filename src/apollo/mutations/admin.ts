@@ -276,3 +276,27 @@ export const CREATE_PLAN = gql`
     }
   }
 `
+
+export const UPDATE_PLAN = gql`
+mutation UpdatePlan($updatePlanId: ID!, $title: String!, $pricePerCourse: Int!, $allowedCourseList: [String!]!,   $priceOfFreeTrial: Float!, $subTitle: String!, $planPrice: Float!, $type: PlanType!) {
+  updatePlan(id: $updatePlanId, title: $title, pricePerCourse: $pricePerCourse, allowedCourseList: $allowedCourseList, priceOfFreeTrial: $priceOfFreeTrial, subTitle: $subTitle, planPrice: $planPrice, type: $type) {
+    _id
+    title
+    pricePerCourse
+    allowedCourseList {
+      _id
+      name
+      description
+      slug
+      tags
+      createdAt
+      updatedAt
+    }
+    priceOfFreeTrial
+    subTitle
+    planPrice
+    planCode
+    type
+  }
+}
+`

@@ -1,7 +1,8 @@
-import { CREATE_PLAN } from '@/apollo/mutations/admin';
+import { CREATE_PLAN, UPDATE_PLAN } from '@/apollo/mutations/admin';
 import { SUBJECTS } from '@/apollo/queries/admin';
 import AdminLayout from '@/layout/AdminLayout';
 import { useLazyQuery, useMutation } from '@apollo/client';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { IoIosArrowBack } from 'react-icons/io'
@@ -20,6 +21,8 @@ const AddPlan = () => {
   const [subTitle, setSubTitle] = useState("")
   const [subjects, setSubjects] = useState([])
   const [courses, setCourses] = useState<any | []>([])
+  const page = useSearchParams()?.get("edit")
+  console.log(page)
 
   const [createPlan, { loading }] = useMutation(CREATE_PLAN, {
     variables: {
@@ -40,6 +43,29 @@ const AddPlan = () => {
     },
     onError: (error) => {
       toast.error('Error creating Plan: ' + error)
+    },
+  })
+
+  const [updatePlan] = useMutation(UPDATE_PLAN, {
+    variables: {
+      updatePlanId: page,
+      title,
+      pricePerCourse: priceCourse,
+      priceOfFreeTrial: freePrice,
+      subTitle,
+      planPrice: freePrice,
+      type,
+      allowedCourseList: courses.map((course: any) => course.value)
+    },
+    onCompleted: (data) => {
+      console.log(data)
+      toast.success('Plan updated successfully.')
+      setTimeout(() => {
+        path.push(`/admin/plans`)
+      }, 5000)
+    },
+    onError: (error) => {
+      toast.error('Error updating Plan: ' + error)
     },
   })
 
@@ -77,7 +103,10 @@ const AddPlan = () => {
     }
     // Check if any body item is empty
 
-
+    if (page !== null) {
+      updatePlan()
+      return
+    }
     createPlan()
   }
 
@@ -98,7 +127,7 @@ const AddPlan = () => {
           >
             <IoIosArrowBack /> <div>Back</div>
           </button>
-          <button onClick={(e) => handleSubmit(e)} className='p-3 bg-indigo-500 px-6 text-white rounded-md'>{loading ? 'loading' : 'Create'}</button>
+          <button onClick={(e) => handleSubmit(e)} className='p-3 bg-indigo-500 px-6 text-white rounded-md'>{loading ? 'loading' : page !== null ? 'Update' : 'Create'}</button>
         </div>
         <div className="mb-2 mt-6 items-start justify-between md:grid md:grid-cols-2 md:gap-6">
           <div className="flex w-full flex-col items-start justify-between gap-y-1">

@@ -285,3 +285,68 @@ export const GET_SUBSCRIPTION = gql`
     }
   }
 `
+
+
+export const GET_SUBSCRIPTIONS = gql`
+  query GetSubscriptions{
+    getSubscriptions {
+    autoRenew
+    cancellationDate
+    duration
+    endDate
+    id
+    paymentMethod
+    price
+    startDate
+    status
+    __typename
+    plan {
+      _id
+      title
+      subTitle
+      planPrice
+      priceOfFreeTrial
+      pricePerCourse
+      type
+    }
+    user {
+      firstName
+      lastName
+      _id
+      city
+      email
+    }
+    }
+  }
+`
+
+export const GET_TRANSACTIONS = gql`
+  query Transactions(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $searchParams: String
+  ) {
+    transactions (
+      page: $page
+      limit: $limit
+      filter: $filter
+      searchParams: $searchParams
+    ) {
+      userId
+      name
+      email
+      phone
+      amount
+      type
+      currency
+      status
+      tx_ref
+      txId
+      profit
+      paymentMethod
+      createdAt
+      updatedAt
+    }
+  }
+`
