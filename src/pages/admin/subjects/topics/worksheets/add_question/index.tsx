@@ -1,5 +1,6 @@
 import { CREATE_QUESTION, EDIT_QUESTION } from '@/apollo/mutations/admin';
 import { GET_QUESTION } from '@/apollo/queries/admin';
+import ModalAuth from '@/components/ModalComp';
 import AdminLayout from '@/layout/AdminLayout';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useSearchParams } from 'next/navigation';
@@ -16,7 +17,7 @@ const AddQuestion = () => {
   const page = useSearchParams()?.get("worksheet")
   const question = useSearchParams()?.get("question")
   // console.log(question, page)
-
+  const [open, setOpen] = useState(false)
   const [img, setImg] = useState('')
   const [title, setTitle] = useState('')
   const [isObjective, setIsObjective] = useState(false)
@@ -116,11 +117,11 @@ const AddQuestion = () => {
       toast.error('Description field cannot be empty')
       return
     }
-    if (img === '') {
-      console.log('Description Image field cannot be empty')
-      toast.error('Description Image field cannot be empty')
-      return
-    }
+    // if (img === '') {
+    //   console.log('Description Image field cannot be empty')
+    //   toast.error('Description Image field cannot be empty')
+    //   return
+    // }
     // Check if any body item is empty
     if (isObjective) {
       for (let item of options) {
@@ -203,7 +204,10 @@ const AddQuestion = () => {
           >
             <IoIosArrowBack /> <div>Back</div>
           </button>
-          <button onClick={(e) => handleSubmit(e)} className='p-3 text-white bg-indigo-600 rounded-md'>{page !== null ? loading ? 'loading...' : 'Create' : 'Update'}</button>
+          <div>
+            <button onClick={(e) => handleSubmit(e)} className='p-3 text-white bg-indigo-600 rounded-md'>{page !== null ? loading ? 'loading...' : 'Create' : 'Update'}</button>
+            <input value={"Preview"} onClick={() => setOpen(true)} className='p-3 ml-4 text-white bg-indigo-600 rounded-md' type="button" />
+          </div>
         </div>
         <div className='flex justify-between'>
           <div className="flex w-full flex-col items-start gap-y-1">
@@ -238,7 +242,7 @@ const AddQuestion = () => {
 
           <div className="flex w-full flex-col items-start gap-y-1">
             <label htmlFor={`img`} className="w-full">
-              Description image <span className="text-red-500">*</span>
+              Description image
             </label>
             {img === '' ? <input value={'Upload Image'} className='cursor-pointer bg-blue-500 p-1 text-xs my-2 text-white px-6 rounded-md' type="button" onClick={() => uploadRef.current?.click()} /> : <img src={img} onClick={() => uploadRef.current?.click()} className='w-44 ' alt="" />}
             <input
@@ -269,6 +273,34 @@ const AddQuestion = () => {
           </div>
           {options.length === 4 ? null : <button onClick={() => setOptions([...options, option])} className='p-3 bg-indigo-600 text-white rounded-md'>Add</button>}
         </> : null}
+        <ModalAuth
+          isOpen={open}
+          XIcon={true}
+          onClose={() => (setOpen(false))}
+          styling={'w-[1000px] m-auto'}
+        >
+          <div className=' text-center'>
+            <h1 className="w-full mb-4 text-2xl font-semibold uppercase leading-6 text-gray-900">
+              {title}
+            </h1>
+            {img ? <img
+              src={img}
+              alt="image"
+              className="h-full max-h-[400px] mx-auto w-1/2"
+            /> : null}
+            <div className="">
+              <p className="my-2">
+                Is Objective: {isObjective ? 'true' : 'false'}
+              </p>
+              <p className='my-2'>Description: {description}</p>
+              <p className='my-2'>Explanation: {explanation}</p>
+            </div>
+            <div className='my-2'>
+              {options.length > 1 ? options.map((single, index) => <div className='flex justify-between w-1/2 mx-auto' key={index}> <p>{single.option} </p><p>{single.isCorrect ? 'Correct Option' : ''}</p></div>) : null}
+            </div>
+          </div>
+
+        </ModalAuth>
       </div>
     </AdminLayout>
   );
