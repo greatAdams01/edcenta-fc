@@ -115,7 +115,7 @@ export default function Create() {
     }
     // Check if any body item is empty
     for (let item of bodyItems) {
-      if (item.text.trim() === '' || item.img.trim() === '') {
+      if (item.text.trim() === '') {
         console.log('Body item cannot be empty')
         toast.error('Body item cannot be empty')
         return
@@ -235,7 +235,7 @@ export default function Create() {
                   </div>
                   <div className="flex w-full flex-col items-start justify-between gap-y-1">
                     <label htmlFor={`img-${index}`} className="w-full">
-                      Description image <span className="text-red-500">*</span>
+                      Description image
                     </label>
                     <input value={'Upload Image'} className='cursor-pointer bg-blue-500 p-1 text-xs my-2 text-white px-6 rounded-md' type="button" onClick={() => uploadRef.current?.click()} />
                     <img src={item.img} className='w-80 ' alt="" />

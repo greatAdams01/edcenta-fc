@@ -53,7 +53,7 @@ const AddPlan = () => {
         setTitle(data.getPlans[id].title)
         setType(data.getPlans[id].type)
         setPrice(data.getPlans[id].planPrice)
-        // setCourses(data.getPlans[id].allowedCourseList)
+        setCourses(data.getPlans[id].allowedCourseList)
         setFreePrice(data.getPlans[id].priceOfFreeTrial)
         setPriceCourse(data.getPlans[id].pricePerCourse)
         setSubTitle(data.getPlans[id].subTitle)
@@ -227,6 +227,7 @@ const AddPlan = () => {
             </label>
             <Select isMulti onChange={e => { setCourses(e) }}
               isClearable={true}
+              value={courses}
               isSearchable={true}
               className='w-full' options={formattedOptions} />
           </div>
