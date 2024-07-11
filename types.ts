@@ -336,6 +336,24 @@ export interface IStudent extends DefaultAttributes {
   isActive: boolean
 }
 
+export interface ICourse {
+  _id: string
+  name?: string
+}
+
+export interface IPlan {
+  _id: string
+  title: string
+  pricePerCourse: number
+  allowedCourseList: ICourse[]
+  priceOfFreeTrial: number
+  subTitle: string
+  planPrice: number
+  planCode: string
+  type: string
+  __typename: string
+}
+
 export interface IAnswer {
   questionId: string
   answer: string // question option ID
