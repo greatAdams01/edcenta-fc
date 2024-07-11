@@ -16,7 +16,7 @@ import CustomPlan from '@/components/dashbord/CustomPlan'
 
 function Index() {
   const [plans, setPlans] = useState<IPlan[]>([])
-  const [isOpen, setIsOpen] = useState(false)
+  const [open, setOpen] = useState(false)
   const { data: subscriptionData, refetch: refetchSubscription } = useQuery(
     GET_SUBSCRIPTION,
     {
@@ -164,7 +164,7 @@ function Index() {
                 <div className="flex w-full justify-end">
                   <button
                     className="mt-4 rounded-md bg-indigo-600 px-4 py-2 font-bold text-white hover:bg-blue-700"
-                    onClick={() => setIsOpen(true)}
+                    onClick={() => setOpen(true)}
                   >
                     Custom Plan
                   </button>
@@ -228,9 +228,9 @@ function Index() {
       </div>
       <ToastContainer />
       <ModalAuth
-        isOpen={isOpen}
+        isOpen={open}
         XIcon={true}
-        onClose={() => setIsOpen(false)}
+        onClose={() => setOpen(false)}
         styling={'w-[1000px] m-auto'}
       >
         <>
