@@ -229,3 +229,124 @@ export const GET_QUESTION = gql`
     }
   }
 `
+export const GET_PLANS = gql`
+  query GetPlans{
+    getPlans{
+      _id
+      planCode
+      planPrice
+      priceOfFreeTrial
+      pricePerCourse
+      subTitle
+      title
+      type
+      __typename
+      allowedCourseList {
+        _id
+        createdAt
+        description
+        name
+        slug
+        tags
+      }
+    }
+  }
+`
+
+export const GET_SUBSCRIPTION = gql`
+  query GetSubscription{
+    getSubscription {
+      autoRenew
+      cancellationDate
+      duration
+      endDate
+      id
+      paymentMethod
+      price
+      startDate
+      status
+      transactionRef
+      plan {
+        _id
+        title
+        planPrice
+        planCode
+        priceOfFreeTrial
+        pricePerCourse
+        subTitle
+        type
+      }
+      user {
+        _id
+        firstName
+        lastName
+        phone
+      }
+    }
+  }
+`
+
+
+export const GET_SUBSCRIPTIONS = gql`
+  query GetSubscriptions{
+    getSubscriptions {
+    autoRenew
+    cancellationDate
+    duration
+    endDate
+    id
+    paymentMethod
+    price
+    startDate
+    status
+    __typename
+    plan {
+      _id
+      title
+      subTitle
+      planPrice
+      priceOfFreeTrial
+      pricePerCourse
+      type
+    }
+    user {
+      firstName
+      lastName
+      _id
+      city
+      email
+    }
+    }
+  }
+`
+
+export const GET_TRANSACTIONS = gql`
+  query Transactions(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $searchParams: String
+  ) {
+    transactions (
+      page: $page
+      limit: $limit
+      filter: $filter
+      searchParams: $searchParams
+    ) {
+      userId
+      name
+      email
+      phone
+      amount
+      type
+      currency
+      status
+      tx_ref
+      txId
+      profit
+      paymentMethod
+      createdAt
+      updatedAt
+    }
+  }
+`

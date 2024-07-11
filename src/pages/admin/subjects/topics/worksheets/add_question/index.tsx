@@ -1,5 +1,6 @@
 import { CREATE_QUESTION, EDIT_QUESTION } from '@/apollo/mutations/admin'
 import { GET_QUESTION } from '@/apollo/queries/admin'
+import ModalAuth from '@/components/ModalComp'
 import AdminLayout from '@/layout/AdminLayout'
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { useSearchParams } from 'next/navigation'
@@ -16,7 +17,7 @@ const AddQuestion = () => {
   const page = useSearchParams()?.get('worksheet')
   const question = useSearchParams()?.get('question')
   // console.log(question, page)
-
+  const [open, setOpen] = useState(false)
   const [img, setImg] = useState('')
   const [title, setTitle] = useState('')
   const [isObjective, setIsObjective] = useState(false)
@@ -118,11 +119,11 @@ const AddQuestion = () => {
       toast.error('Description field cannot be empty')
       return
     }
-    if (img === '') {
-      console.log('Description Image field cannot be empty')
-      toast.error('Description Image field cannot be empty')
-      return
-    }
+    // if (img === '') {
+    //   console.log('Description Image field cannot be empty')
+    //   toast.error('Description Image field cannot be empty')
+    //   return
+    // }
     // Check if any body item is empty
     if (isObjective) {
       for (let item of options) {
@@ -203,12 +204,20 @@ const AddQuestion = () => {
           >
             <IoIosArrowBack /> <div>Back</div>
           </button>
-          <button
-            onClick={(e) => handleSubmit(e)}
-            className="rounded-md bg-indigo-600 p-3 text-white"
-          >
-            {page !== null ? (loading ? 'loading...' : 'Create') : 'Update'}
-          </button>
+          <div>
+            <button
+              onClick={(e) => handleSubmit(e)}
+              className="rounded-md bg-indigo-600 p-3 text-white"
+            >
+              {page !== null ? (loading ? 'loading...' : 'Create') : 'Update'}
+            </button>
+            <input
+              value={'Preview'}
+              onClick={() => setOpen(true)}
+              className="ml-4 rounded-md bg-indigo-600 p-3 text-white"
+              type="button"
+            />
+          </div>
         </div>
         <div className="flex justify-between">
           <div className="flex w-full flex-col items-start gap-y-1">
@@ -268,7 +277,7 @@ const AddQuestion = () => {
 
           <div className="flex w-full flex-col items-start gap-y-1">
             <label htmlFor={`img`} className="w-full">
-              Description image <span className="text-red-500">*</span>
+              Description image
             </label>
             {img === '' ? (
               <input
@@ -320,7 +329,7 @@ const AddQuestion = () => {
                       onClick={() => setActiveIndex(index)}
                       className={
                         option.isCorrect
-                          ? 'my-auto ml-20 h-16 rounded-md bg-green-500 p-3 text-white'
+                          ? 'my-auto ml-20 ml-20 h-16 rounded-md bg-green-500 p-3 text-white'
                           : 'my-auto ml-20 h-16 cursor-pointer rounded-md p-3 hover:bg-gray-300'
                       }
                     >
@@ -353,6 +362,46 @@ const AddQuestion = () => {
             )}
           </>
         ) : null}
+        <ModalAuth
+          isOpen={open}
+          XIcon={true}
+          onClose={() => setOpen(false)}
+          styling={'w-[1000px] m-auto'}
+        >
+          <div className=" text-center">
+            <h1 className="mb-4 w-full text-2xl font-semibold uppercase leading-6 text-gray-900">
+              {title}
+            </h1>
+            {img ? (
+              <img
+                src={img}
+                alt="image"
+                className="mx-auto h-full max-h-[400px] w-1/2"
+              />
+            ) : null}
+            <div className="">
+              <p className="my-2">
+                Is Objective: {isObjective ? 'true' : 'false'}
+              </p>
+              <p className="my-2">Description: {description}</p>
+              <p className="my-2">Explanation: {explanation}</p>
+            </div>
+            <div className="my-2">
+              {options.length > 1
+                ? options.map((single, index) => (
+                    <div
+                      className="mx-auto flex w-1/2 justify-between"
+                      key={index}
+                    >
+                      {' '}
+                      <p>{single.option} </p>
+                      <p>{single.isCorrect ? 'Correct Option' : ''}</p>
+                    </div>
+                  ))
+                : null}
+            </div>
+          </div>
+        </ModalAuth>
       </div>
     </AdminLayout>
   )
