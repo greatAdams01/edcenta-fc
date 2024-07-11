@@ -9,56 +9,14 @@ import { GET_PLANS, GET_SUBSCRIPTION } from '@/apollo/queries/dashboard'
 import { useQuery } from '@apollo/client'
 import { SUBSCRIBE_TO_PLAN } from '@/apollo/mutations/dashboard'
 import { showToast } from '@/utils/toast'
-
-const getPlans = [
-  {
-    _id: '1',
-    title: 'Basic Plan',
-    pricePerCourse: 20,
-    allowedCourseList: [
-      { _id: 'c1', name: 'HTML Basics' },
-      { _id: 'c2', name: 'CSS Fundamentals' },
-    ],
-    priceOfFreeTrial: 0,
-    subTitle: 'A great start for beginners.',
-    planPrice: 50,
-    planCode: 'BASIC',
-    type: 'Starter',
-  },
-  {
-    _id: '2',
-    title: 'Pro Plan',
-    pricePerCourse: 15,
-    allowedCourseList: [
-      { _id: 'c3', name: 'JavaScript Essentials' },
-      { _id: 'c4', name: 'Advanced CSS' },
-      { _id: 'c5', name: 'Intro to React' },
-    ],
-    priceOfFreeTrial: 0,
-    subTitle: 'For the aspiring developer.',
-    planPrice: 100,
-    planCode: 'PRO',
-    type: 'Intermediate',
-  },
-  {
-    _id: '3',
-    title: 'Ultimate Plan',
-    pricePerCourse: 10,
-    allowedCourseList: [
-      { _id: 'c6', name: 'Node.js from Scratch' },
-      { _id: 'c7', name: 'Express Basics' },
-      { _id: 'c8', name: 'MongoDB for Beginners' },
-      { _id: 'c9', name: 'React Native Introduction' },
-    ],
-    priceOfFreeTrial: 0,
-    subTitle: 'Everything you need to become a full-stack developer.',
-    planPrice: 200,
-    planCode: 'ULTIMATE',
-    type: 'Advanced',
-  },
-]
+import { IPlan } from '../../../../types'
+import { Plane } from 'lucide-react'
+import ModalAuth from '@/components/ModalComp'
+import CustomPlan from '@/components/dashbord/CustomPlan'
 
 function Index() {
+  const [plans, setPlans] = useState<IPlan[]>([])
+  const [open, setOpen] = useState(false)
   const { data: subscriptionData, refetch: refetchSubscription } = useQuery(
     GET_SUBSCRIPTION,
     {
@@ -66,7 +24,7 @@ function Index() {
     },
   )
   const { data: plansData, refetch: refetchPlans } = useQuery(GET_PLANS, {
-    skip: true,
+    fetchPolicy: 'network-only',
   })
 
   const [subscribeToPlan, { loading }] = useMutation(SUBSCRIBE_TO_PLAN, {
@@ -75,7 +33,9 @@ function Index() {
     },
     onCompleted: (data) => {
       console.log(data)
-      showToast('success', 'Subscription successful')
+      if (data.subscribeToPlan && data.subscribeToPlan.authorization_url) {
+        window.location.href = data.subscribeToPlan.authorization_url
+      }
     },
     onError: (error) => {
       showToast('error', error.message)
@@ -93,7 +53,12 @@ function Index() {
       refetchPlans()
     }
   }, [subscriptionData, refetchPlans])
-
+  useEffect(() => {
+    if (plansData && plansData.getPlans) {
+      setPlans(plansData.getPlans)
+      console.log(plans)
+    }
+  }, [plansData])
   useEffect(() => {
     if (subscriptionData) {
       console.log(JSON.stringify(subscriptionData, null, 2))
@@ -196,10 +161,17 @@ function Index() {
                     Select any of the available plans
                   </h2>
                 </div>
-
-                <div className="mt-6 justify-center md:grid md:grid-cols-2 md:gap-6 xl:grid-cols-3">
-                  {getPlans &&
-                    getPlans.map((plan) => (
+                <div className="flex w-full justify-end">
+                  <button
+                    className="mt-4 rounded-md bg-indigo-600 px-4 py-2 font-bold text-white hover:bg-blue-700"
+                    onClick={() => setOpen(true)}
+                  >
+                    Custom Plan
+                  </button>
+                </div>
+                <div className="mt-3 justify-center md:grid md:grid-cols-2 md:gap-6 xl:grid-cols-3">
+                  {plans &&
+                    (plans as IPlan[]).map((plan: IPlan) => (
                       <div
                         key={plan._id}
                         className="flex max-w-sm flex-col justify-between overflow-hidden rounded-lg border border-black p-6 shadow-lg hover:border-blue-500"
@@ -255,6 +227,16 @@ function Index() {
         </div>
       </div>
       <ToastContainer />
+      <ModalAuth
+        isOpen={open}
+        XIcon={true}
+        onClose={() => setOpen(false)}
+        styling={'w-[1000px] m-auto'}
+      >
+        <>
+          <CustomPlan />
+        </>
+      </ModalAuth>
     </AppLayout>
   )
 }
