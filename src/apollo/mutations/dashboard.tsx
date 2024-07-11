@@ -96,3 +96,18 @@ export const SUBSCRIBE_TO_PLAN = gql`
     }
   }
 `
+export const CUSTOM_PLAN = gql`
+  mutation SubscribeToCustomPlan(
+    $allowedCourseList: [String!]!
+    $numberOfStudents: Int!
+  ) {
+    subscribeToCustomPlan(
+      allowedCourseList: $allowedCourseList
+      numberOfStudents: $numberOfStudents
+    ) {
+      authorization_url
+      access_code
+      reference
+    }
+  }
+`
