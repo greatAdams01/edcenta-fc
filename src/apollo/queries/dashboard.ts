@@ -358,3 +358,8 @@ export const GET_PLANS = gql`
     }
   }
 `
+export const GET_PRICE = gql`
+  query Query {
+    getPricePerStudent
+  }
+`
