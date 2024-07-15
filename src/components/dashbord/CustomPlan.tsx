@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import { useLazyQuery, useMutation } from '@apollo/client'
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client'
 import { showToast } from '@/utils/toast'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Select from 'react-select'
 import { CUSTOM_PLAN } from '@/apollo/mutations/dashboard'
 import { SUBJECTS } from '@/apollo/queries/admin'
+import { GET_PRICE } from '@/apollo/queries/dashboard'
 
 const CustomPlan = () => {
   const [students, setStudents] = useState(0)
   const [courses, setCourses] = useState<any | []>([])
   const [subjects, setSubjects] = useState([])
   const [totalCost, setTotalCost] = useState(0)
+  const { data: priceData } = useQuery(GET_PRICE)
+
+  useEffect(() => {
+    if (priceData) {
+      console.log('Price per student:', priceData.getPricePerStudent)
+    }
+  }, [priceData])
 
   const [customPlan, { loading }] = useMutation(CUSTOM_PLAN, {
     variables: {
@@ -64,8 +72,7 @@ const CustomPlan = () => {
   }, [])
   useEffect(() => {
     const studentCost = students * 4
-    const subjectCost = courses.length * 3
-    setTotalCost(studentCost + subjectCost)
+    setTotalCost(studentCost)
   }, [students, courses])
   return (
     <div>
