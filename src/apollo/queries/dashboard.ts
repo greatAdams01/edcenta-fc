@@ -130,6 +130,7 @@ export const ASSIGNMENTS = gql`
         worksheetId {
           _id
           title
+          subjectId
         }
         answers {
           _id
