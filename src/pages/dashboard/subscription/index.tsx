@@ -23,6 +23,7 @@ function Index() {
       fetchPolicy: 'network-only',
     },
   )
+  const [changePlan, setChangePlan] = useState(false)
   const { data: plansData, refetch: refetchPlans } = useQuery(GET_PLANS, {
     fetchPolicy: 'network-only',
   })
@@ -71,33 +72,58 @@ function Index() {
     e.preventDefault()
   }
 
+  const formattedDate = new Date(
+    subscriptionData?.getSubscription?.endDate,
+  ).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+
+  const vatRate = 0.2
+  const vatAmount = subscriptionData?.getSubscription?.plan?.planPrice * vatRate
+  const monthlyTotal =
+    subscriptionData?.getSubscription?.plan?.planPrice + vatAmount
+
   return (
     <AppLayout>
       <div className="grid justify-items-stretch">
         <div className="flex w-full justify-self-center rounded-md border-2 p-8 px-4 sm:px-6 lg:px-8">
           <div className="w-full">
-            {subscriptionData ? (
-              <form onSubmit={handleSubmit} className="w-full ">
+            {!changePlan && subscriptionData ? (
+              <div className="w-full ">
                 <div className="my-4 flex w-full items-center justify-between">
                   <h1 className="text-lg font-bold">My Subscription</h1>
                 </div>
 
                 <div className="mt-6 justify-between md:grid md:grid-cols-2 md:gap-6">
-                  <div className="my-2 font-bold">
-                    <p>Status: {}</p>
+                  <div className="my-2 font-bold capitalize">
+                    <p>Status: {subscriptionData.getSubscription.status}</p>
                   </div>
                   <div className="my-2 font-bold">
-                    <p>Total per Month: {}</p>
+                    <p>
+                      Total per Month: $
+                      {(
+                        (subscriptionData.getSubscription.plan.planPrice / 12) *
+                        100
+                      ).toFixed(2)}
+                    </p>
                   </div>
-                  <div className="my-2 font-bold">Subscription Type: {}</div>
-                  <div className="my-2 font-bold">Renewal Date: {}</div>
+                  <div className="my-2 font-bold">
+                    Subscription Type:{' '}
+                    {subscriptionData.getSubscription.plan.subTitle}
+                  </div>
+                  <div className="my-2 font-bold">
+                    Renewal Date: {formattedDate}
+                  </div>
                   <div className="my-1 flex w-full py-2 font-bold">
-                    <a
-                      href="#"
+                    <button
+                      type="button"
+                      onClick={() => setChangePlan(true)}
                       className="flex w-full justify-center rounded-md border-2 p-2 text-center font-bold hover:border-black"
                     >
                       Change Plan
-                    </a>
+                    </button>
                   </div>
                   <div className="my-1 flex w-full py-2 font-bold">
                     <a
@@ -114,7 +140,7 @@ function Index() {
                       <col className="w-full sm:w-6/12" />
                       <col className="w-full sm:w-6/12" />
                     </colgroup>
-                    <thead className=" w-full bg-gray-200 ">
+                    <thead className="w-full bg-gray-200">
                       <tr className="w-full">
                         <th scope="col" className="py-4 pl-2 text-start">
                           Subscription Plan
@@ -122,13 +148,21 @@ function Index() {
                         <th scope="col"></th>
                       </tr>
                     </thead>
-                    <tbody className="devide-white/5 divide-y">
+                    <tbody className="divide-y divide-white/5">
                       <tr>
-                        <td className="p-2">Educator Monthly Core</td>
-                        <td className="text-end">$10.24</td>
+                        <td className="p-2">
+                          {subscriptionData.getSubscription.plan.title}
+                        </td>
+                        <td className="text-end">
+                          $
+                          {(
+                            subscriptionData.getSubscription.plan.planPrice /
+                            100
+                          ).toFixed(2)}
+                        </td>
                       </tr>
                     </tbody>
-                    <thead className=" w-full bg-gray-200 ">
+                    <thead className="w-full bg-gray-200">
                       <tr className="w-full">
                         <th scope="col" className="py-4 pl-2 text-start">
                           Taxes
@@ -136,21 +170,23 @@ function Index() {
                         <th scope="col"></th>
                       </tr>
                     </thead>
-                    <tbody className="devide-white/5 divide-y">
+                    <tbody className="divide-y divide-white/5">
                       <tr className="w-full">
                         <td className="p-2">Vat(20%)</td>
-                        <td className="text-end">$1.05</td>
+                        <td className="text-end">
+                          ${(vatAmount / 100).toFixed(2)}
+                        </td>
                       </tr>
                       <tr className="w-full">
                         <td className="p-2">Monthly Total</td>
                         <td className="font-bolder text-end underline">
-                          $11.29
+                          #{monthlyTotal.toFixed(2)}
                         </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-              </form>
+              </div>
             ) : (
               <div className="w-full ">
                 <div className="my-4 space-y-3">
