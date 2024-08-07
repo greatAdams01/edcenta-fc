@@ -111,7 +111,7 @@ function Index() {
                   </div>
                   <div className="my-2 font-bold">
                     Subscription Type:{' '}
-                    {subscriptionData.getSubscription.plan.subTitle}
+                    {subscriptionData.getSubscription.plan.type}
                   </div>
                   <div className="my-2 font-bold">
                     Renewal Date: {formattedDate}
