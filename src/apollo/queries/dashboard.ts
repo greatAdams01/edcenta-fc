@@ -111,16 +111,8 @@ export const QUESTION_QUERY = gql`
 `
 
 export const ASSIGNMENTS = gql`
-  query Assignments(
-    $page: Int
-    $limit: Int
-    $filter: String
-    $studentId: String
-    $worksheetId: String
-  ) {
+  query Assignments($filter: String, $studentId: String, $worksheetId: String) {
     assignments(
-      page: $page
-      limit: $limit
       filter: $filter
       studentId: $studentId
       worksheetId: $worksheetId
@@ -130,7 +122,10 @@ export const ASSIGNMENTS = gql`
         worksheetId {
           _id
           title
-          subjectId
+          subjectId {
+            name
+            _id
+          }
         }
         answers {
           _id
@@ -145,7 +140,6 @@ export const ASSIGNMENTS = gql`
     }
   }
 `
-
 export const QUESTIONS = gql`
   query Questions(
     $page: Int

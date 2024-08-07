@@ -59,7 +59,7 @@ export const studentNav = [
     icon: ClipboardDocumentCheckIcon,
     children: [
       { name: 'Score', href: '/dashboard/scores' },
-      { name: 'Reward', href: '#' },
+      { name: 'Reward', href: '/dashboard/rewards' },
     ],
   },
 ]

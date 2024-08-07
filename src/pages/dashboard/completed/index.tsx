@@ -69,8 +69,8 @@ export default function Completed() {
 
   const [getAssignments, { loading, error, data }] = useLazyQuery(ASSIGNMENTS, {
     variables: {
-      page,
-      limit: 10,
+      // page,
+      // limit: 10,
       filter: '',
       studentId: authDataId,
       worksheetId: '',
@@ -91,7 +91,7 @@ export default function Completed() {
     setPage(pageNum)
     getAssignments({
       variables: {
-        page: pageNum,
+        // page: pageNum,
         limit: 10,
         filter: authDataId,
       },
@@ -139,6 +139,7 @@ export default function Completed() {
                 <tr>
                   <td className="w-[65%] pb-4">Title</td>
                   <td className="pb-4">Review</td>
+                  <td className="pb-4">Subject</td>
                   <td className="pb-4">Attempted</td>
                   <td className="pb-4">Score</td>
                 </tr>
@@ -165,6 +166,14 @@ export default function Completed() {
                         <td className="pr-6 text-left">
                           <button className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
                             {assignment.status}
+                          </button>
+                        </td>
+                        <td className="pr-6 text-left">
+                          <button className="inline-flex w-full justify-center rounded-md bg-[#00AE9A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
+                            {assignment.worksheetId.subjectId.name.substring(
+                              0,
+                              3,
+                            )}
                           </button>
                         </td>
                         <td>

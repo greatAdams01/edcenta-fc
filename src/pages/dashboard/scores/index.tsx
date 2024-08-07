@@ -11,7 +11,8 @@ export default function Score() {
   const { data } = useQuery(STUDENTS)
   const students = data?.students.data || []
   const [assignmentList, setAssignmentList] = useState<any[]>([])
-  const [currentScores, setCurrentScores] = useState(statData.map((stat) => 0))
+  const [statsData, setStatsData] = useState<any[]>([])
+  const [currentScores, setCurrentScores] = useState(statsData.map((stat) => 0))
   const [fullName, setFullName] = useState('')
   const [isStudent, setIsStudent] = useState(false)
   const [page, setPage] = useState(1)
@@ -23,33 +24,62 @@ export default function Score() {
   })
 
   const [student] = useLazyQuery(STUDENT_NAME, {
-    // variables: { studentId: list._id },
     onCompleted: (data) => {
       setFullName(data.student.name)
     },
   })
 
+  const authData: any = getCookie('Authdata')
+  let authDataId: string | null = null
+
+  if (authData) {
+    try {
+      authDataId = JSON.parse(authData)._id
+    } catch (error) {
+      console.error('Error parsing authData:', error)
+    }
+  }
+
   const [getAssignments, { error, data: assignments }] = useLazyQuery(
     ASSIGNMENTS,
     {
       variables: {
-        page,
-        filter: '',
-        limit: 50,
-        studentId: '',
+        studentId: authDataId,
         worksheetId: '',
       },
       onCompleted: (data) => {
-        console.log('Data:', data)
-        setAssignmentList(data.assignments.data)
+        console.log('Raw data:', data) // Log the raw data object
+        const assignmentsData = data.assignments.data
+        setAssignmentList(assignmentsData)
+
+        // Check if assignmentsData is an array and has elements
+        if (Array.isArray(assignmentsData) && assignmentsData.length > 0) {
+          const transformedData = assignmentsData
+            .filter((assignment) => assignment.worksheetId) // Filter out assignments with null worksheetId
+            .map((assignment) => ({
+              subject: assignment.worksheetId.subjectId.name.substring(0, 3),
+              score: assignment.score,
+            }))
+          console.log('Transformed Data:', transformedData) // Log the transformed data
+          setStatsData(transformedData)
+        } else {
+          console.warn(
+            'Assignments data is not an array or is empty:',
+            assignmentsData,
+          )
+        }
       },
       onError: (error) => {
         console.log('Error:', error)
       },
     },
   )
+
   useEffect(() => {
     console.log('assignmentList', assignmentList)
+
+    console.log(statsData)
+    console.log(currentScores)
   }, [assignmentList])
 
   useEffect(() => {
@@ -64,35 +94,38 @@ export default function Score() {
   }, [])
 
   useEffect(() => {
-    const incrementScores = () => {
-      const newScores = currentScores.map((score, index) => {
-        const targetScore = statData[index].score
-        let step = 0
-        step++
-        const newScore = score + step
-        return newScore >= targetScore ? targetScore : newScore
-      })
+    setCurrentScores(statsData.map((stat) => 0)) // Initialize currentScores based on statsData
 
-      setCurrentScores(newScores)
-      if (newScores.some((score, index) => score < statData[index].score)) {
-        requestAnimationFrame(incrementScores)
-      }
+    const incrementScores = () => {
+      setCurrentScores((prevScores) =>
+        prevScores.map((score, index) => {
+          const targetScore = statsData[index].score
+          let step = 5 // Increment step value
+          const newScore = score + step
+          return newScore >= targetScore ? targetScore : newScore
+        }),
+      )
     }
 
-    incrementScores()
-  }, [currentScores])
+    const interval = setInterval(() => {
+      incrementScores()
+    }, 50)
+
+    return () => clearInterval(interval)
+  }, [statsData]) // Add statsData as a dependency
 
   const totalScore = currentScores.reduce((sum, score) => sum + score, 0)
 
   const circleWidth = 200
   const radius = 90
   const statArray = radius * Math.PI * 2
-  const estimatedPercentage = (totalScore / (statData.length * 100)) * 100
+  const estimatedPercentage =
+    statsData.length > 0 ? (totalScore / (statsData.length * 100)) * 100 : 0
   const statOffset = statArray - (statArray * estimatedPercentage) / 100
 
   const subjectRadius = 65
   const subjectStatArray = subjectRadius * Math.PI * 2
-  const subjectOffsets = statData.map((stat, index) => {
+  const subjectOffsets = statsData.map((stat, index) => {
     const subjectStatOffset =
       subjectStatArray - (subjectStatArray * currentScores[index]) / 100
     return subjectStatOffset
@@ -183,7 +216,7 @@ export default function Score() {
             <section className="">
               <p className="my-2 text-lg">Subject score</p>
               <div className="grid w-full grid-cols-[repeat(auto-fit,_minmax(10rem,_1fr))] gap-x-0 border p-6 md:w-[50vw]">
-                {statData.map((stat, index) => (
+                {statsData.map((stat, index) => (
                   <div key={index} className="grid w-full justify-center">
                     <div className="flex w-full justify-center">
                       <p className="w-5/6 bg-[#00AE9A] p-2 text-center text-white">
@@ -281,12 +314,15 @@ export default function Score() {
                         </td>
                         <td className="pr-6 text-left">
                           <button className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                            Maths
+                            {assignment.worksheetId.subjectId.name.substring(
+                              0,
+                              3,
+                            )}
                           </button>
                         </td>
                         <td>
                           <button className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                            80
+                            {assignment.score}
                           </button>
                         </td>
                       </tr>
@@ -332,12 +368,15 @@ export default function Score() {
                         </td>
                         <td className="pr-6 text-left">
                           <button className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                            Maths
+                            {assignment.worksheetId.subjectId.name.substring(
+                              0,
+                              3,
+                            )}
                           </button>
                         </td>
                         <td>
                           <button className="inline-flex w-full justify-center rounded-md bg-[#FF0000] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                            22
+                            {assignment.score}
                           </button>
                         </td>
                       </tr>
