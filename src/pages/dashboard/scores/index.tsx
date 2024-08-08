@@ -55,11 +55,13 @@ export default function Score() {
         // Check if assignmentsData is an array and has elements
         if (Array.isArray(assignmentsData) && assignmentsData.length > 0) {
           const transformedData = assignmentsData
-            .filter((assignment) => assignment.worksheetId) // Filter out assignments with null worksheetId
+            .filter((assignment) => assignment.worksheetId) // Only check for null worksheetId
             .map((assignment) => ({
-              subject: assignment.worksheetId.subjectId.name.substring(0, 3),
+              subject:
+                assignment.worksheetId.subjectId?.name.substring(0, 3) || 'N/A', // Handle null subjectId
               score: assignment.score,
             }))
+
           console.log('Transformed Data:', transformedData) // Log the transformed data
           setStatsData(transformedData)
         } else {
@@ -309,15 +311,16 @@ export default function Score() {
                     .map((assignment) => (
                       <tr key={assignment._id}>
                         <td className="pr-6 text-left">
-                          {assignment.worksheetId &&
-                            assignment.worksheetId.title}
+                          {assignment.worksheetId?.title || 'No Title'}{' '}
+                          {/* Safe access with fallback */}
                         </td>
                         <td className="pr-6 text-left">
                           <button className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                            {assignment.worksheetId.subjectId.name.substring(
+                            {assignment.worksheetId?.subjectId?.name?.substring(
                               0,
                               3,
-                            )}
+                            ) || 'N/A'}{' '}
+                            {/* Safe access with fallback */}
                           </button>
                         </td>
                         <td>
@@ -363,15 +366,15 @@ export default function Score() {
                     .map((assignment) => (
                       <tr key={assignment._id}>
                         <td className="pr-6 text-left">
-                          {assignment.worksheetId &&
-                            assignment.worksheetId.title}
+                          {assignment.worksheetId?.title || 'No Title'}{' '}
+                          {/* Safe access with fallback */}
                         </td>
                         <td className="pr-6 text-left">
                           <button className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                            {assignment.worksheetId.subjectId.name.substring(
+                            {assignment.worksheetId?.subjectId?.name?.substring(
                               0,
                               3,
-                            )}
+                            ) || 'N/A'}
                           </button>
                         </td>
                         <td>
