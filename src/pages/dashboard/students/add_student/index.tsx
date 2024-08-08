@@ -51,7 +51,10 @@ export default function Create() {
       }, 5000)
     },
     onError: (error) => {
-      toast.error('Error creating student: ' + error)
+      toast.error(
+        'Error creating student: this email might already been used by another student',
+      )
+      console.log(error)
     },
   })
 
@@ -96,6 +99,7 @@ export default function Create() {
       return
     }
     createStudent()
+    console.log(creatorId)
   }
 
   return (
