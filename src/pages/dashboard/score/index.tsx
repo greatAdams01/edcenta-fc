@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { useQuery, useLazyQuery } from '@apollo/client'
 import { ASSIGNMENTS, STUDENTS } from '@/apollo/queries/dashboard'
 import AppLayout from '@/layout/AppLayout'
-import { statData } from '@/utils/nav'
 import { BsBarChartFill } from 'react-icons/bs'
-import { USER_FULLNAME, STUDENT_NAME } from '@/apollo/queries/auth'
-import { deleteCookie, getCookie } from 'cookies-next'
+import { USER_FULLNAME } from '@/apollo/queries/auth'
+import { getCookie } from 'cookies-next'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -14,8 +13,10 @@ export default function Score() {
   const students = data?.students.data || []
   const [assignmentList, setAssignmentList] = useState<any[]>([])
   const [statsData, setStatsData] = useState<any[]>([])
-  const [currentScores, setCurrentScores] = useState(statsData.map((stat) => 0))
-  const [selectedStudentId, setSelectedStudentId] = useState(null)
+  const [currentScores, setCurrentScores] = useState<number[]>([])
+  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(
+    null,
+  )
   const [fullName, setFullName] = useState('')
   const [isStudent, setIsStudent] = useState(false)
   const [page, setPage] = useState(1)
@@ -69,7 +70,7 @@ export default function Score() {
       },
       onError: (error) => {
         console.log('Error:', error)
-        toast.error('An error occured while fetching students score')
+        toast.error('An error occurred while fetching students score')
       },
     })
 
@@ -79,19 +80,22 @@ export default function Score() {
     getAssignments({ variables: { studentId } })
   }
 
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
   useEffect(() => {
-    console.log('assignmentList', assignmentList)
+    if (loading) return
 
+    console.log('assignmentList', assignmentList)
     console.log(statsData)
     console.log(currentScores)
-  }, [assignmentList])
+  }, [loading, assignmentList, statsData, currentScores])
 
   useEffect(() => {
-    setCurrentScores(statsData.map((stat) => 0)) // Initialize currentScores based on statsData
+    if (statsData.length > 0) {
+      setCurrentScores(statsData.map((stat) => 0)) // Initialize currentScores based on statsData
+    }
+  }, [statsData])
+
+  useEffect(() => {
+    if (statsData.length === 0) return
 
     const incrementScores = () => {
       setCurrentScores((prevScores) =>
@@ -109,7 +113,7 @@ export default function Score() {
     }, 50)
 
     return () => clearInterval(interval)
-  }, [statsData]) // Add statsData as a dependency
+  }, [statsData])
 
   const totalScore = currentScores.reduce((sum, score) => sum + score, 0)
 
