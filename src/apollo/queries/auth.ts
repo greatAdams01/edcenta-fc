@@ -41,6 +41,14 @@ export const STUDENT_NAME = gql`
       name
       age
       username
+      email
+       grade {
+        _id
+        stage
+        year
+        ages
+        __typename
+      }
     }
   }
 `
