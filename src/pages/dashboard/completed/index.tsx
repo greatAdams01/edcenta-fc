@@ -170,10 +170,10 @@ export default function Completed() {
                         </td>
                         <td className="pr-6 text-left">
                           <button className="inline-flex w-full justify-center rounded-md bg-[#00AE9A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto">
-                            {assignment.worksheetId.subjectId.name.substring(
+                          {assignment.worksheetId?.subjectId?.name?.substring(
                               0,
                               3,
-                            )}
+                            ) || 'N/A'}
                           </button>
                         </td>
                         <td>
