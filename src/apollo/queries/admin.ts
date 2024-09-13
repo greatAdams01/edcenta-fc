@@ -135,6 +135,7 @@ export const WORKSHEET_BY_ID = gql`
         text
         img
       }
+      vidLink
       difficulty
       levelId
       subjectId
@@ -155,10 +156,14 @@ export const SCHOOL_GRADES = gql`
       filter: $filter
       searchParams: $searchParams
     ) {
-      _id
-      stage
-      ages
-      year
+        data {
+          _id
+          stage
+          ages
+          year
+          createdAt
+          updatedAt
+        }
     }
   }
 `

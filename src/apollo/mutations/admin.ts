@@ -169,6 +169,7 @@ export const CREATE_WORKSHEET = gql`
     $levelId: ID!
     $topicId: ID!
     $subjectId: String!
+    $vidLink: String!
     $difficulty: String!
   ) {
     createWorksheet(
@@ -179,6 +180,7 @@ export const CREATE_WORKSHEET = gql`
         topicId: $topicId
         subjectId: $subjectId
         difficulty: $difficulty
+        vidLink: $vidLink
       }
     ) {
       _id
