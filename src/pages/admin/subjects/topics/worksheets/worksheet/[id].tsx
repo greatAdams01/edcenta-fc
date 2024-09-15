@@ -40,6 +40,7 @@ const Topics: React.FC<WorksheetProps> = () => {
     title: '',
     body: [],
     difficulty: '',
+    vidLink: ''
   })
 
   const handleDelete = (id?: string) => {
@@ -68,7 +69,7 @@ const Topics: React.FC<WorksheetProps> = () => {
     console.log('worksheet', worksheet)
   }, [worksheet])
 
-  const [getQuestions, {}] = useLazyQuery(GET_QUESTIONS, {
+  const [getQuestions, { }] = useLazyQuery(GET_QUESTIONS, {
     variables: {
       worksheetId: id,
       page: 1,
@@ -178,7 +179,7 @@ const Topics: React.FC<WorksheetProps> = () => {
         <h1 className="w-full text-center text-3xl font-semibold uppercase leading-6 text-gray-900">
           {worksheet.title}
         </h1>
-        <div className="text-center">
+        <div className="text-center w-1/2 mx-auto">
           <div className=" justifiy-start flex items-center gap-2 text-base text-gray-700">
             <div>Difficulty:</div>
             {isDifficultyLevel(difficulty) && (
@@ -186,10 +187,12 @@ const Topics: React.FC<WorksheetProps> = () => {
             )}
           </div>
         </div>
+        {worksheet.vidLink && <div className='mx-auto w-1/2' dangerouslySetInnerHTML={{ __html: worksheet.vidLink }} />}
+
         {worksheet.body.map((item, index) => (
-          <div key={index} className="my-4 text-center">
+          <div key={index} className="my-6 text-center">
             <div
-              className="w-full text-lg"
+              className="w-full font-bold text-lg"
               dangerouslySetInnerHTML={{ __html: item.text }}
             />
             <div className="flex w-full justify-center">

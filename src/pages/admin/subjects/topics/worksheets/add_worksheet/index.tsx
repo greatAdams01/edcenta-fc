@@ -15,6 +15,7 @@ import AdminLayout from '@/layout/AdminLayout'
 import { CREATE_WORKSHEET } from '@/apollo/mutations/admin'
 import { FETCH_LEARNING } from '@/apollo/queries/dashboard'
 import ModalAuth from '@/components/ModalComp'
+import { SCHOOL_GRADES } from '@/apollo/queries/admin'
 
 export default function Create() {
   const path = useRouter()
@@ -22,6 +23,7 @@ export default function Create() {
 
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState('')
+  const [video, setVideo] = useState('')
   const [bodyItems, setBodyItems] = useState([{ text: '', img: '' }])
   const [topicSchoolGrade, setTopicSchoolGrade] = useState('')
   const [difficulty, setDifficulty] = useState('')
@@ -32,7 +34,7 @@ export default function Create() {
     topicId = localStorage.getItem('topicId')
   }
 
-  const { data } = useQuery(FETCH_LEARNING)
+  const { data } = useQuery(SCHOOL_GRADES)
 
   const [createWorksheet, { loading }] = useMutation(CREATE_WORKSHEET, {
     variables: {
@@ -42,6 +44,7 @@ export default function Create() {
       topicId: topicId,
       subjectId: subjectId,
       difficulty: difficulty,
+      vidLink: video
     },
     onCompleted: (data) => {
       console.log(data)
@@ -78,6 +81,10 @@ export default function Create() {
       ),
     )
   }
+
+  const createMarkup = (htmlString: string) => {
+    return { __html: htmlString };
+  };
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -176,7 +183,7 @@ export default function Create() {
                   >
                     <option value="">Select grade</option>
                     {data &&
-                      data.fetchLearning.map((stage: any) => (
+                      data.schoolGrades.data.map((stage: any) => (
                         <option key={stage._id} value={stage._id}>
                           {stage.year}
                         </option>
@@ -200,6 +207,18 @@ export default function Create() {
                     <option value="MEDIUM">MEDIUM</option>
                     <option value="HARD">HARD</option>
                   </select>
+                </div>
+                <div className="flex w-full flex-col items-start justify-between gap-y-1">
+                  <label htmlFor="video" className="w-full">
+                    Video URL
+                  </label>
+                  <textarea
+                    value={video}
+                    onChange={(e) => setVideo(e.target?.value)}
+                    className="my-2 h-12 w-[100%] max-w-[400px] h-20 rounded-md border-2 px-4 lg:w-[100rem]"
+                    id="video"
+                  ></textarea>
+                  <p className='text-xs'>N/B width and height should be less than 500</p>
                 </div>
               </div>
               {bodyItems.map((item, index) => (
@@ -274,6 +293,7 @@ export default function Create() {
                 Edit
               </a> */}
             </div>
+            {video && <div className='mx-auto' dangerouslySetInnerHTML={createMarkup(video)} />}
             {bodyItems.map((item, index) => (
               <div key={index}>
                 <div

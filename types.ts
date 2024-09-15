@@ -244,9 +244,11 @@ export interface IWorksheet extends DefaultAttributes {
   title: string
   body: IBody[]
   difficulty: string
+  vidLink: string | TrustedHTML
 }
 
 export interface IWorksheet2 extends DefaultAttributes {
+  vidLink: string | TrustedHTML
   title: string
   body: IBody[]
   difficulty: string
