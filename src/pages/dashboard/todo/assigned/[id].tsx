@@ -62,6 +62,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
     difficulty: '',
     levelId: '',
     subjectId: '',
+    vidLink: ''
   })
   const [startQuestions, setStartQuestions] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
