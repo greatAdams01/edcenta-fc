@@ -40,6 +40,7 @@ const QuestionPage = () => {
     title: '',
     body: [],
     difficulty: '',
+    vidLink: ""
   })
 
   const { data: studentsData } = useQuery(STUDENTS)

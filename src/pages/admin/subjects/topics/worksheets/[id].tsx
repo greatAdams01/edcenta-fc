@@ -36,6 +36,7 @@ const Topics: React.FC<WorksheetProps> = () => {
     title: '',
     body: [],
     difficulty: '',
+    vidLink: ''
   })
 
   const handleDelete = (id?: string) => {
