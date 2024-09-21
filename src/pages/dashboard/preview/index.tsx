@@ -25,7 +25,7 @@ interface Grade {
   }[];
 }
 
-export default function Assign() {
+export default function Preview() {
 
   return (
     <AppLayout>
@@ -40,7 +40,7 @@ export default function Assign() {
         </div>
         <div className='mt-4 -my-2 sm:-mx-6 lg:-mx-8'>
           <table className='min-w-full divide-y devide-gray-300 mt-4'>
-            <thead className='bg-[#0075BC]  text-white font-bold'>
+            <thead className=' font-bold'>
               <tr className='text-left'>
                 <th scope='col' className='py-8 pl-3'>Activity</th>
                 <th scope='col'>Subject</th>

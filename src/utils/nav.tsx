@@ -12,7 +12,7 @@ export const navigation = [
     href: '/dashboard',
     icon: CalendarIcon,
     children: [
-      { name: 'My Dashboard', href: '/dashboard' },
+      { name: 'Home', href: '/dashboard' },
       { name: 'Browse and Assign', href: '/dashboard/assign' },
       { name: 'Preview assigned', href: '/dashboard/preview' },
       { name: 'Review completed', href: '/dashboard/review' },
@@ -25,7 +25,6 @@ export const navigation = [
     children: [
       { name: 'Score', href: '/dashboard/score' },
       { name: 'Reward', href: '/dashboard/reward' },
-      { name: 'Badges', href: '#' },
     ],
   },
   {

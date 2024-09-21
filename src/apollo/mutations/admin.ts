@@ -258,25 +258,11 @@ export const DELETE_PLAN = gql`
   }
 `
 export const CREATE_PLAN = gql`
-  mutation CreatePlan($title: String! 
-  $pricePerCourse: Int!
-  $allowedCourseList: [String!]!
-  $priceOfFreeTrial: Float!
-  $subTitle: String! 
-  $planPrice: Float!
-  $type:PlanType!) {
-    createPlan(
-      title: $title 
-      pricePerCourse: $pricePerCourse
-      priceOfFreeTrial: $priceOfFreeTrial
-      allowedCourseList: $allowedCourseList
-      subTitle: $subTitle
-      planPrice: $planPrice
-      type: $type
-      ) {
-      _id
-    }
+mutation CreatePlan($title: String!, $pricePerCourse: Int!, $allowedCourseList: [String!]!, $subTitle: String!, $planPrice: Float!, $type: PlanType!, $pricePerStudent: Float!, $numberStudents: Float!) {
+  createPlan(title: $title, pricePerCourse: $pricePerCourse, allowedCourseList: $allowedCourseList, subTitle: $subTitle, planPrice: $planPrice, type: $type, pricePerStudent: $pricePerStudent, numberStudents: $numberStudents) {
+    _id
   }
+}
 `
 
 export const UPDATE_PLAN = gql`

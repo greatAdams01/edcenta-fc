@@ -16,8 +16,8 @@ const AddPlan = () => {
   const [title, setTitle] = useState("")
   const [type, setType] = useState("")
   const [priceCourse, setPriceCourse] = useState(0)
-  const [price, setPrice] = useState(0.0)
-  const [freePrice, setFreePrice] = useState(0.0)
+  const [numOfStudents, setNumOfStudents] = useState(0)
+  const [costPerStudent, setCostPerStudent] = useState(0.0)
   const [subTitle, setSubTitle] = useState("")
   const [subjects, setSubjects] = useState([])
   const [courses, setCourses] = useState<any | []>([])
@@ -28,11 +28,12 @@ const AddPlan = () => {
     variables: {
       title,
       pricePerCourse: priceCourse,
-      priceOfFreeTrial: freePrice,
       subTitle,
-      planPrice: freePrice,
+      planPrice: ( costPerStudent * numOfStudents) + (courses.length * priceCourse),
       type,
-      allowedCourseList: courses.map((course: any) => course.value)
+      allowedCourseList: courses.map((course: any) => course.value),
+      pricePerStudent: costPerStudent,
+      numberStudents: numOfStudents
     },
     onCompleted: (data) => {
       console.log(data)
@@ -52,9 +53,7 @@ const AddPlan = () => {
       if (id) {
         setTitle(data.getPlans[id].title)
         setType(data.getPlans[id].type)
-        setPrice(data.getPlans[id].planPrice)
         setCourses(data.getPlans[id].allowedCourseList)
-        setFreePrice(data.getPlans[id].priceOfFreeTrial)
         setPriceCourse(data.getPlans[id].pricePerCourse)
         setSubTitle(data.getPlans[id].subTitle)
       }
@@ -70,11 +69,12 @@ const AddPlan = () => {
       updatePlanId: page,
       title,
       pricePerCourse: priceCourse,
-      priceOfFreeTrial: freePrice,
       subTitle,
-      planPrice: freePrice,
+      planPrice: ( costPerStudent * numOfStudents) + (courses.length * priceCourse),
       type,
-      allowedCourseList: courses.map((course: any) => course.value)
+      allowedCourseList: courses.map((course: any) => course.value),
+      pricePerStudent: costPerStudent,
+      numberStudents: numOfStudents
     },
     onCompleted: (data) => {
       console.log(data)
@@ -187,26 +187,26 @@ const AddPlan = () => {
             />
           </div>
           <div className="flex w-full flex-col items-start justify-between gap-y-1">
-            <label htmlFor="free" className="w-full">
-              Price of Free Trial <span className="text-red-500">*</span>
+            <label htmlFor="perStudent" className="w-full">
+              Price Per Student <span className="text-red-500">*</span>
             </label>
             <input
-              id="free"
+              id="perStudent"
               type="number"
-              value={freePrice}
-              onChange={(e) => setFreePrice(parseFloat(e.target?.value))}
+              value={costPerStudent}
+              onChange={(e) => setCostPerStudent(parseFloat(e.target?.value))}
               className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
             />
           </div>
           <div className="flex w-full flex-col items-start justify-between gap-y-1">
-            <label htmlFor="price" className="w-full">
-              Price <span className="text-red-500">*</span>
+            <label htmlFor="numStudnet" className="w-full">
+              Number of Student <span className="text-red-500">*</span>
             </label>
             <input
-              id="price"
+              id="numStudnet"
               type="number"
-              value={price}
-              onChange={(e) => setPrice(parseFloat(e.target?.value))}
+              value={numOfStudents}
+              onChange={(e) => setNumOfStudents(parseFloat(e.target?.value))}
               className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
             />
           </div>
@@ -231,6 +231,9 @@ const AddPlan = () => {
               isSearchable={true}
               className='w-full' options={formattedOptions} />
           </div>
+        </div>
+        <div className='pt-5'>
+          <p className='font-bold'>Plan cost: NGN { ( costPerStudent * numOfStudents) + (courses.length * priceCourse) } </p>
         </div>
       </div>
     </AdminLayout>
