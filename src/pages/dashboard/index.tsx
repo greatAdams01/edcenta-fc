@@ -58,25 +58,7 @@ export default function Dashboard() {
     setAccountType(JSON.parse(authData).accountType);
   }, [authData])
 
-  const Stats = [
-    {
-      title: 'Account Setup',
-      status: '90%'
-    },
-    {
-      title: 'No. of Class',
-      status: Object.keys(groupedStudents).length
 
-    },
-    {
-      title: 'No. of Student',
-      status: students.length
-    },
-    {
-      title: 'Curriculum completed',
-      status: '0'
-    },
-  ]
 
 
   return (
@@ -84,21 +66,18 @@ export default function Dashboard() {
       <motion.div
         animate={{}}>
         <header>
-          {/* Heading */}
-          <div className="flex flex-col items-start justify-between px-4 py-4 sm:flex-row sm:items-center sm:px-6 lg:px-8">
-            <div>
-              <div className="flex items-center gap-x-3">
+ 
+        <div className="border-b border-gray-200 pb-5">
+      <div className="sm:flex sm:items-baseline sm:justify-between">
+        <div className="sm:w-0 sm:flex-1">
+          <h1 id="message-heading" className="text-base font-semibold leading-6 text-gray-900">
+            Account status
+          </h1>
+          {/* <p className="mt-1 truncate text-sm text-gray-500">Checkout and Payments Team</p> */}
+        </div>
 
-                <h1 className="flex gap-x-3 text-base leading-7">
-                  <span className="font-semibold">{accountType}</span>
-                  <span className="text-gray-600">/</span>
-                  <span className="font-semibold">Dashboard</span>
-                </h1>
-              </div>
-            </div>
-            <div className="flex order-first flex-none rounded-full bg-indigo-400/10 px-2 py-1 text-xs font-medium text-indigo-400 ring-1 ring-inset ring-indigo-400/30 sm:order-none">
-
-              {user.isActive == true ? (
+        <div className="mt-4 flex items-center justify-between sm:ml-6 sm:mt-0 sm:flex-shrink-0 sm:justify-start">
+        {user.isActive == true ? (
                 <>
                   <div className="flex-none rounded-full bg-green-400/10 p-1 text-green-400">
                     <div className="h-2 w-2 rounded-full bg-current" />
@@ -113,21 +92,10 @@ export default function Dashboard() {
                   <p>Inactive</p>
                 </>
               )}
-            </div>
-          </div>
+        </div>
+      </div>
+    </div>
 
-          {/* Stats */}
-          <div className="w-full grid md:flex font-bold gap-y-4 gap-x-10 my-4">
-
-            {Stats.map((stat: any, index: any) => (
-              <div key={index} className='w-full bg-[#0075BC] border border-[#8B53FF] rounded-md text-center py-6 text-white'>
-                <p className="font-medium leading-6">{stat.title}</p>
-                <p className="mt-2 flex justify-center gap-x-2  px-6">
-                  <span className="text-4xl font-semibold tracking-tight">{stat.status}</span>
-                </p>
-              </div>
-            ))}
-          </div>
         </header>
 
         {/* Activity list */}

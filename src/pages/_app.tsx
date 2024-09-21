@@ -35,7 +35,7 @@ const client = new ApolloClient({
   uri: SERVER_URL,
   cache: new InMemoryCache(),
   headers: {
-    ...(token !== undefined ? { Authorization: `Bearer ${token}` } : {})
+   Authorization: `Bearer ${token !== undefined ? token : ''}`,
   },
 });
 
