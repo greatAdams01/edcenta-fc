@@ -358,3 +358,30 @@ export const GET_PRICE = gql`
     getPricePerStudent
   }
 `
+export const FETCH_ASSIGNED = gql `
+  query FetchAssigned($status: AssignmentStatus) {
+  fetchAssigned(status: $status) {
+    data {
+      _id
+      worksheetId {
+        _id
+        title
+        body {
+          _id
+          text
+        }
+        levelId
+        topicId
+        difficulty
+        createdAt
+        updatedAt
+      }
+      status
+      score
+      createdAt
+      attemptedAt
+      updatedAt
+    }
+  }
+}
+`
