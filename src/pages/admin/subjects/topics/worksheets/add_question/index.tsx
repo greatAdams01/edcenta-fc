@@ -52,7 +52,6 @@ const AddQuestion = () => {
 
   const [createQuestion, { loading }] = useMutation(CREATE_QUESTION, {
     variables: {
-      title,
       isObjective,
       options,
       explanation,
@@ -78,7 +77,6 @@ const AddQuestion = () => {
     variables: {
       id: question,
       input: {
-        title: title,
         isObjective,
         options,
         explanation,
@@ -104,11 +102,11 @@ const AddQuestion = () => {
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
-    if (title === '') {
-      console.log('Title field cannot be empty')
-      toast.error('Title field cannot be empty')
-      return
-    }
+    // if (title === '') {
+    //   console.log('Title field cannot be empty')
+    //   toast.error('Title field cannot be empty')
+    //   return
+    // }
     if (explanation === '') {
       console.log('Explanation field cannot be empty')
       toast.error('Explanation field cannot be empty')
@@ -219,37 +217,7 @@ const AddQuestion = () => {
             />
           </div>
         </div>
-        <div className="flex justify-between">
-          <div className="flex w-full flex-col items-start gap-y-1">
-            <label htmlFor="title">
-              Title <span className="text-red-500">*</span>{' '}
-            </label>
-            <input
-              value={title}
-              id="title"
-              onChange={(e) => setTitle(e.target.value)}
-              type="text"
-              className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
-            />
-          </div>
-          <div className="flex w-full flex-col items-start  gap-y-1">
-            <label htmlFor="">
-              Objective? <span className="text-red-500">*</span>
-            </label>
-            <div>
-              {/* <span>{isObjective ? 'Active' : 'Inactive'}</span> */}
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={isObjective}
-                  onChange={(e) => setIsObjective(e.target.checked)}
-                />
-                <span className="slider round"></span>
-              </label>
-            </div>
-            {/* <input id='title' onChange={e => setIsObjective(e.target.checked)} type="checkbox" className="" /> */}
-          </div>
-        </div>
+
         <div>
           <label htmlFor="explanation">
             Explanation <span className="text-red-500">*</span>{' '}
@@ -260,6 +228,26 @@ const AddQuestion = () => {
             className="my-2 h-32 w-[100%]  rounded-md border-2 px-4"
             id="explanation"
           ></textarea>
+        </div>
+        <div className="flex w-full flex-col items-start  gap-y-1">
+          <label htmlFor="">
+            Objective? <span className="text-red-500">*</span>
+          </label>
+          <div>
+            {/* <span>{isObjective ? 'Active' : 'Inactive'}</span> */}
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={isObjective}
+                onChange={(e) => setIsObjective(e.target.checked)}
+              />
+              <span className="slider round"></span>
+            </label>
+          </div>
+          {/* <input id='title' onChange={e => setIsObjective(e.target.checked)} type="checkbox" className="" /> */}
+        </div>
+        <div className='mt-4'>
+          <p className='font-bold text-lg'>Add More</p>
         </div>
         <div className="flex justify-between">
           <div className="flex w-full flex-col items-start gap-y-1">
@@ -389,15 +377,15 @@ const AddQuestion = () => {
             <div className="my-2">
               {options.length > 1
                 ? options.map((single, index) => (
-                    <div
-                      className="mx-auto flex w-1/2 justify-between"
-                      key={index}
-                    >
-                      {' '}
-                      <p>{single.option} </p>
-                      <p>{single.isCorrect ? 'Correct Option' : ''}</p>
-                    </div>
-                  ))
+                  <div
+                    className="mx-auto flex w-1/2 justify-between"
+                    key={index}
+                  >
+                    {' '}
+                    <p>{single.option} </p>
+                    <p>{single.isCorrect ? 'Correct Option' : ''}</p>
+                  </div>
+                ))
                 : null}
             </div>
           </div>
