@@ -176,36 +176,38 @@ const Topics: React.FC<WorksheetProps> = () => {
             </Link>
           </div>
         </div>
-        <h1 className="w-full text-center text-3xl font-semibold uppercase leading-6 text-gray-900">
+        <h1 className="text-center text-4xl font-bold text-gray-800">
           {worksheet.title}
         </h1>
-        <div className="text-center w-1/2 mx-auto">
+        {/* <div className="text-center w-1/2 mx-auto">
           <div className=" justifiy-start flex items-center gap-2 text-base text-gray-700">
             <div>Difficulty:</div>
             {isDifficultyLevel(difficulty) && (
               <DifficultyIndicator difficulty={difficulty} />
             )}
           </div>
-        </div>
+        </div> */}
         {worksheet.vidLink && <div className='mx-auto w-1/2' dangerouslySetInnerHTML={{ __html: worksheet.vidLink }} />}
 
-        {worksheet.body.map((item, index) => (
-          <div key={index} className="my-6 text-center">
-            <div
-              className="w-full font-bold text-lg"
-              dangerouslySetInnerHTML={{ __html: item.text }}
-            />
-            <div className="flex w-full justify-center">
-              {item.img && (
-                <img
-                  src={item.img}
-                  alt="image"
-                  className="h-full max-h-[400px] w-auto"
-                />
-              )}
+        <div className='flex justify-between flex-wrap'>
+          {worksheet.body.map((item, index) => (
+            <div key={index} className="my-6 lg:w-[32%] bg-gray-100 p-3 rounded-md text-center">
+              <div className="flex w-full justify-center">
+                {item.img && (
+                  <img
+                    src={item.img}
+                    alt="image"
+                    className="h-full max-h-[400px]"
+                  />
+                )}
+              </div>
+              <div
+                className="w-full font-bold text-lg"
+                dangerouslySetInnerHTML={{ __html: item.text }}
+              />
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
       {questions.length >= 1 && (
         <div>
