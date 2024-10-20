@@ -67,12 +67,12 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
         <ul className="">
           {stages.map((stage: any) => (
             <li key={stage._id} className="w-full pt-2">
-              <a
+              <Link
                 href={stage.stage}
                 className="group flex gap-x-3 rounded-md bg-[#00AE9A] bg-opacity-20 p-2 text-lg font-semibold leading-6"
               >
                 {stage.year}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -81,7 +81,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
   } else {
     renderedNavigation = navList.map((item: any) => (
       <li key={item.name}>
-        <a
+        <Link
           href={item.href}
           className={classNames(
             item.href === pathname
@@ -100,12 +100,12 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
             aria-hidden="true"
           />
           {item.name}
-        </a>
+        </Link>
         {item.children && (
           <ul className="my-2 pl-4">
             {item.children.map((subItem: any) => (
               <li key={subItem.name}>
-                <a
+                <Link
                   href={subItem.href}
                   className={classNames(
                     subItem.href === pathname
@@ -115,7 +115,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                   )}
                 >
                   {subItem.name}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -206,7 +206,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                         </li>
                         <li></li>
                         <li className="mt-auto">
-                          <a
+                          <Link
                             href="#"
                             className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                           >
@@ -215,7 +215,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                               aria-hidden="true"
                             />
                             Settings
-                          </a>
+                          </Link>
                         </li>
                       </ul>
                     </nav>
@@ -251,7 +251,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                 </li>
                 <li></li>
                 <li className="mt-auto">
-                  <a
+                  <Link
                     href="#"
                     className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                   >
@@ -260,7 +260,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                       aria-hidden="true"
                     />
                     Settings
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>

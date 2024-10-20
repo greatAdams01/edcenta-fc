@@ -34,7 +34,7 @@ export const navigation = [
     current: false,
     children: [
       { name: 'My Details', href: '/dashboard/details' },
-      { name: 'My Subscriptions', href: '/dashboard/subscription' },
+      { name: 'My Subscription', href: '/dashboard/subscription' },
       { name: 'Manage students', href: '/dashboard/students' },
       { name: 'Manage groups', href: '/dashboard/group' },
       { name: 'Notifications', href: '/dashboard/notification' },
