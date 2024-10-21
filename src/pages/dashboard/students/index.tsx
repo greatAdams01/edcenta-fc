@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import {
   PlusIcon,
   ArrowRightEndOnRectangleIcon,
@@ -7,12 +7,29 @@ import {
 import AppLayout from '@/layout/AppLayout'
 import { useQuery } from '@apollo/client'
 import { STUDENTS } from '@/apollo/queries/dashboard'
+import Link from 'next/link'
 
 export default function Manage() {
   const { data } = useQuery(STUDENTS)
   const students = data?.students.data || []
+  const [allStudents, setAllStudents] = useState(data?.students.data || [])
 
-  const groupedStudents = students.reduce((groups: any, student: any) => {
+  const filterStudents = (status: string) => {
+    if (status === "active") {
+      const data = students.filter((single: { isActive: any }) => single.isActive)
+      setAllStudents(data)
+    } else if (status === "inactive") {
+      const data = students.filter((single: { isActive: any }) => !single.isActive)
+      setAllStudents(data)
+    } else {
+      setAllStudents(students)
+    }
+  }
+  useEffect(() => {
+    filterStudents("")
+  }, [students])
+
+  const groupedStudents = allStudents.reduce((groups: any, student: any) => {
     const groupKey = student.grade.year
     if (!groups[groupKey]) {
       groups[groupKey] = []
@@ -38,18 +55,24 @@ export default function Manage() {
           <h1 className="text-lg font-bold">Manage Student</h1>
           <section className="my-4 flex w-full justify-between">
             <p>
-              you have {students.length} active{' '}
-              {students.length === 1 ? 'student' : 'students'}
+              you have {students.length} students
             </p>
-            <a
+            <Link
               href={'/dashboard/students/add_student'}
               className="flex items-center justify-center rounded-md border bg-[#00AE9A] bg-opacity-70 px-4 py-4 text-center font-bold hover:bg-opacity-100"
             >
               <PlusIcon className="mr-2 w-4" /> Add student
-            </a>
+            </Link>
           </section>
           <section>
-            <h1 className="text-lg font-bold">Manage students</h1>
+            <div className='flex justify-between'>
+              <h1 className="text-lg font-bold">Manage students</h1>
+              <select onChange={(e) => filterStudents(e.target.value)} className='border border-gray-100 px-6 py-2'>
+                <option value="">Show All</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
             <div>
               {Object.keys(groupedStudents).map((grade, index) => (
                 <Fragment key={grade}>

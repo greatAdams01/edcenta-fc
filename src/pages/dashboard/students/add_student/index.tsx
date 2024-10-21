@@ -52,7 +52,8 @@ export default function Create() {
     },
     onError: (error) => {
       toast.error(
-        'Error creating student: this email might already been used by another student',
+        error.message
+        // 'Error creating student: this email might already been used by another student',
       )
       console.log(error)
     },

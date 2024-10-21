@@ -187,6 +187,7 @@ export const STUDENTS = gql`
         name
         username
         age
+        isActive
         email
         creatorId
         grade {

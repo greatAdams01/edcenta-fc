@@ -102,7 +102,7 @@ function Index() {
                   </div>
                   <div className="my-2 font-bold">
                     <p>
-                      Total per Month: $
+                      Total per Month: ₦
                       {(
                         (subscriptionData.getSubscription.plan.planPrice / 12) *
                         100
@@ -154,7 +154,7 @@ function Index() {
                           {subscriptionData.getSubscription.plan.title}
                         </td>
                         <td className="text-end">
-                          $
+                          ₦
                           {(
                             subscriptionData.getSubscription.plan.planPrice /
                             100
@@ -174,13 +174,13 @@ function Index() {
                       <tr className="w-full">
                         <td className="p-2">Vat(20%)</td>
                         <td className="text-end">
-                          ${(vatAmount / 100).toFixed(2)}
+                          ₦{(vatAmount / 100).toFixed(2)}
                         </td>
                       </tr>
                       <tr className="w-full">
                         <td className="p-2">Monthly Total</td>
                         <td className="font-bolder text-end underline">
-                          #{monthlyTotal.toFixed(2)}
+                          ₦{monthlyTotal.toFixed(2)}
                         </td>
                       </tr>
                     </tbody>
@@ -222,12 +222,12 @@ function Index() {
                             </p>
                           </div>
                           <div className="pb-2 pt-4">
-                            <p>Price per Course: ${plan.pricePerCourse}</p>
-                            <p>Plan Price: ${plan.planPrice}</p>
+                            <p>Price per Course: ₦{plan.pricePerCourse}</p>
+                            <p>Plan Price: ₦{plan.planPrice}</p>
                             <p>
                               Free Trial:{' '}
                               {plan.priceOfFreeTrial
-                                ? `$${plan.priceOfFreeTrial}`
+                                ? `₦${plan.priceOfFreeTrial}`
                                 : 'No'}
                             </p>
                             <p>Type: {plan.type}</p>
