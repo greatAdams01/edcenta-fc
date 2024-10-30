@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-export const SchoolGrades = gql`
+export const FETCH_SCHOOL_GRADES = gql`
   query SchoolGrades(
     $page: Int
     $limit: Int
@@ -13,14 +13,14 @@ export const SchoolGrades = gql`
       filter: $filter
       searchParams: $searchParams
     ) {
-      data {
-        _id
-        ages
-        year
-        stage
-        createdAt
-        updatedAt
-      }
+     data {
+      _id
+      stage
+      ages
+      year
+      createdAt
+      updatedAt
+    }
       totalPage
       totalRecord
     }
