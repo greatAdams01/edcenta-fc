@@ -117,7 +117,7 @@ const CustomPlan = () => {
           </div>
         </div>
         <div className="mt-5">
-          <p className="text-lg">Estimated Fee: ${totalCost}</p>
+          <p className="text-lg">Estimated Fee: ₦{totalCost}</p>
         </div>
         <button
           type="button"

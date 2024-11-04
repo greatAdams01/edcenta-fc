@@ -17,6 +17,17 @@ import { FETCH_LEARNING } from '@/apollo/queries/dashboard'
 import ModalAuth from '@/components/ModalComp'
 import { SCHOOL_GRADES } from '@/apollo/queries/admin'
 
+// Register align module
+
+const toolbarOptions = [
+  [{ 'align': [] }], // Alignment options
+  ['bold', 'italic', 'underline', 'strike'], // Text styles
+  [{ 'list': 'ordered' }, { 'list': 'bullet' }], // Lists
+  [{ 'header': [1, 2, 3, false] }], // Headers
+  ['link', 'image'], // Add link and image options
+  [{ 'color': [] }, { 'background': [] }], // Text color and background
+  ['clean'] // Remove formatting
+];
 export default function Create() {
   const path = useRouter()
   const uploadRef = useRef<HTMLInputElement>(null)
@@ -210,7 +221,7 @@ export default function Create() {
                 </div>
                 <div className="flex w-full flex-col items-start justify-between gap-y-1">
                   <label htmlFor="video" className="w-full">
-                    Video URL
+                    Embed Code
                   </label>
                   <textarea
                     value={video}
@@ -237,10 +248,15 @@ export default function Create() {
                       <ReactQuill
                         id={`description-${index}`}
                         value={item.text}
+                        modules={{ toolbar: toolbarOptions }} // Attach the custom toolbar
+                        formats={[
+                          'header', 'bold', 'italic', 'underline', 'strike',
+                          'list', 'bullet', 'link', 'image', 'align', 'color', 'background'
+                        ]}
                         onChange={(content, delta, source, editor) =>
                           handleBodyItemChange(index, 'text', editor.getHTML())
                         }
-                        className="w-full max-w-[400px] lg:w-[100rem]"
+                        className="w-full max-w-[400px]  lg:w-[100rem]"
                       />
                     </div>
                     <button onClick={() => handleRemoveBodyItem(index)}>

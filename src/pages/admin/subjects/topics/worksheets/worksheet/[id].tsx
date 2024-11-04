@@ -187,7 +187,6 @@ const Topics: React.FC<WorksheetProps> = () => {
             )}
           </div>
         </div> */}
-        {worksheet.vidLink && <div className='mx-auto w-1/2' dangerouslySetInnerHTML={{ __html: worksheet.vidLink }} />}
 
         <div className='flex justify-between flex-wrap'>
           {worksheet.body.map((item, index) => (
@@ -302,6 +301,8 @@ const Topics: React.FC<WorksheetProps> = () => {
           </div>
         </div>
       )}
+      {worksheet.vidLink && <div className='mx-auto w-1/2' dangerouslySetInnerHTML={{ __html: worksheet.vidLink }} />}
+
       <ModalAuth
         isOpen={open}
         XIcon={true}

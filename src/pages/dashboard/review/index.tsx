@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import Link from 'next/link';
 import AppLayout from '../../../layout/AppLayout';
-import { FETCH_ASSIGNED, SchoolGrades, TOPIC_QUERY } from '@/apollo/queries/dashboard';
+import { FETCH_ASSIGNED, TOPIC_QUERY } from '@/apollo/queries/dashboard';
 import { convertTimestampToDate } from '@/utils/convertDate';
 
 interface Grade {
