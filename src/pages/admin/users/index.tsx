@@ -11,6 +11,7 @@ import { AccountType, IUser } from '../../../../types'
 import { DELETE_USER } from '@/apollo/mutations/admin'
 import { showToast } from '@/utils/toast'
 import EditUser from '@/components/dashbord/EditUser'
+import Link from 'next/link'
 
 function Users() {
   const [page, setPage] = useState(1)
@@ -62,6 +63,7 @@ function Users() {
     variables: { page, limit: 10, filter: userType },
     onCompleted: (data) => {
       setUsers(data.users.data)
+      // console.log(data.users.data)
     },
   })
 
@@ -115,6 +117,15 @@ function Users() {
               Add user
             </button>
           </div>
+        </div>
+        <div className='flex justify-end mt-6'>
+          <select className='border py-3 px-2' onChange={(e) => setType(e.target.value)}>
+            <option value="">All</option>
+            <option value="OWNER">OWNER	</option>
+            <option value="PARENT">PARENT</option>
+            <option value="PARENT">PARENT</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
         </div>
         <div className="mt-8 flow-root">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -193,6 +204,14 @@ function Users() {
                             <span className="sr-only">, {person.name}</span>
                           </a>
                         </td>
+                        {person.accountType === 'TUTOR' && <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
+
+                          <Link href={`users/tutor?page=${person._id}`}>
+                            View
+                          </Link>
+                          {/* <span className="sr-only">, {person.name}</span> */}
+                        </td>}
+
                       </tr>
                     ))}
                   </tbody>

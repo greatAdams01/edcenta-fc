@@ -355,3 +355,24 @@ export const GET_TRANSACTIONS = gql`
     }
   }
 `
+
+export const GET_TUTOR_STUDENTS = gql`
+query($filter: String, $page: Int, $limit: Int){
+  students(filter: $filter, page: $page, limit: $limit) {
+    data {
+      _id
+      name
+      username
+      age
+      password
+      reward     
+      email
+      isActive
+      creatorId
+      lastLoggedIn
+      createdAt
+      updatedAt
+    }
+  }
+}
+`
