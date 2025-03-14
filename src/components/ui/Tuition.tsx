@@ -70,7 +70,7 @@ export function Tuition() {
 
   return (
     <motion.section
-      className="py-20 sm:pt-32 bg-[#000000] text-white overflow-hidden"
+      className="py-20 sm:pt-32 bg-[#800080] text-white overflow-hidden"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}

@@ -1,38 +1,129 @@
-import React from 'react'
-
-import { PlusIcon } from '@heroicons/react/24/outline';
-import AppLayout from '@/layout/AppLayout'
-import { useQuery } from '@apollo/client';
-import { STUDENTS } from '@/apollo/queries/dashboard';
+"use client"
+import { PlusIcon, GiftIcon, CalendarIcon } from "@heroicons/react/24/outline"
+import AppLayout from "@/layout/AppLayout"
+import { useQuery } from "@apollo/client"
+import { STUDENTS } from "@/apollo/queries/dashboard"
+import { motion } from "framer-motion"
 
 export default function Reward() {
-  const { data } = useQuery(STUDENTS);
-  const students = data?.students.data || [];
+  const { data } = useQuery(STUDENTS)
+  const students = data?.students.data || []
 
   return (
     <AppLayout>
-        <div className='grid justify-items-stretch'>
-        <div className='w-full px-4 sm:px-6 lg:px-8 border-2 p-8 rounded-md justify-self-center'>
-          <h1 className="font-bold text-lg">Rewards</h1>
-          <section className='flex w-full justify-between my-4'>
-            <select className='border border-black rounded-md w-60 px-2'>
-                {students.map((student: any) => (
-                  <option key={student} value={student.name} className='font-bold'>{student.name}</option>
-                ))}
-                
-            </select>
-            <a href={'#'} className='bg-[#00AE9A] bg-opacity-70 hover:bg-opacity-100 border rounded-md py-4 px-4 flex items-center justify-center text-center font-bold'>
-              <PlusIcon className='w-4 mr-2' /> Create Reward
-            </a>
-            
-          </section>
+      <div className="grid justify-items-stretch transition-colors duration-200">
+        <div className="w-full justify-self-center rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm transition-colors duration-200">
+          <div className="mb-6 flex w-full items-center justify-between gap-x-3 bg-purple-100 p-4 dark:bg-purple-900/20 rounded-t-lg transition-colors duration-200">
+            <div className="flex w-full items-center justify-start gap-x-3">
+              <GiftIcon className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+              <h1 className="text-xl font-semibold text-gray-900 dark:text-white transition-colors duration-200">
+                Rewards
+              </h1>
+            </div>
+          </div>
 
-          <section className='font-bold flex bg-'>
-              <p>Total Reward: {}</p>
-              <p>Upcoming Reward: {}</p>
-          </section>
+          <div className="px-6 pb-6">
+            <section className="flex w-full flex-col sm:flex-row justify-between items-start sm:items-center gap-4 my-4">
+              <select
+                className="w-full sm:w-60 rounded-md border border-gray-300 bg-white px-2 py-4 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-white transition-colors duration-200"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select a student
+                </option>
+                {students.map((student: any) => (
+                  <option key={student._id} value={student.name} className="font-medium">
+                    {student.name}
+                  </option>
+                ))}
+              </select>
+
+              <motion.a
+                href={"#"}
+                className="w-full sm:w-auto inline-flex items-center justify-center rounded-md bg-purple-600 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:bg-purple-700 dark:hover:bg-purple-800 transition-colors duration-200"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <PlusIcon className="h-5 w-5 mr-2" />
+                Create Reward
+              </motion.a>
+            </section>
+
+            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-gray-700 p-6 transition-colors duration-200">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0 rounded-md bg-purple-200 dark:bg-purple-800 p-3">
+                    <GiftIcon className="h-6 w-6 text-purple-700 dark:text-purple-300" />
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Rewards</dt>
+                      <dd>
+                        <div className="text-lg font-bold text-gray-900 dark:text-white">12</div>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-gray-700 p-6 transition-colors duration-200">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0 rounded-md bg-purple-200 dark:bg-purple-800 p-3">
+                    <CalendarIcon className="h-6 w-6 text-purple-700 dark:text-purple-300" />
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                        Upcoming Rewards
+                      </dt>
+                      <dd>
+                        <div className="text-lg font-bold text-gray-900 dark:text-white">3</div>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm transition-colors duration-200">
+              <div className="px-4 py-5 sm:p-6">
+                <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white">Recent Rewards</h3>
+                <div className="mt-5 border-t border-gray-200 dark:border-gray-700">
+                  <div className="flow-root">
+                    <ul className="-my-5 divide-y divide-gray-200 dark:divide-gray-700">
+                      {[1, 2, 3].map((item) => (
+                        <li key={item} className="py-5">
+                          <div className="flex items-center space-x-4">
+                            <div className="flex-shrink-0">
+                              <div className="h-10 w-10 rounded-full bg-purple-200 dark:bg-purple-800 flex items-center justify-center">
+                                <GiftIcon className="h-6 w-6 text-purple-700 dark:text-purple-300" />
+                              </div>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+                                Achievement Badge
+                              </p>
+                              <p className="truncate text-sm text-gray-500 dark:text-gray-400">
+                                Awarded on {new Date().toLocaleDateString()}
+                              </p>
+                            </div>
+                            <div>
+                              <span className="inline-flex items-center rounded-full bg-green-100 dark:bg-green-800 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:text-green-200">
+                                Claimed
+                              </span>
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        </div>
+      </div>
     </AppLayout>
   )
 }
+

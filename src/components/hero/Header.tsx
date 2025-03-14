@@ -76,7 +76,7 @@ export default function Header() {
     <header
       className={classNames(
         "sticky top-0 z-50 transition-all duration-300",
-        scrolled ? "bg-black/95 backdrop-blur-md shadow-md" : "bg-black",
+        scrolled ? "bg-white/95 backdrop-blur-md shadow-md" : "bg-white",
       )}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8" aria-label="Global">
@@ -93,7 +93,7 @@ export default function Header() {
         <div className="flex lg:hidden">
           <button
             type="button"
-            className="-m-2.5 inline-flex items-center justify-center rounded-full p-2.5 text-white hover:bg-purple-800/50 transition-colors"
+            className="-m-2.5 inline-flex items-center justify-center rounded-full p-2.5 text-gray-700 hover:bg-purple-100 transition-colors"
             onClick={() => setMobileMenuOpen(true)}
           >
             <span className="sr-only">Open main menu</span>
@@ -109,14 +109,14 @@ export default function Header() {
                 <Popover.Button
                   className={classNames(
                     "flex items-center gap-x-1 text-md font-semibold leading-6 transition-all duration-200",
-                    open ? "text-white" : "text-white hover:text-purple-400",
+                    open ? "text-purple-600" : "text-gray-700 hover:text-purple-600",
                   )}
                 >
                   Learn
                   <ChevronDownIcon
                     className={classNames(
                       "h-5 w-5 flex-none transition-transform duration-200",
-                      open ? "rotate-180 text-white" : "text-white",
+                      open ? "rotate-180 text-purple-600" : "text-gray-700",
                     )}
                     aria-hidden="true"
                   />
@@ -205,7 +205,7 @@ export default function Header() {
       {/* Mobile menu */}
       <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
         <div className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm" aria-hidden="true" />
-        <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-black px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+        <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <Link href="/" className="-m-1.5 p-1.5" onClick={() => setMobileMenuOpen(false)}>
               <span className="sr-only">Your Company</span>
@@ -213,7 +213,7 @@ export default function Header() {
             </Link>
             <button
               type="button"
-              className="-m-2.5 rounded-full p-2.5 text-white hover:bg-purple-800/50 transition-colors"
+              className="-m-2.5 rounded-full p-2.5 text-gray-700 hover:bg-purple-100 transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               <span className="sr-only">Close menu</span>
@@ -226,11 +226,11 @@ export default function Header() {
                 <Disclosure as="div" className="-mx-3">
                   {({ open }) => (
                     <>
-                      <Disclosure.Button className="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-white hover:bg-purple-800/50 transition-colors">
+                      <Disclosure.Button className="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-purple-50 transition-colors">
                         Learn
                         <ChevronDownIcon
                           className={classNames(
-                            open ? "rotate-180 text-purple-400" : "",
+                            open ? "rotate-180 text-purple-600" : "",
                             "h-5 w-5 flex-none transition-transform duration-200",
                           )}
                           aria-hidden="true"
@@ -242,7 +242,7 @@ export default function Header() {
                             key={item.name}
                             as="a"
                             href={item.href}
-                            className="block rounded-lg py-2 pl-6 pr-3 text-md font-semibold leading-7 text-white hover:bg-purple-800/50 hover:text-purple-400 transition-colors"
+                            className="block rounded-lg py-2 pl-6 pr-3 text-md font-semibold leading-7 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors"
                           >
                             {item.name}
                           </Disclosure.Button>
@@ -278,12 +278,12 @@ export default function Header() {
   )
 }
 
-// Reusable NavLink component with hover effect - Updated to white text
+// Reusable NavLink component with hover effect - Updated to dark text
 function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <Link
       href={href}
-      className="group relative text-md font-semibold leading-6 text-white transition-colors hover:text-purple-400"
+      className="group relative text-md font-semibold leading-6 text-gray-700 transition-colors hover:text-purple-600"
     >
       {children}
       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-purple-400 transform scale-x-0 origin-left transition-transform group-hover:scale-x-100" />
@@ -291,13 +291,13 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   )
 }
 
-// Mobile NavLink component - Updated to white text
+// Mobile NavLink component - Updated to dark text
 function MobileNavLink({ href, onClick, children }: { href: string; onClick?: () => void; children: React.ReactNode }) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-purple-800/50 hover:text-purple-400 transition-colors"
+      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-purple-50 hover:text-purple-600 transition-colors"
     >
       {children}
     </Link>

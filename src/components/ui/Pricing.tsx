@@ -49,7 +49,7 @@ export function Pricing() {
   }, [])
 
   return (
-    <section id="speakers" aria-labelledby="speakers-title" className="py-20 sm:py-32 bg-gray-900">
+    <section id="speakers" aria-labelledby="speakers-title" className="py-20 sm:py-32 bg-[#800080]">
       <ImageClipPaths id={id} />
       <Container>
         <div className="mx-auto max-w-2xl lg:mx-0">
@@ -66,7 +66,7 @@ export function Pricing() {
             {Price.map((price: any, index: any) => (
               <motion.div
                 key={index}
-                className="transition-all ease-in-out delay-500 duration-1000 border border-purple-500 hover:border-2 hover:shadow-lg hover:shadow-purple-500 rounded-md p-4 leading-loose bg-gray-800"
+                className="transition-all ease-in-out delay-500 duration-1000 border border-purple-500 hover:border-2 hover:shadow-lg hover:shadow-purple-500 rounded-md p-4 leading-loose bg-blue-900"
                 initial={{ y: 100, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
@@ -109,6 +109,12 @@ export function Pricing() {
           </section>
         </AnimatePresence>
       </Container>
+
+      {/* Background decoration */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 bg-blue-500/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/3 right-1/4 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-3xl" />
+      </div>
     </section>
   )
 }

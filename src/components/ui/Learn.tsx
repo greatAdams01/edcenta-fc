@@ -103,7 +103,7 @@ export function Learn() {
     <motion.section
       id="speakers"
       aria-labelledby="speakers-title"
-      className="py-20 sm:py-32 bg-gray-900"
+      className="py-20 sm:py-32 bg-white"
       initial={{ opacity: 0, y: 100 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -113,11 +113,11 @@ export function Learn() {
         <div className="mx-auto max-w-2xl lg:mx-0">
           <h2
             id="speakers-title"
-            className="font-display text-4xl font-medium tracking-tighter text-orange-500 sm:text-5xl"
+            className="font-display text-4xl font-medium tracking-tighter text-orange-600 sm:text-5xl"
           >
             Learn
           </h2>
-          <p className="mt-4 font-display text-2xl tracking-tight text-orange-400">
+          <p className="mt-4 font-display text-2xl tracking-tight text-orange-500">
             Learn from the experts from cutting-edge Institutions across the globe.
           </p>
         </div>
@@ -129,7 +129,7 @@ export function Learn() {
           onChange={setSelectedIndex}
         >
           <div className="relative -mx-4 flex overflow-x-auto pb-4 sm:mx-0 sm:block sm:overflow-visible sm:pb-0">
-            <div className="absolute bottom-0 left-0.5 top-2 hidden w-px bg-gray-700 lg:block" />
+            <div className="absolute bottom-0 left-0.5 top-2 hidden w-px bg-gray-200 lg:block" />
             <Tab.List className="grid auto-cols-auto grid-flow-col justify-start gap-x-8 gap-y-10 whitespace-nowrap px-4 sm:mx-auto sm:max-w-2xl sm:grid-cols-3 sm:px-0 sm:text-center lg:grid-flow-row lg:grid-cols-1 lg:text-left">
               {days.map((day, dayIndex) => (
                 <div key={day.dateTime} className="relative lg:pl-8">
@@ -138,14 +138,14 @@ export function Learn() {
                       "absolute left-[-0.5px] top-[0.5625rem] hidden h-1.5 w-1.5 overflow-visible lg:block",
                       dayIndex === selectedIndex
                         ? "fill-orange-500 stroke-orange-500"
-                        : "fill-transparent stroke-gray-500",
+                        : "fill-transparent stroke-gray-400",
                     )}
                   />
                   <div className="relative">
                     <div
                       className={clsx(
                         "font-mono text-sm",
-                        dayIndex === selectedIndex ? "text-orange-500" : "text-orange-400/70",
+                        dayIndex === selectedIndex ? "text-orange-600" : "text-orange-500/70",
                       )}
                     >
                       <Tab className="ui-not-focus-visible:outline-none">
@@ -157,7 +157,7 @@ export function Learn() {
                       dateTime={day.dateTime}
                       className={clsx(
                         "mt-1.5 block text-md lg:text-2xl font-semibold tracking-tight transition-colors duration-300",
-                        dayIndex === selectedIndex ? "text-white" : "text-white/70",
+                        dayIndex === selectedIndex ? "text-gray-900" : "text-gray-600",
                       )}
                     >
                       {day.date}
@@ -205,13 +205,13 @@ export function Learn() {
                         >
                           <div className="group relative h-[17.5rem] transform overflow-hidden rounded-2xl">
                             {/* Card with glass effect and gradient border */}
-                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500/30 via-transparent to-orange-800/20 p-[1px] shadow-xl transition-all duration-300 group-hover:shadow-orange-500/20">
-                              <div className="absolute inset-0 rounded-2xl backdrop-blur-sm bg-gray-800/80" />
+                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500/20 via-transparent to-orange-600/10 p-[1px] shadow-md transition-all duration-300 group-hover:shadow-orange-500/10">
+                              <div className="absolute inset-0 rounded-2xl bg-white" />
                             </div>
 
                             {/* Image container with hover effects */}
                             <div className="absolute inset-[1px] overflow-hidden rounded-2xl">
-                              <div className="absolute inset-0 bg-gradient-to-br from-orange-900/40 to-gray-900/60 opacity-70 transition-opacity duration-300 group-hover:opacity-50" />
+                              <div className="absolute inset-0 bg-gradient-to-br from-orange-100/40 to-gray-100/60 opacity-70 transition-opacity duration-300 group-hover:opacity-50" />
                               <Image
                                 className="absolute inset-0 h-full w-full object-cover transition-all duration-500 group-hover:scale-110"
                                 src={speaker.image || "/placeholder.svg"}
@@ -223,7 +223,7 @@ export function Learn() {
                               />
 
                               {/* Overlay with info that appears on hover */}
-                              <div className="absolute inset-0 flex flex-col justify-end p-6 bg-gradient-to-t from-black/90 via-black/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                              <div className="absolute inset-0 flex flex-col justify-end p-6 bg-gradient-to-t from-gray-900/90 via-gray-900/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                                 <h3 className="font-display text-xl font-bold tracking-tight text-white">
                                   {speaker.name}
                                 </h3>
@@ -232,16 +232,16 @@ export function Learn() {
                             </div>
 
                             {/* Decorative elements */}
-                            <div className="absolute top-4 right-4 h-10 w-10 rounded-full bg-orange-500/20 backdrop-blur-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                            <div className="absolute bottom-4 left-4 h-6 w-6 rounded-full bg-orange-500/30 backdrop-blur-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                            <div className="absolute top-4 right-4 h-10 w-10 rounded-full bg-orange-500/10 backdrop-blur-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                            <div className="absolute bottom-4 left-4 h-6 w-6 rounded-full bg-orange-500/20 backdrop-blur-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                           </div>
 
                           {/* Card info below the image */}
                           <div className="mt-6 px-2">
-                            <h3 className="font-display text-xl font-bold tracking-tight text-white group-hover:text-orange-400 transition-colors duration-300">
+                            <h3 className="font-display text-xl font-bold tracking-tight text-gray-900 group-hover:text-orange-600 transition-colors duration-300">
                               {speaker.name}
                             </h3>
-                            <p className="mt-2 text-base tracking-tight text-white/80">{speaker.info}</p>
+                            <p className="mt-2 text-base tracking-tight text-gray-600">{speaker.info}</p>
                           </div>
                         </motion.div>
                       ))}

@@ -25,7 +25,7 @@ export function Sponsors() {
     <motion.section
       id="sponsors"
       aria-label="Sponsors"
-      className="py-20 sm:py-32 bg-gray-900"
+      className="py-20 sm:py-32 bg-[#800080]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -33,7 +33,7 @@ export function Sponsors() {
     >
       <Container>
         <motion.h2
-          className="mx-auto max-w-2xl text-center font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl"
+          className="mx-auto max-w-2xl text-center font-display text-4xl font-medium tracking-tighter text-gray-900 sm:text-5xl"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -61,10 +61,10 @@ export function Sponsors() {
                   transition: { duration: 0.2 },
                 }}
               >
-                <div className="relative p-4 bg-white/10 rounded-xl backdrop-blur-sm">
+                <div className="relative p-4 bg-gray-50 rounded-xl shadow-sm border border-gray-100">
                   <motion.div
-                    initial={{ filter: "brightness(0.8) invert(1)", opacity: 0.7 }}
-                    whileInView={{ filter: "brightness(1) invert(1)", opacity: 1 }}
+                    initial={{ filter: "brightness(0.8)", opacity: 0.7 }}
+                    whileInView={{ filter: "brightness(1)", opacity: 1 }}
                     transition={{ duration: 0.5 }}
                   >
                     <Image

@@ -83,7 +83,7 @@ export function Hero() {
     },
     hover: {
       scale: 1.05,
-      boxShadow: "0px 5px 15px rgba(147, 51, 234, 0.5)", // Purple shadow (was orange)
+      boxShadow: "0px 5px 15px rgba(147, 51, 234, 0.5)", // Purple shadow
       transition: {
         type: "spring",
         stiffness: 600,
@@ -125,7 +125,7 @@ export function Hero() {
     }),
     hover: {
       scale: 1.05,
-      boxShadow: "0px 10px 25px rgba(147, 51, 234, 0.3)", // Purple shadow (was orange)
+      boxShadow: "0px 10px 25px rgba(147, 51, 234, 0.3)", // Purple shadow
       transition: {
         type: "spring",
         stiffness: 500,
@@ -134,7 +134,7 @@ export function Hero() {
     },
   }
 
-  // Function to colorize specific words in orange
+  // Function to colorize specific words in purple
   const colorizeText = (text: string, purpleWords: string[]) => {
     const words = text.split(" ")
     return words.map((word, index) => {
@@ -170,7 +170,7 @@ export function Hero() {
   }
 
   return (
-    <div className="bg-black">
+    <div className="bg-white">
       <main>
         <div className="relative isolate">
           <svg
@@ -215,7 +215,7 @@ export function Hero() {
             }}
           >
             <div
-              className="aspect-[801/1036] w-[50.0625rem] bg-gradient-to-tr from-purple-400 to-purple-600 opacity-30" // Changed to purple gradient
+              className="aspect-[801/1036] w-[50.0625rem] bg-gradient-to-tr from-purple-400 to-purple-600 opacity-30"
               style={{
                 clipPath:
                   "polygon(63.1% 29.5%, 100% 17.1%, 76.6% 3%, 48.4% 0%, 44.6% 4.7%, 54.5% 25.3%, 59.8% 49%, 55.2% 57.8%, 44.4% 57.2%, 27.8% 47.9%, 35.1% 81.5%, 0% 97.7%, 39.2% 100%, 35.2% 81.4%, 97.2% 52.8%, 63.1% 29.5%)",
@@ -315,14 +315,14 @@ export function Hero() {
                           }}
                           whileHover={{
                             scale: 1.05,
-                            color: "#9333ea", // Purple color on hover (was orange)
+                            color: "#9333ea", // Purple color on hover
                             transition: { duration: 0.1 },
                           }}
                         >
                           Live demo
                           <motion.span
                             aria-hidden="true"
-                            className="inline-block ml-1 text-purple-500" // Purple arrow (was orange)
+                            className="inline-block ml-1 text-purple-500"
                             initial={{ x: 0 }}
                             whileHover={{
                               x: 5,
