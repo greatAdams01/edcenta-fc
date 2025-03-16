@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`h-full bg-black antialiased ${manrope.variable} ${dosis.variable}`}
+      className={`h-full bg-white antialiased ${manrope.variable} ${dosis.variable}`}
     >
       <head>
         <title>Edcenta</title>

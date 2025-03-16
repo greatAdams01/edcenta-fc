@@ -1,17 +1,18 @@
-"use client"
+'use client'
 
-import type React from "react"
+import { useEffect, useId, useState } from 'react'
 
-import { useEffect, useId, useState } from "react"
+import { motion, AnimatePresence } from 'framer-motion'
 
-import { motion, AnimatePresence } from "framer-motion"
+import { Check, Sparkles } from 'lucide-react'; 
 
-import { Check, Sparkles } from "lucide-react"
+import { Container } from '@/components/ux/Container'
+import { Price } from '@/utils/Price';
 
-import { Container } from "@/components/ux/Container"
-import { Price } from "@/utils/Price"
-
-function ImageClipPaths({ id, ...props }: React.ComponentPropsWithoutRef<"svg"> & { id: string }) {
+function ImageClipPaths({
+  id,
+  ...props
+}: React.ComponentPropsWithoutRef<'svg'> & { id: string }) {
   return (
     <svg aria-hidden="true" width={0} height={0} {...props}>
       <defs>
@@ -30,92 +31,85 @@ function ImageClipPaths({ id, ...props }: React.ComponentPropsWithoutRef<"svg"> 
 }
 
 export function Pricing() {
-  const id = useId()
-  const [tabOrientation, setTabOrientation] = useState("horizontal")
+  
+  let id = useId()
+  let [tabOrientation, setTabOrientation] = useState('horizontal')
 
   useEffect(() => {
-    const lgMediaQuery = window.matchMedia("(min-width: 1024px)")
+    let lgMediaQuery = window.matchMedia('(min-width: 1024px)')
 
     function onMediaQueryChange({ matches }: { matches: boolean }) {
-      setTabOrientation(matches ? "vertical" : "horizontal")
+      setTabOrientation(matches ? 'vertical' : 'horizontal')
     }
 
     onMediaQueryChange(lgMediaQuery)
-    lgMediaQuery.addEventListener("change", onMediaQueryChange)
+    lgMediaQuery.addEventListener('change', onMediaQueryChange)
 
     return () => {
-      lgMediaQuery.removeEventListener("change", onMediaQueryChange)
+      lgMediaQuery.removeEventListener('change', onMediaQueryChange)
     }
   }, [])
 
   return (
-    <section id="speakers" aria-labelledby="speakers-title" className="py-20 sm:py-32 bg-[#800080]">
+    <section
+      id="speakers"
+      aria-labelledby="speakers-title"
+      className="py-20 sm:py-32"
+    >
       <ImageClipPaths id={id} />
       <Container>
         <div className="mx-auto max-w-2xl lg:mx-0">
-          <h2 id="speakers-title" className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl">
+          <h2
+            id="speakers-title"
+            className="font-display text-4xl font-medium tracking-tighter text-blue-600 sm:text-5xl"
+          >
             Pricing
           </h2>
-          <p className="mt-4 font-display text-2xl tracking-tight text-white/90">
-            Whether you are an individual learner looking to enhance your skills or a group seeking comprehensive
-            educational solutions, we have the best plan for you.
+          <p className="mt-4 font-display text-2xl tracking-tight text-blue-900">
+            Whether you are an individual learner looking to enhance your skills or a group seeking comprehensive educational solutions, we have the best plan for you.
           </p>
         </div>
-        <AnimatePresence mode="wait">
-          <section className="my-10 grid md:grid-cols-3 gap-x-8 gap-y-4">
-            {Price.map((price: any, index: any) => (
-              <motion.div
-                key={index}
-                className="transition-all ease-in-out delay-500 duration-1000 border border-purple-500 hover:border-2 hover:shadow-lg hover:shadow-purple-500 rounded-md p-4 leading-loose bg-blue-900"
-                initial={{ y: 100, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.75 }}
-                whileHover={{
-                  scale: 1.02,
-                }}
-              >
-                <div className="grid gap-y-4">
-                  <div className="w-full flex justify-center">
-                    {price.popular === true ? (
-                      <p className="flex items-center bg-purple-500 px-2 rounded-full text-white font-bold">
-                        <Sparkles className="mr-px w-4" />
-                        Most Popular
-                      </p>
-                    ) : null}
-                  </div>
-                  <h2 className="font-bold text-2xl text-center text-white">{price.name}</h2>
-                  <p className="text-center text-lg font-light text-white/70">{price.description}</p>
-                  <div className="w-full flex justify-center">
-                    <motion.button
-                      type="button"
-                      className="w-full transition-all ease-in-out delay-500 duration-1000 rounded-md bg-purple-600 hover:bg-purple-700 p-2 text-white font-bold"
-                    >
-                      Start Plan
-                    </motion.button>
-                  </div>
-                  <div className="w-full h-px bg-purple-500 rounded-full" />
+        <AnimatePresence mode='wait'>
+        <section className='my-10 grid md:grid-cols-3 gap-x-8 gap-y-4'
+        >
+          {Price.map((price: any, index: any) => (
+            <motion.div key={index} className='transition-all ease-in-out delay-500 duration-1000 border border-blue-500 hover:border-2 hover:shadow-lg hover:shadow-blue-500 rounded-md p-4 leading-loose' 
+            initial={{y:100, opacity:0}}
+            whileInView={{y:0, opacity:1}}
+            viewport={{once: true}}
+            transition={{duration:0.75}}
+            whileHover={{
+              scale: 1.02
+            }}
+            >
+              <div className='grid gap-y-4'>
+                <div className='w-full flex justify-center'>
+                {price.popular === true ? (
+                  <p className='flex items-center bg-purple-500 px-2 rounded-full text-white font-bold'><Sparkles  className='mr-px w-4'/>Most Popular</p>
+                )  :(null)}
                 </div>
-                {price.points.map((point: any, index: any) => (
-                  <div key={index} className="flex my-2 gap-x-4">
-                    <div className="w-2 h-2 mt-1 mx-4">
-                      <Check className="text-purple-400" />
-                    </div>
-                    <p className="text-white/90">{point.point}</p>
-                  </div>
-                ))}
-              </motion.div>
-            ))}
-          </section>
+              <h2 className='font-bold text-2xl text-center text-blue-950'>{price.name}</h2>
+              <p className='text-center text-lg font-light opacity-70  '>{price.description}</p>
+              <div className='w-full flex justify-center'>
+              <motion.button 
+              type='button' 
+              className='w-full transition-all ease-in-out delay-500 duration-1000 rounded-md bg-blue-500 hover:bg-[#0075BC] p-2 text-white font-bold'
+              >
+                Start Plan
+              </motion.button> 
+              </div>
+              <div className='w-full h-px bg-blue-500 rounded-full' />
+              </div>
+              {price.points.map((point: any, index: any) => (
+                <div key={index} className='flex my-2 gap-x-4'>
+                  <div className='w-2 h-2 mt-1 mx-4'><Check className='text-blue-500 '/></div> <p>{point.point}</p>
+                </div>
+              ))}
+            </motion.div>
+          ))}
+        </section>
         </AnimatePresence>
       </Container>
-
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 bg-blue-500/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/3 right-1/4 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-3xl" />
-      </div>
     </section>
   )
 }
-
