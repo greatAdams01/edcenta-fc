@@ -69,7 +69,7 @@ const CustomPlan = () => {
   }))
   useEffect(() => {
     getSubjects()
-  }, [])
+  }, [getSubjects])
   useEffect(() => {
     const studentCost = students * 4
     setTotalCost(studentCost)

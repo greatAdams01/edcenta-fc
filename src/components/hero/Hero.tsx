@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 import { useState, useEffect } from "react"
 import Link from "next/link"
@@ -23,6 +24,7 @@ export function Hero() {
     return () => {
       clearInterval(interval)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Multiple heading options to cycle through

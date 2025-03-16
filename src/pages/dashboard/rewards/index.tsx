@@ -69,7 +69,7 @@ export default function Rward() {
     } else {
       user()
     }
-  }, [])
+  }, [getAssignments, student, user])
 
   return (
     <AppLayout>

@@ -40,6 +40,7 @@ export default function Review() {
       const topicIds = data.fetchAssigned.data.map((single: any) => single.worksheetId?.topicId);
       fetchTopics(topicIds);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const fetchTopics = async (topicIds: string[]) => {

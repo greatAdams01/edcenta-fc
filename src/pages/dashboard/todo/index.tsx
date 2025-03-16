@@ -73,7 +73,7 @@ export default function Todo() {
   }
   useEffect(() => {
     getAssignments()
-  }, [])
+  }, [getAssignments])
   return (
     <AppLayout>
       <motion.div className="space-y-8" animate={{}}>

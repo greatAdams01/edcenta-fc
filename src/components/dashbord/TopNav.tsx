@@ -44,7 +44,7 @@ function TopNav() {
     } else {
       user()
     }
-  }, [])
+  }, [student, user])
 
   return (
     <nav className="bg-white border-b border-gray-100">

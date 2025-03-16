@@ -191,7 +191,7 @@ const AddQuestion = () => {
     if (question !== null) {
       getQuestion()
     }
-  }, [question])
+  }, [getQuestion, question])
   return (
     <AdminLayout>
       <div>
@@ -275,6 +275,7 @@ const AddQuestion = () => {
                 onClick={() => uploadRef.current?.click()}
               />
             ) : (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={img}
                 onClick={() => uploadRef.current?.click()}
@@ -317,7 +318,7 @@ const AddQuestion = () => {
                       onClick={() => setActiveIndex(index)}
                       className={
                         option.isCorrect
-                          ? 'my-auto ml-20 ml-20 h-16 rounded-md bg-green-500 p-3 text-white'
+                          ? 'my-auto ml-20 h-16 rounded-md bg-green-500 p-3 text-white'
                           : 'my-auto ml-20 h-16 cursor-pointer rounded-md p-3 hover:bg-gray-300'
                       }
                     >
@@ -361,6 +362,7 @@ const AddQuestion = () => {
               {title}
             </h1>
             {img ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={img}
                 alt="image"

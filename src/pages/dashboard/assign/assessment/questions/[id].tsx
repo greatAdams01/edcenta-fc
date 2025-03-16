@@ -213,6 +213,7 @@ const QuestionPage = () => {
               />
               <div className="flex w-full justify-center">
                 {item.img && (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={item.img}
                     alt="image"

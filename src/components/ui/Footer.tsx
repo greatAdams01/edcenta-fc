@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 const navigation = {
   solutions: [
     { name: "Marketing", href: "#" },

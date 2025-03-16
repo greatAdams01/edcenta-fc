@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
 import { useEffect, useState } from "react"
@@ -33,7 +34,7 @@ export default function Manage() {
   }
   useEffect(() => {
     filterStudents("")
-  }, [students])
+  }, [filterStudents, students])
 
   const groupedStudents = allStudents.reduce((groups: any, student: any) => {
     const groupKey = student.grade.year

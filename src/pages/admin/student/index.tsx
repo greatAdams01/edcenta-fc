@@ -82,7 +82,7 @@ function Students() {
     }
     // Fetch data from API
     students()
-  }, [page, itemId])
+  }, [page, itemId, students, studentList])
   return (
     <AdminLayout>
       <div className="px-4 sm:px-6 lg:px-8">

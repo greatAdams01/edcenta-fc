@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client"
 import type React from "react"
 import { useState } from "react"
@@ -91,7 +92,7 @@ function Index() {
                               {message.score >= message.averageScore ? (
                                 <>
                                   <span className="font-semibold">{message.by}</span> successfully attempted{" "}
-                                  <span className="font-semibold">"{message.topic}"</span>, scoring{" "}
+                                  <span className="font-semibold">"{message.topic}"</span>, scoring{''}
                                   <span className="font-semibold text-green-600 dark:text-green-400">
                                     {message.score}%
                                   </span>

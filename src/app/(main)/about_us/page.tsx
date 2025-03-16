@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 const stats = [
   { label: 'Founded', value: '2021' },
   { label: 'Countries', value: '12' },

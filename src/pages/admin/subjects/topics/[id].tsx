@@ -91,7 +91,7 @@ const Topics: React.FC<TopicsProps> = () => {
     }
     // Fetch data from API
     getTopics()
-  }, [page, itemId, open])
+  }, [page, itemId, open, getTopics, topicList])
   return (
     <AdminLayout>
       <div className="px-4 sm:px-6 lg:px-8">

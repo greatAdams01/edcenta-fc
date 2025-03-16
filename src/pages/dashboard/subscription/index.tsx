@@ -59,7 +59,7 @@ function Index() {
       setPlans(plansData.getPlans)
       console.log(plans)
     }
-  }, [plansData])
+  }, [plans, plansData])
 
   useEffect(() => {
     if (subscriptionData) {

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
@@ -205,7 +206,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
     if (scoreData !== null) {
       updateAssignment()
     }
-  }, [scoreData])
+  }, [scoreData, updateAssignment])
 
   const [getWorksheet, { loading, error, data }] = useLazyQuery(
     WORKSHEET_BY_ID,
@@ -223,7 +224,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
 
   useEffect(() => {
     getWorksheet()
-  }, [id])
+  }, [getWorksheet, id])
 
   const [
     getQuestions,
@@ -250,7 +251,7 @@ const Assigned: React.FC<WorksheetProps> = () => {
     if (worksheet.levelId && worksheet.subjectId && id) {
       getQuestions()
     }
-  }, [worksheet, id])
+  }, [worksheet, id, getQuestions])
 
   const getQuestionColor = (index: number) => {
     const answer = answers[index]

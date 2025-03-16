@@ -14,7 +14,7 @@ const Transactions = () => {
 
   useEffect(() => {
     getTransactions()
-  }, [])
+  }, [getTransactions])
 
   return (
     <AdminLayout>
