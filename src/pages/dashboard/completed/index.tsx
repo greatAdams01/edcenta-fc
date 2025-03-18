@@ -99,7 +99,7 @@ export default function Completed() {
   }
   useEffect(() => {
     getAssignments()
-  }, [])
+  }, [getAssignments])
 
   return (
     <AppLayout>

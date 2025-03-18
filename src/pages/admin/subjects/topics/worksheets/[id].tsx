@@ -97,7 +97,7 @@ const Topics: React.FC<WorksheetProps> = () => {
     }
     // Fetch data from API
     getWorksheet()
-  }, [page, itemId, open])
+  }, [page, itemId, open, getWorksheet, worksheetList])
   return (
     <AdminLayout>
       <div className="px-4 sm:px-6 lg:px-8">

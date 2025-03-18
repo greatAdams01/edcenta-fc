@@ -39,7 +39,7 @@ const Plans = () => {
   })
   useEffect(() => {
     getPlans()
-  }, [])
+  }, [getPlans])
   return (
     <AdminLayout>
       <div>

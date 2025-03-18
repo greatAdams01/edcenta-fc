@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
@@ -226,7 +227,7 @@ export default function Create() {
                   <textarea
                     value={video}
                     onChange={(e) => setVideo(e.target?.value)}
-                    className="my-2 h-12 w-[100%] max-w-[400px] h-20 rounded-md border-2 px-4 lg:w-[100rem]"
+                    className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
                     id="video"
                   ></textarea>
                   <p className='text-xs'>N/B width and height should be less than 500</p>

@@ -14,7 +14,7 @@ const Subscription = () => {
 
   useEffect(() => {
     getSubscription()
-  }, [])
+  }, [getSubscription])
 
   return (
     <AdminLayout>

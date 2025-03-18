@@ -120,7 +120,7 @@ const Topics: React.FC<WorksheetProps> = () => {
   useEffect(() => {
     getWorksheet()
     getQuestions()
-  }, [itemId, open])
+  }, [getQuestions, getWorksheet, itemId, open])
 
   const DifficultyIndicator: React.FC<DifficultyIndicatorProps> = ({
     difficulty,
@@ -193,6 +193,7 @@ const Topics: React.FC<WorksheetProps> = () => {
             <div key={index} className="my-6 lg:w-[32%] bg-gray-100 p-3 rounded-md text-center">
               <div className="flex w-full justify-center">
                 {item.img && (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={item.img}
                     alt="image"

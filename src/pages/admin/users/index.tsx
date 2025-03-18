@@ -95,7 +95,7 @@ function Users() {
     }
     // Fetch data from API
     users()
-  }, [page, itemId])
+  }, [page, itemId, users, userList])
   return (
     <AdminLayout>
       <div className="px-4 sm:px-6 lg:px-8">

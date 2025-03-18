@@ -1,21 +1,26 @@
-import { Fragment, useEffect, useState } from 'react'
+"use client"
+
+import type React from "react"
+
+import { useEffect, useState } from "react"
 import {
   PlusIcon,
   ArrowRightEndOnRectangleIcon,
-} from '@heroicons/react/24/outline'
-import { getCookie } from 'cookies-next'
+  ChartBarIcon,
+  UserGroupIcon,
+  AcademicCapIcon,
+  CheckCircleIcon,
+} from "@heroicons/react/24/outline"
+import { getCookie } from "cookies-next"
+import { motion, AnimatePresence } from "framer-motion"
 
-import AppLayout from '../../layout/AppLayout'
-import { USER, STUDENTS } from '@/apollo/queries/dashboard'
-import { useQuery } from '@apollo/client'
-
-// const statuses: { [key: string]: string } = { Completed: 'text-green-400 bg-green-400/10', Incomplete: 'text-rose-400 bg-rose-400/10' }
+import AdminLayout from "@/layout/AdminLayout"
+import { USER, STUDENTS } from "@/apollo/queries/dashboard"
+import { useQuery } from "@apollo/client"
 
 function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ")
 }
-
-import AdminLayout from '@/layout/AdminLayout'
 
 const AdminPage = () => {
   const { data: userData } = useQuery(USER)
@@ -32,10 +37,8 @@ const AdminPage = () => {
     return groups
   }, {})
 
-  const [openSubtables, setOpenSubtables] = useState<Array<boolean>>(
-    Array(students.length).fill(false),
-  )
-  const [accountType, setAccountType] = useState('' as string)
+  const [openSubtables, setOpenSubtables] = useState<Array<boolean>>(Array(students.length).fill(false))
+  const [accountType, setAccountType] = useState("" as string)
 
   const toggleDropdown = (index: number) => {
     const newOpenSubtables = [...openSubtables]
@@ -44,11 +47,11 @@ const AdminPage = () => {
   }
 
   // Get Authdata from Cookies
-  const authData: any = getCookie('Authdata')
+  const authData: any = getCookie("Authdata")
 
   useEffect(() => {
     if (!authData) {
-      window.location.href = '/auth/login'
+      window.location.href = "/auth/login"
       return
     }
     console.log(JSON.parse(authData).accountType)
@@ -57,143 +60,155 @@ const AdminPage = () => {
 
   return (
     <AdminLayout>
-      <div>
-        <header>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="bg-gradient-to-br from-purple-50 to-indigo-100 min-h-screen"
+      >
+        <header className="bg-white shadow-md">
           {/* Heading */}
-          <div className="flex flex-col items-start justify-between bg-gray-700/10 px-4 py-4 sm:flex-row sm:items-center sm:px-6 lg:px-8">
+          <div className="flex flex-col items-start justify-between px-4 py-6 sm:flex-row sm:items-center sm:px-6 lg:px-8">
             <div>
-              <div className="flex items-center gap-x-3">
-                <h1 className="flex gap-x-3 text-base leading-7">
-                  <span className="font-semibold">{accountType}</span>
-                  <span className="text-gray-600">/</span>
-                  <span className="font-semibold">Dashboard</span>
-                </h1>
-              </div>
+              <h1 className="text-2xl font-bold text-gray-900">{accountType} Dashboard</h1>
+              <p className="mt-1 text-sm text-gray-500">Welcome back, {user.name}</p>
             </div>
-            <div className="order-first flex flex-none rounded-full bg-indigo-400/10 px-2 py-1 text-xs font-medium text-indigo-400 ring-1 ring-inset ring-indigo-400/30 sm:order-none">
-              {user.isActive === true ? (
-                <>
-                  <div className="flex-none rounded-full bg-green-400/10 p-1 text-green-400">
-                    <div className="h-2 w-2 rounded-full bg-current" />
-                  </div>
-                  <p>Active</p>
-                </>
-              ) : (
-                <>
-                  <div className="flex-none rounded-full bg-red-400/10 p-1 text-red-400">
-                    <div className="h-2 w-2 rounded-full bg-current" />
-                  </div>
-                  <p>Inactive</p>
-                </>
+            <motion.div
+              className={classNames(
+                "mt-4 sm:mt-0 px-3 py-1 rounded-full text-sm font-medium",
+                user.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800",
               )}
-            </div>
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {user.isActive ? "Active" : "Inactive"}
+            </motion.div>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 bg-gray-700/10 font-bold sm:grid-cols-2 lg:grid-cols-4">
-            <div className="border-t border-white/5 px-4 py-6 sm:px-6 lg:px-8">
-              <p className="text-sm font-medium leading-6 text-purple-400">
-                Account setup
-              </p>
-              <p className="mt-2 flex items-baseline gap-x-2">
-                <span className="text-4xl font-semibold tracking-tight">
-                  90%
-                </span>
-              </p>
-            </div>
-            <div className="border-t border-white/5 px-4 py-6 sm:px-6 lg:px-8">
-              <p className="text-sm font-medium leading-6 text-purple-400">
-                No. of Class
-              </p>
-              <p className="mt-2 flex items-baseline gap-x-2  px-6">
-                <span className="text-4xl font-semibold tracking-tight">
-                  {Object.keys(groupedStudents).length}
-                </span>
-              </p>
-            </div>
-            <div className="border-t border-white/5 px-4 py-6 sm:px-6 lg:px-8">
-              <p className="text-sm font-medium leading-6 text-purple-400">
-                No. of Student
-              </p>
-              <p className="mt-2 flex items-baseline gap-x-2  px-6">
-                <span className="text-4xl font-semibold tracking-tight">
-                  {students.length}
-                </span>
-              </p>
-            </div>
-            <div className="border-t border-white/5 px-4 py-6 sm:px-6 lg:px-8">
-              <p className="text-sm font-medium leading-6 text-purple-400">
-                Curriculum completed
-              </p>
-              <p className="mt-2 flex items-baseline gap-x-2  px-6">
-                <span className="text-4xl font-semibold tracking-tight">0</span>
-              </p>
-            </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 p-6 bg-white">
+            <StatCard title="Account setup" value="90%" icon={<ChartBarIcon className="h-6 w-6 text-purple-600" />} />
+            <StatCard
+              title="No. of Classes"
+              value={Object.keys(groupedStudents).length.toString()}
+              icon={<AcademicCapIcon className="h-6 w-6 text-blue-600" />}
+            />
+            <StatCard
+              title="No. of Students"
+              value={students.length.toString()}
+              icon={<UserGroupIcon className="h-6 w-6 text-green-600" />}
+            />
+            <StatCard
+              title="Curriculum completed"
+              value="0"
+              icon={<CheckCircleIcon className="h-6 w-6 text-orange-600" />}
+            />
           </div>
         </header>
 
         {/* Activity list */}
-        <div className="border-t border-white/10 pt-11">
-          <h2 className="px-4 text-base font-semibold leading-7 sm:px-6 lg:px-8">
-            Curriculum
-          </h2>
-          {Object.keys(groupedStudents).map((grade, index) => (
-            <Fragment key={grade}>
-              <section className="my-4 flex w-full justify-between rounded-md border border-purple-500 bg-gray-200 px-4 py-6">
-                <div className="font-bold">
-                  {grade === '65ee6115df691bf5cea750a6'
-                    ? 'Primary 1'
-                    : 'Not Decided yet'}{' '}
-                  ({groupedStudents[grade].length}{' '}
-                  {groupedStudents[grade].length === 1 ? 'student' : 'students'}
-                  )
-                </div>
-                <PlusIcon
-                  onClick={() => toggleDropdown(index)}
-                  className="w-6"
-                />
-              </section>
-              {openSubtables[index] && (
-                <section className="shadow-opacity-50 bg-gray-200 shadow-sm shadow-black">
-                  <table className="w-full border-collapse border-gray-300">
-                    <thead className="w-full bg-purple-500 bg-opacity-50">
-                      <tr className="w-full">
-                        <th className="py-4">Name</th>
-                        <th className="hidden justify-center py-4 md:flex">
-                          Recomendations
-                        </th>
-                        <th>Self-Asign</th>
-                        <th>Status</th>
-                        <th className="pr-4">Login</th>
-                      </tr>
-                    </thead>
-                    <tbody className="border-b border-white/10 font-bold ">
-                      {groupedStudents[grade].map((student: any) => (
-                        <tr key={student._id}>
-                          <td className="px-4 py-4">{student.name}</td>
-                          <td className="hidden justify-center py-4 text-center md:flex ">
-                            1
-                          </td>
-                          <td className="text-center">1</td>
-                          <td className="text-center">20</td>
-                          <td className="w-4 cursor-pointer pr-4 text-center">
-                            <a href="#" title={student.name}>
-                              {' '}
-                              <ArrowRightEndOnRectangleIcon className="w-6 text-green-900 hover:text-green-600" />{' '}
-                            </a>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </section>
-              )}
-            </Fragment>
-          ))}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">Curriculum</h2>
+          <AnimatePresence>
+            {Object.keys(groupedStudents).map((grade, index) => (
+              <motion.div
+                key={grade}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="mb-4"
+              >
+                <motion.div
+                  className="bg-white rounded-lg shadow-md overflow-hidden"
+                  whileHover={{ scale: 1.01 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <button
+                    onClick={() => toggleDropdown(index)}
+                    className="w-full flex justify-between items-center px-6 py-4 text-left focus:outline-none"
+                  >
+                    <span className="text-lg font-semibold text-gray-900">
+                      {grade === "65ee6115df691bf5cea750a6" ? "Primary 1" : "Not Decided yet"} (
+                      {groupedStudents[grade].length} {groupedStudents[grade].length === 1 ? "student" : "students"})
+                    </span>
+                    <PlusIcon
+                      className={classNames(
+                        "w-5 h-5 text-gray-500 transition-transform duration-200",
+                        openSubtables[index] ? "transform rotate-45" : "",
+                      )}
+                    />
+                  </button>
+                  <AnimatePresence>
+                    {openSubtables[index] && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <table className="w-full">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Name
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Recommendations
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Self-Assign
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Status
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Login
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200">
+                            {groupedStudents[grade].map((student: any) => (
+                              <tr key={student._id} className="hover:bg-gray-50">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                  {student.name}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  <a href="#" title={student.name} className="text-indigo-600 hover:text-indigo-900">
+                                    <ArrowRightEndOnRectangleIcon className="w-5 h-5" />
+                                  </a>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
     </AdminLayout>
   )
 }
 
+const StatCard = ({ title, value, icon }: { title: string; value: string; icon: React.ReactNode }) => (
+  <motion.div className="bg-white p-6 rounded-lg shadow-md" whileHover={{ scale: 1.03 }} transition={{ duration: 0.2 }}>
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-sm font-medium text-gray-500">{title}</p>
+        <p className="mt-1 text-3xl font-semibold text-gray-900">{value}</p>
+      </div>
+      {icon}
+    </div>
+  </motion.div>
+)
+
 export default AdminPage
+

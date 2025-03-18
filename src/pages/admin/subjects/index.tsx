@@ -83,7 +83,7 @@ function Subjects() {
     }
     // Fetch data from API
     getSubjects()
-  }, [page, itemId, open])
+  }, [page, itemId, open, getSubjects, subjectList])
   return (
     <AdminLayout>
       <div className="px-4 sm:px-6 lg:px-8">

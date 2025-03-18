@@ -67,7 +67,7 @@ const Reset_password = () => {
             className="mt-4 flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 p2"
           >Send OTP</button>
         </form>
-        <div className='flex justify-between mt-2 block text-sm font-medium leading-6 text-gray-900'>
+        <div className='justify-between mt-2 block text-sm font-medium leading-6 text-gray-900'>
           <p>Dont have an account? 
             <Link href={'#'}>
               <span className='text-purple-950 ml-2'>Signup as Vendor</span>

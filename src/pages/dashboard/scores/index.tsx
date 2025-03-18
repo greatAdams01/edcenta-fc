@@ -82,7 +82,7 @@ export default function Score() {
 
     console.log(statsData)
     console.log(currentScores)
-  }, [assignmentList])
+  }, [assignmentList, currentScores, statsData])
 
   useEffect(() => {
     const authData: any = getCookie('Authdata')
@@ -93,7 +93,7 @@ export default function Score() {
     } else {
       user()
     }
-  }, [])
+  }, [getAssignments, student, user])
 
   useEffect(() => {
     setCurrentScores(statsData.map((stat) => 0)) // Initialize currentScores based on statsData
