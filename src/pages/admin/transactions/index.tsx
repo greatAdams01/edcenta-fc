@@ -38,19 +38,19 @@ const Transactions = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-gradient-to-br from-purple-50 to-indigo-100 min-h-screen dark:from-gray-900 dark:to-gray-800"
+        className="bg-gradient-to-br from-purple-50 to-indigo-100 min-h-screen"
       >
-        <header className="bg-white shadow-md dark:bg-gray-800">
+        <header className="bg-white shadow-md">
           {/* Heading */}
           <div className="flex flex-col items-start justify-between px-4 py-6 sm:flex-row sm:items-center sm:px-6 lg:px-8">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Transactions</h1>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <h1 className="text-2xl font-bold text-gray-900">Transactions</h1>
+              <p className="mt-1 text-sm text-gray-500">
                 A list of all transactions processed through the platform.
               </p>
             </div>
             <motion.div
-              className="mt-4 sm:mt-0 px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400"
+              className="mt-4 sm:mt-0 px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -59,26 +59,26 @@ const Transactions = () => {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 p-6 bg-white dark:bg-gray-800">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 p-6 bg-white">
             <StatCard
               title="Total Transactions"
               value={totalTransactions.toString()}
-              icon={<CreditCardIcon className="h-6 w-6 text-purple-600 dark:text-purple-400" />}
+              icon={<CreditCardIcon className="h-6 w-6 text-purple-600" />}
             />
             <StatCard
               title="Successful Transactions"
               value={successfulTransactions.toString()}
-              icon={<ArrowUpCircleIcon className="h-6 w-6 text-green-600 dark:text-green-400" />}
+              icon={<ArrowUpCircleIcon className="h-6 w-6 text-green-600" />}
             />
             <StatCard
               title="Pending Transactions"
               value={pendingTransactions.toString()}
-              icon={<ClockIcon className="h-6 w-6 text-orange-600 dark:text-orange-400" />}
+              icon={<ClockIcon className="h-6 w-6 text-orange-600" />}
             />
             <StatCard
               title="Total Amount"
               value={`₦${totalAmount}`}
-              icon={<BanknotesIcon className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
+              icon={<BanknotesIcon className="h-6 w-6 text-blue-600" />}
             />
           </div>
         </header>
@@ -86,9 +86,9 @@ const Transactions = () => {
         {/* Transaction list */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Transaction History</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Transaction History</h2>
             <div className="mt-3 sm:mt-0">
-              <select className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-purple-400 dark:focus:ring-purple-400">
+              <select className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-purple-500">
                 <option value="">All Transactions</option>
                 <option value="success">Successful</option>
                 <option value="pending">Pending</option>
@@ -97,62 +97,62 @@ const Transactions = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md overflow-hidden dark:bg-gray-800">
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-700">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       S/N
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Name
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Type
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Amount
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Currency
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Date
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                <tbody className="bg-white divide-y divide-gray-200">
                   {loading ? (
                     <tr>
-                      <td colSpan={7} className="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                      <td colSpan={7} className="px-6 py-4 text-center text-sm text-gray-500">
                         <div className="flex justify-center">
                           <svg
-                            className="animate-spin h-5 w-5 text-purple-600 dark:text-purple-400"
+                            className="animate-spin h-5 w-5 text-purple-600"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
@@ -179,24 +179,24 @@ const Transactions = () => {
                       {transactions.map((transaction, index) => (
                         <motion.tr
                           key={transaction._id || index}
-                          className="hover:bg-gray-50 dark:hover:bg-gray-700"
+                          className="hover:bg-gray-50"
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.2, delay: index * 0.05 }}
                         >
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {index + 1}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {transaction.name}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {transaction.type}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {transaction.amount}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {transaction.currency}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -204,16 +204,16 @@ const Transactions = () => {
                               className={classNames(
                                 "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
                                 transaction.status === "success"
-                                  ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                                  ? "bg-green-100 text-green-800"
                                   : transaction.status === "pending"
-                                    ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
-                                    : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : "bg-red-100 text-red-800",
                               )}
                             >
                               {transaction.status}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {new Date(transaction.createdAt).toLocaleDateString("en-US", {
                               year: "numeric",
                               month: "short",
@@ -225,7 +225,7 @@ const Transactions = () => {
                     </AnimatePresence>
                   ) : (
                     <tr>
-                      <td colSpan={7} className="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                      <td colSpan={7} className="px-6 py-4 text-center text-sm text-gray-500">
                         No transactions found
                       </td>
                     </tr>
@@ -242,14 +242,14 @@ const Transactions = () => {
 
 const StatCard = ({ title, value, icon }: { title: string; value: string; icon: React.ReactNode }) => (
   <motion.div
-    className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-700"
+    className="bg-white p-6 rounded-lg shadow-md"
     whileHover={{ scale: 1.03 }}
     transition={{ duration: 0.2 }}
   >
     <div className="flex items-center justify-between">
       <div>
-        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</p>
-        <p className="mt-1 text-3xl font-semibold text-gray-900 dark:text-white">{value}</p>
+        <p className="text-sm font-medium text-gray-500">{title}</p>
+        <p className="mt-1 text-3xl font-semibold text-gray-900">{value}</p>
       </div>
       {icon}
     </div>
@@ -257,4 +257,3 @@ const StatCard = ({ title, value, icon }: { title: string; value: string; icon: 
 )
 
 export default Transactions
-

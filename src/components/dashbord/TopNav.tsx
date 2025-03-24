@@ -7,7 +7,6 @@ import { MagnifyingGlassIcon } from "@heroicons/react/20/solid"
 import { deleteCookie, getCookie } from "cookies-next"
 import { useLazyQuery } from "@apollo/client"
 import { motion } from "framer-motion"
-import Image from "next/image"
 import { USER_FULLNAME, STUDENT_NAME } from "@/apollo/queries/auth"
 
 function classNames(...classes: string[]) {
@@ -49,7 +48,7 @@ function TopNav() {
   return (
     <nav className="bg-white border-b border-gray-100">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
             <motion.div whileHover={{ scale: 1.02 }} className="flex items-center">
@@ -78,8 +77,8 @@ function TopNav() {
             </div>
           </div>
 
-          {/* Right section */}
-          <div className="flex items-center gap-x-4">
+          {/* Right section - pushed to the extreme right */}
+          <div className="flex items-center gap-x-4 mr-2">
             {/* Notification button */}
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -97,15 +96,18 @@ function TopNav() {
                 <Menu.Button className="flex items-center">
                   <span className="sr-only">Open user menu</span>
                   <div className="flex items-center">
+                    
+                    </div>
+                    <div className="ml-36 hidden md:block text-left">
+                      <p className="text-sm font-medium text-gray-700 ml-36">{fullName}</p>
+                      <p className="text-xs text-gray-500 ml-36">{isStudent ? "Student" : ""}</p>
+                      <div className="flex items-center">
                     <motion.img
                       whileHover={{ scale: 1.05 }}
-                      className="h-8 w-8 rounded-full object-cover"
+                      className="h-8 w-8 rounded-full object-cover ml-44"
                       src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                       alt=""
                     />
-                    <div className="ml-3 hidden md:block text-left">
-                      <p className="text-sm font-medium text-gray-700">{fullName}</p>
-                      <p className="text-xs text-gray-500">{isStudent ? "Student" : "Sales Manager"}</p>
                     </div>
                   </div>
                 </Menu.Button>
@@ -182,5 +184,4 @@ function TopNav() {
 }
 
 export default TopNav
-
 

@@ -11,7 +11,8 @@ import { ToastContainer, toast, Slide } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 
 
-export default function Score() {
+// Create a wrapper component that uses useTheme
+function ScoreContent() {
   const { data } = useQuery(STUDENTS)
   const students = data?.students.data || []
   const [assignmentList, setAssignmentList] = useState<any[]>([])
@@ -127,34 +128,24 @@ export default function Score() {
     return subjectStatOffset
   })
 
+  // Rest of your component code...
+
+  // Return your JSX with theme-aware styling
   return (
-    <AppLayout>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        transition={Slide}
-       
-      />
+    <>
       <div className="grid justify-items-stretch transition-colors duration-200">
         <div className="w-full justify-self-center rounded-md">
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-white transition-colors duration-200">
+          <h1 className="text-xl font-semibold text-gray-900 transition-colors duration-200">
             Select a student to view his scores
           </h1>
           {students.length === 0 ? (
-            <p className="my-4 mb-8 text-lg font-medium text-gray-900 dark:text-gray-200 transition-colors duration-200">
+            <p className="my-4 mb-8 text-lg font-medium text-gray-900 transition-colors duration-200">
               You have no registered students
             </p>
           ) : (
             <section className="my-4 mb-8 flex w-full justify-between">
               <select
-                className="w-60 rounded-md border border-gray-300 bg-white px-2 py-4 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-white transition-colors duration-200"
+                className="w-60 rounded-md border border-gray-300 bg-white px-2 py-4 text-gray-900 transition-colors duration-200"
                 onChange={handleStudentChange}
                 defaultValue=""
               >
@@ -169,25 +160,23 @@ export default function Score() {
               </select>
             </section>
           )}
-          <div className="mb-8 flex w-full items-center justify-between gap-x-3 bg-purple-100 p-2 dark:bg-purple-900/20 transition-colors duration-200">
+          <div className="mb-8 flex w-full items-center justify-between gap-x-3 bg-purple-100 p-2 transition-colors duration-200">
             <div className="flex w-full items-center justify-start gap-x-3">
-              <BsBarChartFill className="text-purple-600 dark:text-purple-400" />
-              <h2 className="text-lg font-semibold leading-6 text-gray-700 dark:text-gray-200 transition-colors duration-200">
-                Scores
-              </h2>
+              <BsBarChartFill className="text-purple-600" />
+              <h2 className="text-lg font-semibold leading-6 text-gray-700 transition-colors duration-200">Scores</h2>
             </div>
           </div>
           <section className="grid flex-wrap gap-x-8 font-bold md:flex">
             <section className="">
-              <p className="my-2 text-lg text-gray-900 dark:text-white transition-colors duration-200">Overall score</p>
-              <div className="flex flex-col items-center justify-center space-y-6 border border-gray-200 p-8 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg shadow-sm transition-colors duration-200">
+              <p className="my-2 text-lg text-gray-900 transition-colors duration-200">Overall score</p>
+              <div className="flex flex-col items-center justify-center space-y-6 border border-gray-200 p-8 bg-white rounded-lg shadow-sm transition-colors duration-200">
                 <svg width={circleWidth} height={circleWidth} viewBox={`0 0 ${circleWidth} ${circleWidth}`}>
                   <circle
                     cx={circleWidth / 2}
                     cy={circleWidth / 2}
                     strokeWidth="15px"
                     r={radius}
-                    className="fill-none stroke-gray-200 dark:stroke-gray-700 transition-colors duration-200"
+                    className="fill-none stroke-gray-200 transition-colors duration-200"
                   />
                   <circle
                     cx={circleWidth / 2}
@@ -213,7 +202,7 @@ export default function Score() {
                     y="50%"
                     dy="0.3em"
                     textAnchor="middle"
-                    className="fill-gray-900 text-2xl font-bold dark:fill-white transition-colors duration-200"
+                    className="fill-gray-900 text-2xl font-bold transition-colors duration-200"
                   >
                     {estimatedPercentage.toFixed(2)}%
                   </text>
@@ -224,7 +213,7 @@ export default function Score() {
                     <thead>
                       <tr>
                         <th className="flex w-full justify-center">
-                          <p className="w-5/6 bg-purple-500 p-2 text-white dark:bg-purple-600 rounded-t-md transition-colors duration-200">
+                          <p className="w-5/6 bg-purple-500 p-2 text-white rounded-t-md transition-colors duration-200">
                             Activities completed
                           </p>
                         </th>
@@ -232,7 +221,7 @@ export default function Score() {
                     </thead>
                     <tbody className="text-center">
                       <tr>
-                        <td className="border border-gray-200 dark:border-gray-700 p-2 text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors duration-200">
+                        <td className="border border-gray-200 p-2 text-gray-900 bg-white transition-colors duration-200">
                           {totalScore}
                         </td>
                       </tr>
@@ -243,17 +232,17 @@ export default function Score() {
             </section>
 
             <section className="">
-              <p className="my-2 text-lg text-gray-900 dark:text-white transition-colors duration-200">Subject score</p>
-              <div className="grid w-full grid-cols-[repeat(auto-fit,_minmax(10rem,_1fr))] gap-x-0 border border-gray-200 dark:border-gray-700 p-6 md:w-[50vw] bg-white dark:bg-gray-800 rounded-lg shadow-sm transition-colors duration-200">
+              <p className="my-2 text-lg text-gray-900 transition-colors duration-200">Subject score</p>
+              <div className="grid w-full grid-cols-[repeat(auto-fit,_minmax(10rem,_1fr))] gap-x-0 border border-gray-200 p-6 md:w-[50vw] bg-white rounded-lg shadow-sm transition-colors duration-200">
                 {statsData.length === 0 ? (
-                  <p className="text-lg font-medium text-gray-900 dark:text-gray-200 transition-colors duration-200">
+                  <p className="text-lg font-medium text-gray-900 transition-colors duration-200">
                     This student has no assignments
                   </p>
                 ) : (
                   statsData.map((stat, index) => (
                     <div key={index} className="grid w-full justify-center">
                       <div className="flex w-full justify-center">
-                        <p className="w-5/6 bg-purple-500 p-2 text-center text-white dark:bg-purple-600 rounded-t-md transition-colors duration-200">
+                        <p className="w-5/6 bg-purple-500 p-2 text-center text-white rounded-t-md transition-colors duration-200">
                           {stat.subject}
                         </p>
                       </div>
@@ -263,7 +252,7 @@ export default function Score() {
                           cy={circleWidth / 2}
                           strokeWidth="15px"
                           r={subjectRadius}
-                          className="fill-none stroke-gray-200 dark:stroke-gray-700 transition-colors duration-200"
+                          className="fill-none stroke-gray-200 transition-colors duration-200"
                         />
                         <circle
                           cx={circleWidth / 2}
@@ -285,7 +274,7 @@ export default function Score() {
                           y="50%"
                           dy="0.3em"
                           textAnchor="middle"
-                          className="fill-gray-900 text-2xl font-bold dark:fill-white transition-colors duration-200"
+                          className="fill-gray-900 text-2xl font-bold transition-colors duration-200"
                         >
                           {currentScores[index]}
                         </text>
@@ -295,15 +284,15 @@ export default function Score() {
                           <thead>
                             <tr>
                               <th className="flex w-full justify-center">
-                                <p className="w-5/6 bg-purple-500 p-2 text-white dark:bg-purple-600 rounded-t-md transition-colors duration-200">
+                                <p className="w-5/6 bg-purple-500 p-2 text-white rounded-t-md transition-colors duration-200">
                                   Activities completed
                                 </p>
                               </th>
                             </tr>
                           </thead>
-                          <tbody className="mb-4 h-10 w-full border-b border-gray-200 dark:border-gray-700 text-center">
+                          <tbody className="mb-4 h-10 w-full border-b border-gray-200 text-center">
                             <tr>
-                              <td className="p-2 text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors duration-200">
+                              <td className="p-2 text-gray-900 bg-white transition-colors duration-200">
                                 {currentScores[index]}
                               </td>
                             </tr>
@@ -328,8 +317,18 @@ export default function Score() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
+        theme="light"
         transition={Slide}
       />
+    </>
+  )
+}
+
+// Main component that wraps the content with ThemeProvider
+export default function Score() {
+  return (
+    <AppLayout>
+      <ScoreContent />
     </AppLayout>
   )
 }

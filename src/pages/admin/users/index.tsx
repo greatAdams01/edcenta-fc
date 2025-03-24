@@ -115,21 +115,21 @@ function Users() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-gradient-to-br from-purple-50 to-indigo-100 min-h-screen dark:from-gray-900 dark:to-gray-800"
+        className="bg-gradient-to-br from-purple-50 to-indigo-100 min-h-screen"
       >
-        <header className="bg-white shadow-md dark:bg-gray-800">
+        <header className="bg-white shadow-md">
           {/* Heading */}
           <div className="flex flex-col items-start justify-between px-4 py-6 sm:flex-row sm:items-center sm:px-6 lg:px-8">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Users</h1>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <h1 className="text-2xl font-bold text-gray-900">Users</h1>
+              <p className="mt-1 text-sm text-gray-500">
                 A list of all the users in your account including their name, email and role.
               </p>
             </div>
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="mt-4 sm:mt-0 inline-flex items-center justify-center rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:bg-purple-700 dark:hover:bg-purple-800"
+              className="mt-4 sm:mt-0 inline-flex items-center justify-center rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
             >
               <PlusIcon className="mr-2 h-5 w-5" />
               Add User
@@ -137,26 +137,26 @@ function Users() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 p-6 bg-white dark:bg-gray-800">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 p-6 bg-white">
             <StatCard
               title="Total Users"
               value={userList.length.toString()}
-              icon={<UserGroupIcon className="h-6 w-6 text-purple-600 dark:text-purple-400" />}
+              icon={<UserGroupIcon className="h-6 w-6 text-purple-600" />}
             />
             <StatCard
               title="Admin Users"
               value={adminUsers.toString()}
-              icon={<UserGroupIcon className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
+              icon={<UserGroupIcon className="h-6 w-6 text-blue-600" />}
             />
             <StatCard
               title="Tutor Users"
               value={tutorUsers.toString()}
-              icon={<UserGroupIcon className="h-6 w-6 text-green-600 dark:text-green-400" />}
+              icon={<UserGroupIcon className="h-6 w-6 text-green-600" />}
             />
             <StatCard
               title="Active Users"
               value={activeUsers.toString()}
-              icon={<UserGroupIcon className="h-6 w-6 text-orange-600 dark:text-orange-400" />}
+              icon={<UserGroupIcon className="h-6 w-6 text-orange-600" />}
             />
           </div>
         </header>
@@ -164,10 +164,10 @@ function Users() {
         {/* User list */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">User List</h2>
+            <h2 className="text-xl font-semibold text-gray-900">User List</h2>
             <div className="mt-3 sm:mt-0">
               <select
-                className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-purple-400 dark:focus:ring-purple-400"
+                className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-purple-500"
                 onChange={(e) => setType(e.target.value)}
               >
                 <option value="">All Users</option>
@@ -179,50 +179,50 @@ function Users() {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md overflow-hidden dark:bg-gray-800">
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-700">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Name
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Email
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Role
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
+                      className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                <tbody className="bg-white divide-y divide-gray-200">
                   {loading ? (
                     <tr>
-                      <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                      <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">
                         <div className="flex justify-center">
                           <svg
-                            className="animate-spin h-5 w-5 text-purple-600 dark:text-purple-400"
+                            className="animate-spin h-5 w-5 text-purple-600"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
@@ -249,26 +249,20 @@ function Users() {
                       {userList.map((person, index) => (
                         <motion.tr
                           key={person.email || index}
-                          className="hover:bg-gray-50 dark:hover:bg-gray-700"
+                          className="hover:bg-gray-50"
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.2, delay: index * 0.05 }}
                         >
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {person.firstName} {person.lastName}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                            {person.email}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                            {person.accountType}
-                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{person.email}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{person.accountType}</td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                person.isActive
-                                  ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                                  : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
+                                person.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                               }`}
                             >
                               {person.isActive ? "Active" : "Inactive"}
@@ -280,7 +274,7 @@ function Users() {
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => handleEdit(person._id)}
-                                className="text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300"
+                                className="text-purple-600 hover:text-purple-900"
                               >
                                 <PencilIcon className="h-5 w-5" />
                                 <span className="sr-only">Edit</span>
@@ -289,7 +283,7 @@ function Users() {
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => handleDelete(person._id)}
-                                className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                                className="text-red-600 hover:text-red-900"
                               >
                                 <TrashIcon className="h-5 w-5" />
                                 <span className="sr-only">Delete</span>
@@ -298,7 +292,7 @@ function Users() {
                                 <motion.button
                                   whileHover={{ scale: 1.1 }}
                                   whileTap={{ scale: 0.9 }}
-                                  className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                                  className="text-blue-600 hover:text-blue-900"
                                 >
                                   <Link href={`users/tutor?page=${person._id}`}>
                                     <EyeIcon className="h-5 w-5" />
@@ -313,7 +307,7 @@ function Users() {
                     </AnimatePresence>
                   ) : (
                     <tr>
-                      <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                      <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">
                         No users found
                       </td>
                     </tr>
@@ -343,13 +337,13 @@ function Users() {
         {toDelete ? (
           <>
             <div className="sm:flex sm:items-start">
-              <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20 sm:mx-0 sm:h-10 sm:w-10">
-                <ExclamationTriangleIcon className="h-6 w-6 text-red-600 dark:text-red-400" aria-hidden="true" />
+              <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                <ExclamationTriangleIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
               </div>
               <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                <h3 className="text-base font-semibold leading-6 text-gray-900 dark:text-white">Delete account</h3>
+                <h3 className="text-base font-semibold leading-6 text-gray-900">Delete account</h3>
                 <div className="mt-2">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className="text-sm text-gray-500">
                     Are you sure you want to delete{" "}
                     <span className="font-bold">
                       {user?.firstName} {user?.lastName}
@@ -366,7 +360,7 @@ function Users() {
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 disabled={deleteStatus.loading}
-                className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:bg-red-700 dark:hover:bg-red-800 disabled:opacity-50 disabled:cursor-not-allowed sm:ml-3 sm:w-auto"
+                className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed sm:ml-3 sm:w-auto"
                 onClick={() => deleteUser()}
               >
                 {deleteStatus.loading ? (
@@ -399,7 +393,7 @@ function Users() {
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 disabled={deleteStatus.loading}
-                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:ring-gray-600 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed sm:mt-0 sm:w-auto"
+                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed sm:mt-0 sm:w-auto"
                 onClick={() => handleDelete()}
               >
                 Cancel
@@ -415,15 +409,11 @@ function Users() {
 }
 
 const StatCard = ({ title, value, icon }: { title: string; value: string; icon: React.ReactNode }) => (
-  <motion.div
-    className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-700"
-    whileHover={{ scale: 1.03 }}
-    transition={{ duration: 0.2 }}
-  >
+  <motion.div className="bg-white p-6 rounded-lg shadow-md" whileHover={{ scale: 1.03 }} transition={{ duration: 0.2 }}>
     <div className="flex items-center justify-between">
       <div>
-        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</p>
-        <p className="mt-1 text-3xl font-semibold text-gray-900 dark:text-white">{value}</p>
+        <p className="text-sm font-medium text-gray-500">{title}</p>
+        <p className="mt-1 text-3xl font-semibold text-gray-900">{value}</p>
       </div>
       {icon}
     </div>

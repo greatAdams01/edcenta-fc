@@ -268,19 +268,19 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
 
               {/* Quick Access */}
               <div className="mt-6">
-                <h3 className="px-3 text-xs font-semibold text-purple-300 uppercase tracking-wider">Quick Access</h3>
+                <h3 className="px-3 text-xs font-semibold text-purple-300 uppercase tracking-wider"></h3>
                 <div className="mt-2 space-y-1">
                   <a
                     href="#"
                     className="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:text-purple-700 hover:bg-purple-50"
                   >
-                    <span className="truncate">Recent Files</span>
+                    <span className="truncate"></span>
                   </a>
                   <a
                     href="#"
                     className="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:text-purple-700 hover:bg-purple-50"
                   >
-                    <span className="truncate">Shared with me</span>
+                    <span className="truncate"></span>
                   </a>
                 </div>
               </div>
