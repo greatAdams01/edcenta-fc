@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 
 import { Fragment, useState, useEffect } from "react"
@@ -47,43 +48,38 @@ function TopNav() {
 
   return (
     <nav className="bg-white border-b border-gray-100">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1400px] mx-auto">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center pl-4 sm:pl-6 lg:pl-8">
             <motion.div whileHover={{ scale: 1.02 }} className="flex items-center">
-              <span className="ml-2 text-xl font-semibold text-gray-900"></span>
+              <span className="text-xl font-semibold text-gray-900"></span>
             </motion.div>
           </div>
 
           {/* Search Bar */}
-          <div className="flex-1 max-w-2xl mx-auto flex items-center px-9">
-            <div className="w-full">
-              <label htmlFor="search" className="sr-only">
-                Search
-              </label>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                </div>
-                <input
-                  id="search"
-                  name="search"
-                  className="block w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-10 pr-3 text-sm placeholder:text-gray-400 focus:border-gray-300 focus:bg-white focus:outline-none focus:ring-0"
-                  placeholder="Search..."
-                  type="search"
-                />
+          <div className="flex-1 max-w-xl mx-auto px-8 sm:px-12 lg:px-16">
+            <div className="relative w-full">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
               </div>
+              <input
+                id="search"
+                name="search"
+                className="block w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-10 pr-3 text-sm placeholder:text-gray-400 focus:border-gray-300 focus:bg-white focus:outline-none focus:ring-0 shadow-sm"
+                placeholder="Search..."
+                type="search"
+              />
             </div>
           </div>
 
-          {/* Right section - pushed to the extreme right */}
-          <div className="flex items-center gap-x-4 mr-2">
+          {/* Right section */}
+          <div className="flex items-center pr-4 sm:pr-6 lg:pr-8">
             {/* Notification button */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="relative p-2 text-gray-400 hover:text-gray-500"
+              className="relative p-2.5 text-gray-400 hover:text-gray-500 bg-gray-50 rounded-full shadow-sm mr-8"
             >
               <span className="sr-only">View notifications</span>
               <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -92,26 +88,23 @@ function TopNav() {
 
             {/* Profile dropdown */}
             <Menu as="div" className="relative">
-              <div className="flex items-center">
-                <Menu.Button className="flex items-center">
-                  <span className="sr-only">Open user menu</span>
-                  <div className="flex items-center">
-                    
-                    </div>
-                    <div className="ml-36 hidden md:block text-left">
-                      <p className="text-sm font-medium text-gray-700 ml-36">{fullName}</p>
-                      <p className="text-xs text-gray-500 ml-36">{isStudent ? "Student" : ""}</p>
-                      <div className="flex items-center">
-                    <motion.img
-                      whileHover={{ scale: 1.05 }}
-                      className="h-8 w-8 rounded-full object-cover ml-44"
-                      src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      alt=""
-                    />
-                    </div>
-                  </div>
-                </Menu.Button>
-              </div>
+              <Menu.Button className="flex items-center gap-x-4 focus:outline-none group">
+                <span className="sr-only">Open user menu</span>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="h-9 w-9 rounded-full overflow-hidden border-2 border-gray-200 group-hover:border-purple-200 transition-colors duration-200"
+                >
+                  <img
+                    className="h-full w-full object-cover"
+                    src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    alt=""
+                  />
+                </motion.div>
+                <div className="hidden md:block text-left">
+                  <p className="text-sm font-medium text-gray-700">{fullName}</p>
+                  <p className="text-xs text-gray-500">{isStudent ? "Student" : "Admin"}</p>
+                </div>
+              </Menu.Button>
               <Transition
                 as={Fragment}
                 enter="transition ease-out duration-100"
