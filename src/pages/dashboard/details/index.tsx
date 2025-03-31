@@ -78,26 +78,22 @@ function Index() {
 
   return (
     <AppLayout>
-      <div className="grid justify-items-stretch transition-colors duration-200">
-        <div className="w-full justify-self-center rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm transition-colors duration-200">
-          <div className="mb-6 flex w-full items-center justify-between gap-x-3 bg-purple-100 p-4 dark:bg-purple-900/20 rounded-t-lg transition-colors duration-200">
+      <div className="grid justify-items-stretch">
+        <div className="w-full justify-self-center rounded-lg border border-gray-200 bg-white shadow-sm">
+          <div className="mb-6 flex w-full items-center justify-between gap-x-3 bg-purple-100 p-4 rounded-t-lg">
             <div className="flex w-full items-center justify-start gap-x-3">
-              <UserIcon className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-              <h1 className="text-xl font-semibold text-gray-900 dark:text-white transition-colors duration-200">
-                My Details
-              </h1>
+              <UserIcon className="h-6 w-6 text-purple-600" />
+              <h1 className="text-xl font-semibold text-gray-900">My Details</h1>
             </div>
           </div>
 
           <div className="px-6 pb-6">
             <form onSubmit={handleSubmit} className="w-full">
               <div className="w-full flex justify-between items-center mb-6">
-                <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200">
-                  Update your personal information and account details
-                </p>
+                <p className="text-sm text-gray-600">Update your personal information and account details</p>
                 <button
                   type="submit"
-                  className="inline-flex items-center justify-center rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:bg-purple-700 dark:hover:bg-purple-800 transition-colors duration-200"
+                  className="inline-flex items-center justify-center rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
                 >
                   Save Changes
                 </button>
@@ -105,10 +101,7 @@ function Index() {
 
               <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
                 <div className="space-y-1">
-                  <label
-                    htmlFor="firstName"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
-                  >
+                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
                     First name <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -116,15 +109,12 @@ function Index() {
                     id="firstName"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-purple-400 dark:focus:ring-purple-400 transition-colors duration-200"
+                    className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label
-                    htmlFor="lastName"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
-                  >
+                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
                     Last name <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -132,15 +122,12 @@ function Index() {
                     id="lastName"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-purple-400 dark:focus:ring-purple-400 transition-colors duration-200"
+                    className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
-                  >
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                     Email <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -148,36 +135,30 @@ function Index() {
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-purple-400 dark:focus:ring-purple-400 transition-colors duration-200"
+                    className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
 
                 <div className="space-y-1">
                   <div className="flex justify-between items-center">
-                    <label
-                      htmlFor="password"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
-                    >
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                       Password <span className="text-red-500">*</span>
                     </label>
                     <button
                       type="button"
                       onClick={ifClicked}
-                      className="text-sm font-medium text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 transition-colors duration-200"
+                      className="text-sm font-medium text-purple-600 hover:text-purple-700"
                     >
                       Change Password
                     </button>
                   </div>
-                  <div className="block w-full rounded-md border border-gray-300 bg-gray-100 px-4 py-3 text-gray-500 shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 transition-colors duration-200">
+                  <div className="block w-full rounded-md border border-gray-300 bg-gray-100 px-4 py-3 text-gray-500 shadow-sm">
                     ••••••••
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
-                  >
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
                     Contact <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -185,15 +166,12 @@ function Index() {
                     id="phone"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-purple-400 dark:focus:ring-purple-400 transition-colors duration-200"
+                    className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label
-                    htmlFor="address"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
-                  >
+                  <label htmlFor="address" className="block text-sm font-medium text-gray-700">
                     Address <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -201,15 +179,12 @@ function Index() {
                     id="address"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-purple-400 dark:focus:ring-purple-400 transition-colors duration-200"
+                    className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label
-                    htmlFor="city"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
-                  >
+                  <label htmlFor="city" className="block text-sm font-medium text-gray-700">
                     City <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -217,15 +192,12 @@ function Index() {
                     id="city"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-purple-400 dark:focus:ring-purple-400 transition-colors duration-200"
+                    className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label
-                    htmlFor="accountType"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
-                  >
+                  <label htmlFor="accountType" className="block text-sm font-medium text-gray-700">
                     Account Type <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -234,25 +206,18 @@ function Index() {
                     value={accountType}
                     readOnly
                     title="Account type cannot be changed"
-                    className="block w-full rounded-md border border-gray-300 bg-gray-100 px-4 py-3 text-gray-500 shadow-sm cursor-not-allowed dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 transition-colors duration-200"
+                    className="block w-full rounded-md border border-gray-300 bg-gray-100 px-4 py-3 text-gray-500 shadow-sm cursor-not-allowed"
                   />
                 </div>
               </div>
 
-              <div className="mt-8 border-t border-gray-200 pt-6 dark:border-gray-700 transition-colors duration-200">
-                <h2 className="text-lg font-medium text-gray-900 dark:text-white transition-colors duration-200">
-                  Banking Information
-                </h2>
-                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200">
-                  Update your banking details for payments and transactions
-                </p>
+              <div className="mt-8 border-t border-gray-200 pt-6">
+                <h2 className="text-lg font-medium text-gray-900">Banking Information</h2>
+                <p className="mt-1 text-sm text-gray-600">Update your banking details for payments and transactions</p>
 
                 <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
                   <div className="space-y-1">
-                    <label
-                      htmlFor="bName"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
-                    >
+                    <label htmlFor="bName" className="block text-sm font-medium text-gray-700">
                       Account Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -260,15 +225,12 @@ function Index() {
                       id="bName"
                       value={bName}
                       onChange={(e) => setBName(e.target.value)}
-                      className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-purple-400 dark:focus:ring-purple-400 transition-colors duration-200"
+                      className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label
-                      htmlFor="bankName"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
-                    >
+                    <label htmlFor="bankName" className="block text-sm font-medium text-gray-700">
                       Bank Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -276,15 +238,12 @@ function Index() {
                       id="bankName"
                       value={bankName}
                       onChange={(e) => setBankName(e.target.value)}
-                      className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-purple-400 dark:focus:ring-purple-400 transition-colors duration-200"
+                      className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label
-                      htmlFor="accountNumber"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
-                    >
+                    <label htmlFor="accountNumber" className="block text-sm font-medium text-gray-700">
                       Account Number <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -292,15 +251,12 @@ function Index() {
                       id="accountNumber"
                       value={accountNumber}
                       onChange={(e) => setAccountNumber(e.target.value)}
-                      className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-purple-400 dark:focus:ring-purple-400 transition-colors duration-200"
+                      className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label
-                      htmlFor="occupation"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
-                    >
+                    <label htmlFor="occupation" className="block text-sm font-medium text-gray-700">
                       Occupation <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -308,14 +264,14 @@ function Index() {
                       id="occupation"
                       value={occupation}
                       onChange={(e) => setOccupation(e.target.value)}
-                      className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-purple-400 dark:focus:ring-purple-400 transition-colors duration-200"
+                      className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
                     />
                   </div>
                 </div>
               </div>
 
               {change && (
-                <div className="mt-8 border-t border-gray-200 pt-6 dark:border-gray-700 transition-colors duration-200">
+                <div className="mt-8 border-t border-gray-200 pt-6">
                   <Password />
                 </div>
               )}
@@ -334,6 +290,7 @@ function Index() {
         draggable
         pauseOnHover
         transition={Slide}
+        theme="light"
       />
     </AppLayout>
   )
