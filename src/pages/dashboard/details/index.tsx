@@ -12,6 +12,12 @@ import { USER } from "@/apollo/queries/dashboard"
 import { MUTATE_USER } from "@/apollo/mutations/dashboard"
 import Password from "@/components/ui/password"
 
+interface Bank {
+  active: boolean
+  slug: string
+  code: string
+}
+
 const VERIFY_BANK_ACCOUNT = gql`
   mutation VerifyBankAccount($accountNumber: String, $code: String) {
     verifyBankAccount(account_number: $accountNumber, code: $code) {
@@ -49,7 +55,7 @@ function Index() {
 
   const { data: banksData, loading: banksLoading } = useQuery(GET_BANKS)
   const [verifyBankAccount, { loading: verifyingBank }] = useMutation(VERIFY_BANK_ACCOUNT)
-  const [banks, setBanks] = useState([])
+  const [banks, setBanks] = useState<Bank[]>([])
   const [bankCode, setBankCode] = useState("")
   const [verifiedAccountName, setVerifiedAccountName] = useState("")
   const [isVerifying, setIsVerifying] = useState(false)
@@ -72,7 +78,7 @@ function Index() {
 
   useEffect(() => {
     if (banksData && banksData.getBanks) {
-      setBanks(banksData.getBanks.filter((bank: { active: any }) => bank.active))
+      setBanks(banksData.getBanks.filter((bank: Bank) => bank.active))
     }
   }, [banksData])
 
@@ -103,8 +109,9 @@ function Index() {
       setTimeout(() => {
         window.location.reload()
       }, 3000)
-    } catch (error) {
-      toast.error("Error updating profile: " + error)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
+      toast.error("Error updating profile: " + errorMessage)
     }
   }
 
@@ -128,8 +135,9 @@ function Index() {
         setBName(data.verifyBankAccount.account_name)
         toast.success("Account verified successfully")
       }
-    } catch (error) {
-      toast.error("Failed to verify account: " )
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
+      toast.error("Failed to verify account: " + errorMessage)
     } finally {
       setIsVerifying(false)
     }
@@ -298,13 +306,13 @@ function Index() {
                       value={bankCode}
                       onChange={(e) => {
                         setBankCode(e.target.value)
-                        const selectedBank = banks.find((bank) => bank.code === e.target.value)
+                        const selectedBank = banks.find((bank: Bank) => bank.code === e.target.value)
                         setBankName(selectedBank ? selectedBank.slug : "")
                       }}
                       className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
                     >
                       <option value="">Select a bank</option>
-                      {banks.map((bank) => (
+                      {banks.map((bank: Bank) => (
                         <option key={bank.code} value={bank.code}>
                           {bank.slug}
                         </option>
@@ -363,7 +371,7 @@ function Index() {
         </div>
       </div>
       <ToastContainer
-        position="top-right"
+        position="bottom-right"
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -380,6 +388,4 @@ function Index() {
 }
 
 export default Index
-
-
 
