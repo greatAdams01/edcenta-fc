@@ -102,7 +102,7 @@ function TopNav() {
                 </motion.div>
                 <div className="hidden md:block text-left">
                   <p className="text-sm font-medium text-gray-700">{fullName}</p>
-                  <p className="text-xs text-gray-500">{isStudent ? "Student" : "Admin"}</p>
+                  <p className="text-xs text-gray-500">{isStudent ? "Student" : "Tutor"}</p>
                 </div>
               </Menu.Button>
               <Transition

@@ -1,8 +1,8 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
-import { useQuery, useMutation } from "@apollo/client"
+import { useEffect, useState } from "react"
+import { useQuery, useMutation, gql } from "@apollo/client"
 import { UserIcon } from "@heroicons/react/24/outline"
 import { ToastContainer, toast, Slide } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -11,6 +11,25 @@ import AppLayout from "../../../layout/AppLayout"
 import { USER } from "@/apollo/queries/dashboard"
 import { MUTATE_USER } from "@/apollo/mutations/dashboard"
 import Password from "@/components/ui/password"
+
+const VERIFY_BANK_ACCOUNT = gql`
+  mutation VerifyBankAccount($accountNumber: String, $code: String) {
+    verifyBankAccount(account_number: $accountNumber, code: $code) {
+      account_name
+      account_number
+    }
+  }
+`
+
+const GET_BANKS = gql`
+  query GetBanks {
+    getBanks {
+      active
+      slug
+      code
+    }
+  }
+`
 
 function Index() {
   const { data } = useQuery(USER)
@@ -28,6 +47,13 @@ function Index() {
   const [occupation, setOccupation] = useState("")
   const [change, isClicked] = useState<boolean>(false)
 
+  const { data: banksData, loading: banksLoading } = useQuery(GET_BANKS)
+  const [verifyBankAccount, { loading: verifyingBank }] = useMutation(VERIFY_BANK_ACCOUNT)
+  const [banks, setBanks] = useState([])
+  const [bankCode, setBankCode] = useState("")
+  const [verifiedAccountName, setVerifiedAccountName] = useState("")
+  const [isVerifying, setIsVerifying] = useState(false)
+
   useEffect(() => {
     if (data && data.user) {
       setFirstName(data.user.firstName || "")
@@ -43,6 +69,12 @@ function Index() {
       setOccupation(data.user.occupation || "")
     }
   }, [data])
+
+  useEffect(() => {
+    if (banksData && banksData.getBanks) {
+      setBanks(banksData.getBanks.filter((bank: { active: any }) => bank.active))
+    }
+  }, [banksData])
 
   const ifClicked = () => {
     isClicked(!change)
@@ -73,6 +105,33 @@ function Index() {
       }, 3000)
     } catch (error) {
       toast.error("Error updating profile: " + error)
+    }
+  }
+
+  const handleVerifyAccount = async () => {
+    if (!accountNumber || !bankCode) {
+      toast.error("Please enter account number and select a bank")
+      return
+    }
+
+    setIsVerifying(true)
+    try {
+      const { data } = await verifyBankAccount({
+        variables: {
+          accountNumber,
+          code: bankCode,
+        },
+      })
+
+      if (data && data.verifyBankAccount) {
+        setVerifiedAccountName(data.verifyBankAccount.account_name)
+        setBName(data.verifyBankAccount.account_name)
+        toast.success("Account verified successfully")
+      }
+    } catch (error) {
+      toast.error("Failed to verify account: " )
+    } finally {
+      setIsVerifying(false)
     }
   }
 
@@ -223,9 +282,10 @@ function Index() {
                     <input
                       type="text"
                       id="bName"
-                      value={bName}
+                      value={bName || verifiedAccountName}
                       onChange={(e) => setBName(e.target.value)}
-                      className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                      readOnly={!!verifiedAccountName}
+                      className={`block w-full rounded-md border border-gray-300 ${verifiedAccountName ? "bg-gray-100" : "bg-white"} px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500 ${verifiedAccountName ? "cursor-not-allowed" : ""}`}
                     />
                   </div>
 
@@ -233,26 +293,49 @@ function Index() {
                     <label htmlFor="bankName" className="block text-sm font-medium text-gray-700">
                       Bank Name <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
+                    <select
                       id="bankName"
-                      value={bankName}
-                      onChange={(e) => setBankName(e.target.value)}
+                      value={bankCode}
+                      onChange={(e) => {
+                        setBankCode(e.target.value)
+                        const selectedBank = banks.find((bank) => bank.code === e.target.value)
+                        setBankName(selectedBank ? selectedBank.slug : "")
+                      }}
                       className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                    />
+                    >
+                      <option value="">Select a bank</option>
+                      {banks.map((bank) => (
+                        <option key={bank.code} value={bank.code}>
+                          {bank.slug}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div className="space-y-1">
                     <label htmlFor="accountNumber" className="block text-sm font-medium text-gray-700">
                       Account Number <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      id="accountNumber"
-                      value={accountNumber}
-                      onChange={(e) => setAccountNumber(e.target.value)}
-                      className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                    />
+                    <div className="flex">
+                      <input
+                        type="text"
+                        id="accountNumber"
+                        value={accountNumber}
+                        onChange={(e) => setAccountNumber(e.target.value)}
+                        className="block w-full rounded-l-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleVerifyAccount}
+                        disabled={isVerifying || !accountNumber || !bankCode}
+                        className="inline-flex items-center justify-center rounded-r-md bg-purple-600 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:bg-purple-300"
+                      >
+                        {isVerifying ? "Verifying..." : "Verify"}
+                      </button>
+                    </div>
+                    {verifiedAccountName && (
+                      <p className="mt-1 text-sm text-green-600">Verified: {verifiedAccountName}</p>
+                    )}
                   </div>
 
                   <div className="space-y-1">
@@ -280,7 +363,7 @@ function Index() {
         </div>
       </div>
       <ToastContainer
-        position="bottom-right"
+        position="top-right"
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -297,4 +380,6 @@ function Index() {
 }
 
 export default Index
+
+
 
