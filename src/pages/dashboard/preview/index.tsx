@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useQuery, useLazyQuery } from '@apollo/client'; // Use `useLazyQuery` to trigger queries conditionally
+import { useQuery, useLazyQuery } from '@apollo/client';
 import Link from 'next/link';
 import AppLayout from '../../../layout/AppLayout';
 import { FETCH_ASSIGNED, TOPIC_QUERY } from '@/apollo/queries/dashboard';
-
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 export default function Preview() {
   const { data } = useQuery(FETCH_ASSIGNED, {
     variables: { status: 'ASSIGNED' },
+    fetchPolicy: "network-only",
   });
-  console.log(data)
 
   const [topics, setTopics] = useState<{ [key: string]: string }>({});
 
@@ -17,7 +17,6 @@ export default function Preview() {
 
   useEffect(() => {
     if (data?.fetchAssigned?.data) {
-      // Fetch topics only when data is available
       const topicIds = data.fetchAssigned.data.map((single: any) => single.worksheetId?.topicId);
       fetchTopics(topicIds);
     }
@@ -43,6 +42,42 @@ export default function Preview() {
     setTopics(topicMap);
   };
 
+  if (!data) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-start justify-center bg-[#010B1ACC] dark:bg-[#00000099]">
+        <div className="z-10 m-auto w-[500px] rounded-md bg-white p-6 py-12 dark:bg-gray-800 transition-colors duration-200">
+          <div className="sm:flex sm:items-start">
+            <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900 sm:mx-0 sm:h-10 sm:w-10">
+              <ExclamationTriangleIcon className="h-6 w-6 text-red-600 dark:text-red-400" aria-hidden="true" />
+            </div>
+            <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+              <h3 className="text-base font-semibold leading-6 text-gray-900 dark:text-white">
+                You have no subscription
+              </h3>
+              <div className="mt-2">
+                <p className="text-sm text-gray-500 dark:text-gray-400">Subcribe to one of our plans</p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-5 gap-x-3 sm:mt-4 sm:flex sm:flex-row-reverse">
+            <Link
+              href={`/dashboard`}
+              className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:ring-gray-600 dark:hover:bg-gray-600 transition-colors duration-200 sm:mt-0 sm:w-auto"
+            >
+              Go Back
+            </Link>{" "}
+            <Link
+              href={`/dashboard/subscription`}
+              className="mt-3 inline-flex w-full justify-center rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-800 transition-colors duration-200 sm:mt-0 sm:w-auto"
+            >
+              View plans
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <AppLayout>
       <div className="px-4 sm:px-6 lg:px-8">
@@ -59,20 +94,16 @@ export default function Preview() {
             <thead className="font-bold">
               <tr className="text-left">
                 <th scope="col" className="py-8 pl-3">Activity</th>
-                {/* <th scope="col">Subject</th> */}
                 <th scope="col">Topic</th>
                 <th scope="col">Difficulty</th>
-                {/* <th scope="col">Year</th> */}
               </tr>
             </thead>
             <tbody>
               {data?.fetchAssigned?.data?.map((single: any, index: any) => (
                 <tr key={index} className="border-y">
                   <td className="pl-3 py-6 font-bold">{single.worksheetId?.title}</td>
-                  {/* <td>Mathematics</td> */}
                   <td className="font-bold">{topics[single.worksheetId?.topicId] || '...'}</td>
                   <td>{single.worksheetId?.difficulty}</td>
-                  {/* <td>4</td> */}
                 </tr>
               ))}
             </tbody>

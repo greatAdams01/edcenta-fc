@@ -52,13 +52,14 @@ function Index() {
   const [accountNumber, setAccountNumber] = useState("")
   const [occupation, setOccupation] = useState("")
   const [change, isClicked] = useState<boolean>(false)
+  const [isVerifying, setIsVerifying] = useState(false)
+  const [isAccountVerifying, setIsAccountVerifying] = useState(false)
 
   const { data: banksData, loading: banksLoading } = useQuery(GET_BANKS)
   const [verifyBankAccount, { loading: verifyingBank }] = useMutation(VERIFY_BANK_ACCOUNT)
   const [banks, setBanks] = useState<Bank[]>([])
   const [bankCode, setBankCode] = useState("")
   const [verifiedAccountName, setVerifiedAccountName] = useState("")
-  const [isVerifying, setIsVerifying] = useState(false)
 
   useEffect(() => {
     if (data && data.user) {
@@ -115,33 +116,45 @@ function Index() {
     }
   }
 
-  const handleVerifyAccount = async () => {
-    if (!accountNumber || !bankCode) {
-      toast.error("Please enter account number and select a bank")
-      return
-    }
+  const handleAccountNumberChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newAccountNumber = e.target.value;
+    setAccountNumber(newAccountNumber);
+    
+    if (newAccountNumber && bankCode && newAccountNumber.length >= 10) {
+      setIsAccountVerifying(true);
+      try {
+        const { data } = await verifyBankAccount({
+          variables: {
+            accountNumber: newAccountNumber,
+            code: bankCode,
+          },
+        });
 
-    setIsVerifying(true)
-    try {
-      const { data } = await verifyBankAccount({
-        variables: {
-          accountNumber,
-          code: bankCode,
-        },
-      })
-
-      if (data && data.verifyBankAccount) {
-        setVerifiedAccountName(data.verifyBankAccount.account_name)
-        setBName(data.verifyBankAccount.account_name)
-        toast.success("Account verified successfully")
+        if (data && data.verifyBankAccount) {
+          setVerifiedAccountName(data.verifyBankAccount.account_name);
+          setBName(data.verifyBankAccount.account_name);
+          toast.success("Account verified successfully");
+        }
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+        toast.error("Failed to verify account: " + errorMessage);
+        setVerifiedAccountName("");
+        setBName("");
+      } finally {
+        setIsAccountVerifying(false);
       }
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
-      toast.error("Failed to verify account: " + errorMessage)
-    } finally {
-      setIsVerifying(false)
     }
-  }
+  };
+
+  const handleBankChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedBank = banks.find(bank => bank.code === e.target.value);
+    setBankCode(e.target.value);
+    setBankName(selectedBank?.slug || "");
+    
+    if (accountNumber && accountNumber.length >= 10) {
+      handleAccountNumberChange({ target: { value: accountNumber } } as React.ChangeEvent<HTMLInputElement>);
+    }
+  };
 
   return (
     <AppLayout>
@@ -284,35 +297,17 @@ function Index() {
 
                 <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
                   <div className="space-y-1">
-                    <label htmlFor="bName" className="block text-sm font-medium text-gray-700">
-                      Account Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="bName"
-                      value={bName || verifiedAccountName}
-                      onChange={(e) => setBName(e.target.value)}
-                      readOnly={!!verifiedAccountName}
-                      className={`block w-full rounded-md border border-gray-300 ${verifiedAccountName ? "bg-gray-100" : "bg-white"} px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500 ${verifiedAccountName ? "cursor-not-allowed" : ""}`}
-                    />
-                  </div>
-
-                  <div className="space-y-1">
                     <label htmlFor="bankName" className="block text-sm font-medium text-gray-700">
                       Bank Name <span className="text-red-500">*</span>
                     </label>
                     <select
                       id="bankName"
                       value={bankCode}
-                      onChange={(e) => {
-                        setBankCode(e.target.value)
-                        const selectedBank = banks.find((bank: Bank) => bank.code === e.target.value)
-                        setBankName(selectedBank ? selectedBank.slug : "")
-                      }}
+                      onChange={handleBankChange}
                       className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
                     >
                       <option value="">Select a bank</option>
-                      {banks.map((bank: Bank) => (
+                      {banks.map((bank) => (
                         <option key={bank.code} value={bank.code}>
                           {bank.slug}
                         </option>
@@ -324,28 +319,39 @@ function Index() {
                     <label htmlFor="accountNumber" className="block text-sm font-medium text-gray-700">
                       Account Number <span className="text-red-500">*</span>
                     </label>
-                    <div className="flex">
-                      <input
-                        type="text"
-                        id="accountNumber"
-                        value={accountNumber}
-                        onChange={(e) => setAccountNumber(e.target.value)}
-                        className="block w-full rounded-l-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleVerifyAccount}
-                        disabled={isVerifying || !accountNumber || !bankCode}
-                        className="inline-flex items-center justify-center rounded-r-md bg-purple-600 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:bg-purple-300"
-                      >
-                        {isVerifying ? "Verifying..." : "Verify"}
-                      </button>
-                    </div>
-                    {verifiedAccountName && (
-                      <p className="mt-1 text-sm text-green-600">Verified: {verifiedAccountName}</p>
+                    <input
+                      type="text"
+                      id="accountNumber"
+                      value={accountNumber}
+                      onChange={handleAccountNumberChange}
+                      maxLength={10}
+                      className="block w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                    />
+                    {isAccountVerifying && (
+                      <p className="text-sm text-purple-600">Verifying account...</p>
                     )}
                   </div>
 
+                  <div className="space-y-1">
+                    <label htmlFor="bName" className="block text-sm font-medium text-gray-700">
+                      Account Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="bName"
+                      value={bName || verifiedAccountName}
+                      readOnly
+                      className="block w-full rounded-md border border-gray-300 bg-gray-100 px-4 py-3 text-gray-900 shadow-sm cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 border-t border-gray-200 pt-6">
+                <h2 className="text-lg font-medium text-gray-900">Occupation</h2>
+                <p className="mt-1 text-sm text-gray-600">Update your occupation</p>
+
+                <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
                   <div className="space-y-1">
                     <label htmlFor="occupation" className="block text-sm font-medium text-gray-700">
                       Occupation <span className="text-red-500">*</span>
