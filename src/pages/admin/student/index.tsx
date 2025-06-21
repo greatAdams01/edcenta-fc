@@ -13,6 +13,7 @@ import {
   PencilIcon,
   TrashIcon,
   ExclamationTriangleIcon,
+  XCircleIcon,
 } from "@heroicons/react/24/outline"
 import { getCookie } from "cookies-next"
 import { motion, AnimatePresence } from "framer-motion"
