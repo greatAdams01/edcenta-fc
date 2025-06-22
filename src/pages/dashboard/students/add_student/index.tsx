@@ -56,7 +56,7 @@ export default function Create() {
     },
     onError: (error) => {
       toast.error(
-        error.message
+        error.message.replace(/'/g, "&apos;")
         // 'Error creating student: this email might already been used by another student',
       )
       console.log(error)
@@ -197,7 +197,7 @@ export default function Create() {
               </div>
               <div className="hidden flex-col items-start gap-y-1">
                 <label htmlFor="Last name" className="w-full">
-                  Creator's ID <span className="text-red-500">*</span>
+                  Creator&apos;s ID <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
