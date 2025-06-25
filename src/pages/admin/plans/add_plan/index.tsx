@@ -62,7 +62,7 @@ const AddPlan = () => {
 
   useEffect(() => {
     getPlans()
-  }, [])
+  }, [getPlans])
 
   const [updatePlan] = useMutation(UPDATE_PLAN, {
     variables: {
@@ -135,7 +135,7 @@ const AddPlan = () => {
 
   useEffect(() => {
     getSubjects()
-  }, [])
+  }, [getSubjects])
 
   return (
     <AdminLayout>

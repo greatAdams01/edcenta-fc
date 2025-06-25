@@ -4,6 +4,7 @@ import Link from 'next/link';
 import AppLayout from '../../../layout/AppLayout';
 import { FETCH_ASSIGNED, TOPIC_QUERY } from '@/apollo/queries/dashboard';
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import SubscriptionCheck from '@/components/SubscriptionCheck'
 
 export default function Preview() {
   const { data } = useQuery(FETCH_ASSIGNED, {
@@ -65,7 +66,7 @@ export default function Preview() {
               className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:ring-gray-600 dark:hover:bg-gray-600 transition-colors duration-200 sm:mt-0 sm:w-auto"
             >
               Go Back
-            </Link>{" "}
+            </Link>{' '}
             <Link
               href={`/dashboard/subscription`}
               className="mt-3 inline-flex w-full justify-center rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-800 transition-colors duration-200 sm:mt-0 sm:w-auto"
@@ -75,41 +76,42 @@ export default function Preview() {
           </div>
         </div>
       </div>
-    );
+    )
   }
-
   return (
-    <AppLayout>
-      <div className="px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between">
-          <h1 className="font-bold my-auto">Assigned Activities</h1>
-          <select className="border p-2 rounded-md">
-            <option value="all">All</option>
-            <option value="Worksheets">Worksheets</option>
-            <option value="Assesment">Assesment</option>
-          </select>
-        </div>
-        <div className="mt-4 -my-2 sm:-mx-6 lg:-mx-8">
-          <table className="min-w-full divide-y divide-gray-300 mt-4">
-            <thead className="font-bold">
-              <tr className="text-left">
-                <th scope="col" className="py-8 pl-3">Activity</th>
-                <th scope="col">Topic</th>
-                <th scope="col">Difficulty</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data?.fetchAssigned?.data?.map((single: any, index: any) => (
-                <tr key={index} className="border-y">
-                  <td className="pl-3 py-6 font-bold">{single.worksheetId?.title}</td>
-                  <td className="font-bold">{topics[single.worksheetId?.topicId] || '...'}</td>
-                  <td>{single.worksheetId?.difficulty}</td>
+    <SubscriptionCheck>
+      <AppLayout>
+        <div className="px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between">
+            <h1 className="font-bold my-auto">Assigned Activities</h1>
+            <select className="border p-2 rounded-md">
+              <option value="all">All</option>
+              <option value="Worksheets">Worksheets</option>
+              <option value="Assesment">Assesment</option>
+            </select>
+          </div>
+          <div className="mt-4 -my-2 sm:-mx-6 lg:-mx-8">
+            <table className="min-w-full divide-y divide-gray-300 mt-4">
+              <thead className="font-bold">
+                <tr className="text-left">
+                  <th scope="col" className="py-8 pl-3">Activity</th>
+                  <th scope="col">Topic</th>
+                  <th scope="col">Difficulty</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {data?.fetchAssigned?.data?.map((single: any, index: any) => (
+                  <tr key={index} className="border-y">
+                    <td className="pl-3 py-6 font-bold">{single.worksheetId?.title}</td>
+                    <td className="font-bold">{topics[single.worksheetId?.topicId] || '...'}</td>
+                    <td>{single.worksheetId?.difficulty}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-    </AppLayout>
+      </AppLayout>
+    </SubscriptionCheck>
   );
 }

@@ -167,8 +167,13 @@ const Reset = () => {
 
               {Loading ? (
                 <div className="flex w-full justify-center rounded-md border-2 border-indigo-600  px-3 py-1 text-sm font-semibold leading-6 text-white shadow-sm  cursor-progress">
-                  <img src="/loader.gif" alt="loader" className="w-6 rotating-loader" />
-
+                  <Image
+                    src="/loader.gif"
+                    alt="loader"
+                    className="w-6 rotating-loader"
+                    width={24}
+                    height={24}
+                  />
                 </div>
                 ) : (
                   <button

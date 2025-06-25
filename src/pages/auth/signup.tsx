@@ -261,25 +261,16 @@ export default function Signup() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  />
-                  <label htmlFor="remember-me" className="ml-3 block text-sm leading-6 text-gray-900">
-                    Remember me
-                  </label>
-                </div>
-              </div>
-
               <div>
               {Loading ? (
                 <div className="flex w-full justify-center rounded-md border-2 border-indigo-600  px-3 py-1 text-sm font-semibold leading-6 text-white shadow-sm  cursor-progress">
-                  <img src="/loader.gif" alt="loader" className="w-6 rotating-loader" />
-
+                  <Image
+                    src="/loader.gif"
+                    alt="loader"
+                    className="w-6 rotating-loader"
+                    width={24}
+                    height={24}
+                  />
                 </div>
                 ) : (
                   <button
