@@ -25,6 +25,7 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
   const router = useRouter()
   const { pathname, query } = router
   const { id } = query
+  const [isClient, setIsClient] = useState(false)
 
   const { data } = useQuery(STAGES)
   const stages = data?.schoolGrades || []
@@ -32,13 +33,19 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
   const [accountType, setAccountType] = useState("")
 
   useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isClient) return
+
     const authData: any = getCookie("Authdata")
     if (!authData) {
-      window.location.href = "/auth/login"
+      router.push("/auth/login")
       return
     }
     setAccountType(JSON.parse(authData).accountType)
-  }, [])
+  }, [isClient, router])
 
   let renderedNavigation
   if (

@@ -26,6 +26,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
   const { pathname, query } = router
   const [navList, setList] = useState<any>([])
   const { id } = query
+  const [isClient, setIsClient] = useState(false)
 
   const { data } = useQuery(STAGES)
   const stages = data?.schoolGrades || []
@@ -33,27 +34,63 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
   const [accountType, setAccountType] = useState("")
 
   useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isClient) return
+
     const authData: any = getCookie("Authdata")
+    
+    // Check if authData exists and is valid
     if (!authData) {
-      window.location.href = "/auth/login"
+      console.log("No auth data found, redirecting to login")
+      router.push("/auth/login")
       return
     }
-    if (
-      JSON.parse(authData).accountType === "ADMIN" ||
-      JSON.parse(authData).accountType === "SUPERADMIN" ||
-      JSON.parse(authData).accountType === "MODERATOR"
-    ) {
-      console.log("Redirecting to admin")
-      window.location.href = "/admin"
+
+    try {
+      const parsedAuthData = JSON.parse(authData)
+      
+      // Check if accountType exists and is valid
+      if (!parsedAuthData.accountType || !parsedAuthData._id) {
+        console.log("Invalid auth data structure, clearing cookies and redirecting to login")
+        // Clear invalid cookies
+        document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = 'Authdata=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        router.push("/auth/login")
+        return
+      }
+
+      console.log("Account type:", parsedAuthData.accountType)
+      
+      // Redirect admin users to admin panel
+      if (
+        parsedAuthData.accountType === "ADMIN" ||
+        parsedAuthData.accountType === "SUPERADMIN" ||
+        parsedAuthData.accountType === "MODERATOR"
+      ) {
+        console.log("Redirecting to admin")
+        router.push("/admin")
+        return
+      }
+
+      // Set navigation based on account type
+      if (parsedAuthData.accountType === "STUDENT") {
+        setList(studentNav)
+      } else {
+        setList(navigation)
+      }
+      
+      setAccountType(parsedAuthData.accountType)
+    } catch (error) {
+      console.error("Error parsing auth data:", error)
+      // Clear corrupted cookies
+      document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'Authdata=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      router.push("/auth/login")
     }
-    console.log(JSON.parse(authData).accountType)
-    if (JSON.parse(authData).accountType === "STUDENT") {
-      setList(studentNav)
-    } else {
-      setList(navigation)
-    }
-    setAccountType(JSON.parse(authData).accountType)
-  }, [])
+  }, [isClient, router])
 
   let renderedNavigation
   if (

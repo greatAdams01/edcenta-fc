@@ -9,19 +9,21 @@ import { deleteCookie, getCookie } from "cookies-next"
 import { useLazyQuery } from "@apollo/client"
 import { motion } from "framer-motion"
 import { USER_FULLNAME, STUDENT_NAME } from "@/apollo/queries/auth"
+import { useRouter } from 'next/router'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ")
 }
 
 function TopNav() {
+  const router = useRouter();
   const [fullName, setFullName] = useState("")
   const [isStudent, setIsStudent] = useState(false)
 
   const logOut = () => {
     deleteCookie("token")
     deleteCookie("Authdata")
-    window.location.href = "/auth/login"
+    router.push("/auth/login")
   }
 
   const [user, { loading }] = useLazyQuery(USER_FULLNAME, {
@@ -38,13 +40,36 @@ function TopNav() {
 
   useEffect(() => {
     const authData: any = getCookie("Authdata")
-    if (JSON.parse(authData).accountType === "STUDENT") {
-      setIsStudent(true)
-      student({ variables: { studentId: JSON.parse(authData)._id } })
-    } else {
-      user()
+    
+    // Check if authData exists and is valid
+    if (!authData) {
+      console.log("No auth data found in TopNav")
+      return
     }
-  }, [student, user])
+
+    try {
+      const parsedAuthData = JSON.parse(authData)
+      
+      // Check if accountType exists
+      if (!parsedAuthData.accountType) {
+        console.log("No account type found in auth data")
+        return
+      }
+
+      if (parsedAuthData.accountType === "STUDENT") {
+        setIsStudent(true)
+        student({ variables: { studentId: parsedAuthData._id } })
+      } else {
+        user()
+      }
+    } catch (error) {
+      console.error("Error parsing auth data in TopNav:", error)
+      // Clear corrupted cookies
+      deleteCookie("token")
+      deleteCookie("Authdata")
+      router.push("/auth/login")
+    }
+  }, [student, user, router])
 
   return (
     <nav className="bg-white border-b border-gray-100">

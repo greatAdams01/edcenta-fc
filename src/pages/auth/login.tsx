@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -17,11 +18,13 @@ import { LOGIN, STUDENT_LOGIN } from '@/apollo/mutations/auth';
 
 export default function Login() {
   const { data: session } = useSession();
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [Loading, setLoading] = useState(false);
   const [isStudent, setIsStudent] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   
   const authData: any = getCookie('Authdata');
 
@@ -33,12 +36,13 @@ export default function Login() {
     onCompleted: (data) => {
       console.log(data);
       setCookie('token', data.login.token);
-      setCookie('Authdata', data.login);
-      // If role is ADMIN, SUPERADMIN and MODERATOR redirect to /admin
-      if(data.login.role === 'ADMIN' || data.login.role === 'SUPERADMIN' || data.login.role === 'MODERATOR'){
-        window.location.href = '/admin/';
+      setCookie('Authdata', JSON.stringify(data.login));
+      // If accountType is ADMIN, SUPERADMIN and MODERATOR redirect to /admin
+      if(data.login.accountType === 'ADMIN' || data.login.accountType === 'SUPERADMIN' || data.login.accountType === 'MODERATOR'){
+        router.push('/admin/');
+      } else {
+        router.push('/dashboard/');
       }
-      window.location.href = '/dashboard/';
     },
     onError: (error) => {
       toast.error(error.message);
@@ -54,8 +58,8 @@ export default function Login() {
     onCompleted: (data) => {
       console.log(data);
       setCookie('token', data.loginStudent.token);
-      setCookie('Authdata', data.loginStudent);
-      window.location.href = '/dashboard/';
+      setCookie('Authdata', JSON.stringify(data.loginStudent));
+      router.push('/dashboard/');
     },
     onError: (error) => {
       toast.error(error.message);
@@ -63,14 +67,44 @@ export default function Login() {
     },
   });
 
-  if (authData) {
-    window.location.href = '/dashboard';
-    return;
-  }
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
-  if(session){
-    window.location.href = '/tutor/';
-  }
+  useEffect(() => {
+    if (!isClient) return;
+
+    if (authData) {
+      // Check if user is already logged in and redirect appropriately
+      try {
+        const parsedAuthData = JSON.parse(authData);
+        
+        // Validate that the auth data has required fields
+        if (parsedAuthData && parsedAuthData.accountType && parsedAuthData._id) {
+          if (parsedAuthData.accountType === 'ADMIN' || parsedAuthData.accountType === 'SUPERADMIN' || parsedAuthData.accountType === 'MODERATOR') {
+            router.push('/admin/');
+          } else {
+            router.push('/dashboard/');
+          }
+        } else {
+          // Invalid auth data, clear it and stay on login page
+          console.log('Invalid auth data, clearing cookies');
+          document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          document.cookie = 'Authdata=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        }
+      } catch (error) {
+        console.error('Error parsing auth data:', error);
+        // Clear corrupted auth data
+        document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = 'Authdata=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      }
+      return;
+    }
+
+    if(session){
+      router.push('/tutor/');
+    }
+  }, [isClient, authData, session, router]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

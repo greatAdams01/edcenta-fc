@@ -3,16 +3,17 @@ import {
   PlusIcon, ArrowRightEndOnRectangleIcon
 } from '@heroicons/react/24/outline'
 import { getCookie } from 'cookies-next';
-
-import AppLayout from '../../layout/AppLayout'
-import { USER, STUDENTS } from '@/apollo/queries/dashboard';
+import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
 import { motion } from "framer-motion"
 import Link from 'next/link';
 import EditStudent from '@/components/dashbord/EditStudent';
 import ModalAuth from '@/components/ModalComp';
 import { IStudent } from '../../../types';
+import { USER, STUDENTS } from '@/apollo/queries/dashboard';
+import AppLayout from '../../layout/AppLayout';
 // import { Stats } from '@/utils/nav';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 
 // const statuses: { [key: string]: string } = { Completed: 'text-green-400 bg-green-400/10', Incomplete: 'text-rose-400 bg-rose-400/10' }
 
@@ -21,12 +22,14 @@ function classNames(...classes: string[]) {
 }
 
 export default function Dashboard() {
+  const router = useRouter();
   const { data: userData } = useQuery(USER);
   const { data: studentsData } = useQuery(STUDENTS);
   const user = userData?.user || [];
-  const students = studentsData?.students.data || [];
+  const students = studentsData?.students?.data || [];
   const [student, setStudent] = useState<IStudent | null>(null)
   const [isOpen, setOpen] = useState(false)
+  const [isClient, setIsClient] = useState(false)
 
   const groupedStudents = students.reduce((groups: any, student: any) => {
     const groupKey = student.grade.year;
@@ -50,16 +53,19 @@ export default function Dashboard() {
   const authData: any = getCookie('Authdata');
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
     if (!authData) {
-      window.location.href = '/auth/login';
+      router.push('/auth/login');
       return;
     }
     console.log(JSON.parse(authData).accountType);
     setAccountType(JSON.parse(authData).accountType);
-  }, [authData])
-
-
-
+  }, [isClient, authData, router]);
 
   return (
     <AppLayout>

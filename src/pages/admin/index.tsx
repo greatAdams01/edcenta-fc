@@ -13,6 +13,7 @@ import {
 } from "@heroicons/react/24/outline"
 import { getCookie } from "cookies-next"
 import { motion, AnimatePresence } from "framer-motion"
+import { useRouter } from 'next/router'
 
 import AdminLayout from "@/layout/AdminLayout"
 import { USER, STUDENTS } from "@/apollo/queries/dashboard"
@@ -23,10 +24,12 @@ function classNames(...classes: string[]) {
 }
 
 const AdminPage = () => {
+  const router = useRouter()
   const { data: userData } = useQuery(USER)
   const { data: studentsData } = useQuery(STUDENTS)
   const user = userData?.user || []
   const students = studentsData?.students.data || []
+  const [isClient, setIsClient] = useState(false)
 
   const groupedStudents = students.reduce((groups: any, student: any) => {
     const groupKey = student.grade
@@ -50,13 +53,19 @@ const AdminPage = () => {
   const authData: any = getCookie("Authdata")
 
   useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isClient) return
+
     if (!authData) {
-      window.location.href = "/auth/login"
+      router.push("/auth/login")
       return
     }
     console.log(JSON.parse(authData).accountType)
     setAccountType(JSON.parse(authData).accountType)
-  }, [authData])
+  }, [isClient, authData, router])
 
   return (
     <AdminLayout>

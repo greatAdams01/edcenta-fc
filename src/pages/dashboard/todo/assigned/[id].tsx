@@ -30,10 +30,9 @@ const Assigned: React.FC<WorksheetProps> = () => {
   const router = useRouter()
   const path = useRouter()
   const { id } = router.query
-  let currentAssignmentId: string | null = null
-  if (typeof window !== 'undefined') {
-    currentAssignmentId = localStorage.getItem('currentAssignmentId')
-  }
+  const [isClient, setIsClient] = useState(false)
+  const [currentAssignmentId, setCurrentAssignmentId] = useState<string | null>(null)
+  
   const authData: any = getCookie('Authdata')
   let authDataId: string | null = null
   if (authData) {
@@ -43,20 +42,11 @@ const Assigned: React.FC<WorksheetProps> = () => {
       console.error('Error parsing authData:', error)
     }
   }
+  
   const [questionsList, setQuestionsList] = useState<IQuestion[]>([])
   const [isSubmit, setIsSubmit] = useState(false)
   const [showExplanation, setShowExplanation] = useState(false)
-  const [selectedOptions, setSelectedOptions] = useState<number[]>(() => {
-    if (typeof window !== 'undefined') {
-      const savedSelectedOptions = localStorage.getItem('selectedOptions')
-      console.log(savedSelectedOptions)
-      return savedSelectedOptions
-        ? JSON.parse(savedSelectedOptions)
-        : new Array(questionsList.length).fill(null)
-    } else {
-      return []
-    }
-  })
+  const [selectedOptions, setSelectedOptions] = useState<number[]>([])
   const [worksheet, setWorksheet] = useState<IWorksheet2>({
     title: '',
     body: [],
@@ -65,101 +55,112 @@ const Assigned: React.FC<WorksheetProps> = () => {
     subjectId: '',
     vidLink: ''
   })
-  const [startQuestions, setStartQuestions] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const savedStartQuestions = localStorage.getItem('startQuestions')
-      return savedStartQuestions ? JSON.parse(savedStartQuestions) : false
-    } else {
-      return false
-    }
-  })
+  const [startQuestions, setStartQuestions] = useState<boolean>(false)
   const [scoreData, setScoreData] = useState<number | null>(null)
-  const [score, setScore] = useState<number | null>(() => {
-    if (typeof window !== 'undefined') {
-      const savedScore = localStorage.getItem('score')
-      return savedScore ? JSON.parse(savedScore) : null
-    } else {
-      return null
-    }
-  })
-  const [showScore, setShowscore] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const savedStartQuestions = localStorage.getItem('showScore')
-      return savedStartQuestions ? JSON.parse(savedStartQuestions) : false
-    } else {
-      return false
-    }
-  })
+  const [score, setScore] = useState<number | null>(null)
+  const [showScore, setShowscore] = useState<boolean>(false)
   const [answers, setAnswers] = useState<
     { questionId: string; optionId: string; answer: string; correct: boolean }[]
-  >(() => {
-    if (typeof window !== 'undefined') {
-      const savedAnswers = localStorage.getItem('answers')
-      return savedAnswers
-        ? JSON.parse(savedAnswers)
-        : new Array(questionsList.length).fill({
-            questionId: '',
-            optionId: '',
-            answer: '',
-            correct: false,
-          })
+  >([])
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0)
+
+  // Initialize client-side state after component mounts
+  useEffect(() => {
+    setIsClient(true)
+    
+    // Load localStorage data only on client side
+    const savedSelectedOptions = localStorage.getItem('selectedOptions')
+    if (savedSelectedOptions) {
+      setSelectedOptions(JSON.parse(savedSelectedOptions))
     } else {
-      return []
+      setSelectedOptions(new Array(questionsList.length).fill(null))
     }
-  })
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(
-    () => {
-      if (typeof window !== 'undefined') {
-        const savedCurrentQuestionIndex = localStorage.getItem(
-          'currentQuestionIndex',
-        )
-        return savedCurrentQuestionIndex
-          ? JSON.parse(savedCurrentQuestionIndex)
-          : 0
-      } else {
-        return 0
-      }
-    },
-  )
+
+    const savedStartQuestions = localStorage.getItem('startQuestions')
+    if (savedStartQuestions) {
+      setStartQuestions(JSON.parse(savedStartQuestions))
+    }
+
+    const savedScore = localStorage.getItem('score')
+    if (savedScore) {
+      setScore(JSON.parse(savedScore))
+    }
+
+    const savedShowScore = localStorage.getItem('showScore')
+    if (savedShowScore) {
+      setShowscore(JSON.parse(savedShowScore))
+    }
+
+    const savedAnswers = localStorage.getItem('answers')
+    if (savedAnswers) {
+      setAnswers(JSON.parse(savedAnswers))
+    } else {
+      setAnswers(new Array(questionsList.length).fill({
+        questionId: '',
+        optionId: '',
+        answer: '',
+        correct: false,
+      }))
+    }
+
+    const savedCurrentQuestionIndex = localStorage.getItem('currentQuestionIndex')
+    if (savedCurrentQuestionIndex) {
+      setCurrentQuestionIndex(JSON.parse(savedCurrentQuestionIndex))
+    }
+
+    const savedCurrentAssignmentId = localStorage.getItem('currentAssignmentId')
+    if (savedCurrentAssignmentId) {
+      setCurrentAssignmentId(savedCurrentAssignmentId)
+    }
+  }, [questionsList.length])
 
   useEffect(() => {
-    if (id) {
+    if (id && isClient) {
       localStorage.setItem('topicId', id as string)
     }
-  }, [id])
+  }, [id, isClient])
 
   useEffect(() => {
-    localStorage.setItem('startQuestions', JSON.stringify(startQuestions))
-  }, [startQuestions])
+    if (isClient) {
+      localStorage.setItem('startQuestions', JSON.stringify(startQuestions))
+    }
+  }, [startQuestions, isClient])
+  
   useEffect(() => {
-    localStorage.setItem('showScore', JSON.stringify(showScore))
-  }, [showScore])
+    if (isClient) {
+      localStorage.setItem('showScore', JSON.stringify(showScore))
+    }
+  }, [showScore, isClient])
 
   useEffect(() => {
-    localStorage.setItem('answers', JSON.stringify(answers))
-  }, [answers])
+    if (isClient) {
+      localStorage.setItem('answers', JSON.stringify(answers))
+    }
+  }, [answers, isClient])
 
   useEffect(() => {
-    localStorage.setItem(
-      'currentQuestionIndex',
-      JSON.stringify(currentQuestionIndex),
-    )
-  }, [currentQuestionIndex])
+    if (isClient) {
+      localStorage.setItem(
+        'currentQuestionIndex',
+        JSON.stringify(currentQuestionIndex),
+      )
+    }
+  }, [currentQuestionIndex, isClient])
+  
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (isClient) {
       localStorage.setItem('selectedOptions', JSON.stringify(selectedOptions))
     }
-  }, [selectedOptions])
+  }, [selectedOptions, isClient])
+  
   useEffect(() => {
-    if (scoreData !== null) {
+    if (scoreData !== null && isClient) {
       const scorePercentage = (scoreData / questionsList.length) * 100
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('score', JSON.stringify(scorePercentage))
-      }
+      localStorage.setItem('score', JSON.stringify(scorePercentage))
       setScore(scorePercentage)
       console.log(scoreData, scorePercentage)
     }
-  }, [scoreData, questionsList.length])
+  }, [scoreData, questionsList.length, isClient])
 
   // const input = {
   //   studentId: authDataId,
@@ -321,7 +322,9 @@ const Assigned: React.FC<WorksheetProps> = () => {
     setShowscore(false)
     setScore(null)
     setScoreData(null)
-    localStorage.removeItem('currentAssignmentId')
+    if (isClient) {
+      localStorage.removeItem('currentAssignmentId')
+    }
   }
 
   const question = questionsList[currentQuestionIndex]

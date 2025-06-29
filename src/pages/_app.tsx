@@ -5,15 +5,15 @@ import Head from 'next/head'
 import { Manrope, Dosis } from 'next/font/google'
 // import { GoogleOAuthProvider } from '@react-oauth/google';
 // import { FacebookProvider } from 'react-facebook';
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 import axios from 'axios';
-import { getCookie } from 'cookies-next';
 // import { Provider } from 'react-redux'
 // import { persistor, store } from '../store/store.js';
 // import { PersistGate } from 'redux-persist/integration/react';
 
 import { SessionProvider } from "next-auth/react";
 import { useSession, signIn, signOut } from 'next-auth/react';
+import { createApolloClient } from '@/utils/apollo-error-handler';
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -27,20 +27,12 @@ const dosis = Dosis({
   variable: '--font-dosis',
 })
 
-const token = getCookie('token')
-
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL
 
-const client = new ApolloClient({
-  uri: SERVER_URL,
-  cache: new InMemoryCache(),
-  headers: {
-   Authorization: `Bearer ${token !== undefined ? token : ''}`,
-  },
-});
+// Create Apollo client with proper auth and error handling
+const client = createApolloClient();
 
 axios.defaults.baseURL = SERVER_URL;
-axios.defaults.headers.common['Authorization'] = "Bearer" + token;
 
 export default function App({  Component, pageProps: {session, ...pageProps} }: AppProps): JSX.Element {
 
