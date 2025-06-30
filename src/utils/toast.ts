@@ -2,14 +2,14 @@ import { toast, ToastContent, ToastOptions, Slide, Id } from "react-toastify";
 import { AppError, ErrorCode, ErrorSeverity, handleError, getToastType, getErrorAction } from "./errors";
 
 export const defaultToastOptions: ToastOptions = {
-  position: "top-center",
+  position: "top-right",
   autoClose: 4000,
-  hideProgressBar: true,
+  hideProgressBar: false,
   closeOnClick: true,
   pauseOnHover: true,
   draggable: true,
   progress: undefined,
-  theme: "colored",
+  theme: "light",
   transition: Slide,
 };
 
@@ -30,19 +30,26 @@ export const showToast = (
 ): Id => {
   const optionsToApply = { ...defaultToastOptions, ...options };
 
-  switch (type) {
-    case "success":
-      return toast.success(content, optionsToApply);
-    case "error":
-      return toast.error(content, optionsToApply);
-    case "info":
-      return toast.info(content, optionsToApply);
-    case "warning":
-      return toast.warn(content, optionsToApply);
-    case "default":
-      return toast(content, optionsToApply);
-    default:
-      return toast(content, optionsToApply);
+  try {
+    switch (type) {
+      case "success":
+        return toast.success(content, optionsToApply);
+      case "error":
+        return toast.error(content, optionsToApply);
+      case "info":
+        return toast.info(content, optionsToApply);
+      case "warning":
+        return toast.warn(content, optionsToApply);
+      case "default":
+        return toast(content, optionsToApply);
+      default:
+        return toast(content, optionsToApply);
+    }
+  } catch (error) {
+    console.error('Toast error:', error);
+    // Fallback to console.log if toast fails
+    console.log(`${type.toUpperCase()}: ${content}`);
+    return 'fallback';
   }
 };
 

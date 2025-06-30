@@ -46,9 +46,12 @@ export const FETCH_LEARNING = gql`
 export const STAGES = gql`
   query SchoolGrades {
     schoolGrades {
+      data {
       _id
+      ages
       stage
       year
+    }
     }
   }
 `
@@ -252,7 +255,13 @@ export const TOPICS = gql`
 export const SUBJECT = gql`
   query Subject($subjectId: ID!) {
     subject(id: $subjectId) {
+      _id
       name
+      description
+      slug
+      tags
+      createdAt
+      updatedAt
     }
   }
 `
@@ -385,4 +394,234 @@ export const FETCH_ASSIGNED = gql `
     }
   }
 }
+`
+
+// Assessment Queries
+export const ASSESSMENTS = gql`
+  query Assessments(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $subjectId: String
+    $topicId: String
+    $difficulty: String
+    $status: String
+  ) {
+    assessments(
+      page: $page
+      limit: $limit
+      filter: $filter
+      subjectId: $subjectId
+      topicId: $topicId
+      difficulty: $difficulty
+      status: $status
+    ) {
+      data {
+        _id
+        title
+        description
+        subjectId {
+          _id
+          name
+        }
+        topicId {
+          _id
+          name
+        }
+        difficulty
+        timeLimit
+        totalQuestions
+        passingScore
+        status
+        isActive
+        createdAt
+        updatedAt
+      }
+      totalPage
+      totalRecord
+    }
+  }
+`
+
+export const ASSESSMENT_BY_ID = gql`
+  query Assessment($assessmentId: ID!) {
+    assessment(id: $assessmentId) {
+      _id
+      title
+      description
+      subjectId {
+        _id
+        name
+      }
+      topicId {
+        _id
+        name
+      }
+      difficulty
+      timeLimit
+      totalQuestions
+      passingScore
+      status
+      isActive
+      questions {
+        _id
+        title
+        body {
+          text
+          img
+        }
+        type
+        options {
+          _id
+          option
+          isCorrect
+        }
+        explanation
+        points
+        difficulty
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const ASSESSMENT_ATTEMPTS = gql`
+  query AssessmentAttempts(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $studentId: String
+    $assessmentId: String
+    $status: String
+  ) {
+    assessmentAttempts(
+      page: $page
+      limit: $limit
+      filter: $filter
+      studentId: $studentId
+      assessmentId: $assessmentId
+      status: $status
+    ) {
+      data {
+        _id
+        assessmentId {
+          _id
+          title
+          subjectId {
+            name
+          }
+          topicId {
+            name
+          }
+        }
+        studentId {
+          _id
+          name
+          email
+        }
+        status
+        score
+        totalScore
+        percentage
+        timeSpent
+        startedAt
+        completedAt
+        answers {
+          _id
+          questionId
+          answer
+          isCorrect
+          points
+        }
+        createdAt
+        updatedAt
+      }
+      totalPage
+      totalRecord
+    }
+  }
+`
+
+export const ASSESSMENT_RESULTS = gql`
+  query AssessmentResults(
+    $page: Int
+    $limit: Int
+    $filter: String
+    $studentId: String
+    $assessmentId: String
+    $dateFrom: String
+    $dateTo: String
+  ) {
+    assessmentResults(
+      page: $page
+      limit: $limit
+      filter: $filter
+      studentId: $studentId
+      assessmentId: $assessmentId
+      dateFrom: $dateFrom
+      dateTo: $dateTo
+    ) {
+      data {
+        _id
+        assessmentId {
+          _id
+          title
+          subjectId {
+            name
+          }
+          topicId {
+            name
+          }
+        }
+        studentId {
+          _id
+          name
+          email
+        }
+        score
+        totalScore
+        percentage
+        grade
+        timeSpent
+        completedAt
+        createdAt
+      }
+      totalPage
+      totalRecord
+    }
+  }
+`
+
+export const STUDENT_PROGRESS = gql`
+  query StudentProgress($studentId: ID!) {
+    studentProgress(studentId: $studentId) {
+      totalAssessments
+      completedAssessments
+      averageScore
+      totalPoints
+      subjectProgress {
+        subjectId {
+          _id
+          name
+        }
+        totalAssessments
+        completedAssessments
+        averageScore
+        bestScore
+      }
+      recentAttempts {
+        _id
+        assessmentId {
+          title
+          subjectId {
+            name
+          }
+        }
+        score
+        percentage
+        completedAt
+      }
+    }
+  }
 `

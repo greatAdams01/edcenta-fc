@@ -11,8 +11,6 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { ToastContainer, Slide } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 
 const Plans = () => {
   const router = useRouter()
@@ -284,19 +282,6 @@ const Plans = () => {
           </motion.button>
         </div>
       </ModalAuth>
-
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        transition={Slide}
-      />
     </AdminLayout>
   )
 }

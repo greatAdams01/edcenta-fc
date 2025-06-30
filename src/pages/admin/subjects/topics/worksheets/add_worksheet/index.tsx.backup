@@ -302,13 +302,10 @@ export default function Create() {
       return
     }
 
-    // Filter out sectionTitle field from bodyItems to match BodyInput schema
-    const filteredBody = bodyItems.map(({ text, img }) => ({ text, img }))
-
     createWorksheet({
       variables: {
         title: title,
-        body: filteredBody,
+        body: bodyItems,
         levelId: topicSchoolGrade,
         topicId: topicId,
         subjectId: subjectId,

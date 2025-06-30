@@ -170,7 +170,7 @@ export const CREATE_WORKSHEET = gql`
     $topicId: ID!
     $subjectId: String!
     $vidLink: String!
-    $difficulty: String!
+    $difficulty: Difficulty!
   ) {
     createWorksheet(
       input: {

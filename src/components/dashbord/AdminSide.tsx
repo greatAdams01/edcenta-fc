@@ -28,7 +28,7 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
   const [isClient, setIsClient] = useState(false)
 
   const { data } = useQuery(STAGES)
-  const stages = data?.schoolGrades || []
+  const stages = data?.data?.schoolGrades || []
 
   const [accountType, setAccountType] = useState("")
 

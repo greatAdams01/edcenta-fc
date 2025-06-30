@@ -7,6 +7,20 @@ import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 import { IoIosArrowBack } from 'react-icons/io'
+import { 
+  PlusIcon, 
+  EyeIcon, 
+  CheckIcon, 
+  XMarkIcon,
+  PhotoIcon,
+  DocumentTextIcon,
+  AcademicCapIcon,
+  QuestionMarkCircleIcon
+} from '@heroicons/react/24/outline'
+import dynamic from 'next/dynamic'
+
+const ReactQuill = dynamic(import('react-quill'), { ssr: false })
+import 'react-quill/dist/quill.snow.css'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -16,7 +30,6 @@ const AddQuestion = () => {
   const uploadRef = useRef<HTMLInputElement>(null)
   const page = useSearchParams()?.get('worksheet')
   const question = useSearchParams()?.get('question')
-  // console.log(question, page)
   const [open, setOpen] = useState(false)
   const [img, setImg] = useState('')
   const [title, setTitle] = useState('')
@@ -24,10 +37,14 @@ const AddQuestion = () => {
   const [explanation, setExplanation] = useState('')
   const [description, setDescription] = useState('')
   const [worksheetId, setWorksheetId] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [activeTab, setActiveTab] = useState('basic')
+  
   let option = {
     option: '',
     isCorrect: false,
   }
+  
   const [getQuestion] = useLazyQuery(GET_QUESTION, {
     variables: { id: question },
     onCompleted: (data) => {
@@ -42,7 +59,6 @@ const AddQuestion = () => {
       setExplanation(data.question.explanation)
       setDescription(data.question.body[0].text)
       setImg(data.question.body[0].img)
-      // setWorksheets(data.worksheets.data)
     },
     onError: (error) => {
       console.log('Error:', error)
@@ -63,13 +79,15 @@ const AddQuestion = () => {
     },
     onCompleted: (data) => {
       console.log(data)
-      toast.success('Question created successfully.')
+      toast.success('Question created successfully!')
+      setIsSubmitting(false)
       setTimeout(() => {
         path.push(`/admin/subjects/topics/worksheets/worksheet/${page}`)
-      }, 5000)
+      }, 2000)
     },
     onError: (error) => {
-      toast.error('Error creating Question: ' + error)
+      toast.error('Error creating Question: ' + error.message)
+      setIsSubmitting(false)
     },
   })
 
@@ -89,56 +107,55 @@ const AddQuestion = () => {
     },
     onCompleted: (data) => {
       console.log(data)
-      toast.success('Question edited successfully.')
+      toast.success('Question updated successfully!')
+      setIsSubmitting(false)
       setTimeout(() => {
         path.push(`/admin/subjects/topics/worksheets/worksheet/${worksheetId}`)
-      }, 5000)
+      }, 2000)
     },
     onError: (error) => {
-      toast.error('Error editing question: ' + error)
+      toast.error('Error updating question: ' + error.message)
+      setIsSubmitting(false)
     },
   })
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
+    setIsSubmitting(true)
 
-    // if (title === '') {
-    //   console.log('Title field cannot be empty')
-    //   toast.error('Title field cannot be empty')
-    //   return
-    // }
-    if (explanation === '') {
-      console.log('Explanation field cannot be empty')
+    // Validation
+    if (explanation.trim() === '') {
       toast.error('Explanation field cannot be empty')
+      setIsSubmitting(false)
       return
     }
-    if (description === '') {
-      console.log('Description field cannot be empty')
+    
+    if (description.trim() === '') {
       toast.error('Description field cannot be empty')
+      setIsSubmitting(false)
       return
     }
-    // if (img === '') {
-    //   console.log('Description Image field cannot be empty')
-    //   toast.error('Description Image field cannot be empty')
-    //   return
-    // }
+
     // Check if any body item is empty
     if (isObjective) {
       for (let item of options) {
         if (item.option.trim() === '') {
-          console.log('Option item cannot be empty')
-          toast.error('Option item cannot be empty')
+          toast.error('All option fields must be filled')
+          setIsSubmitting(false)
           return
         }
       }
+      
       if (options.length !== 4) {
-        toast.error('Option cannot be less than or greater than 4')
+        toast.error('Objective questions must have exactly 4 options')
+        setIsSubmitting(false)
         return
       }
+      
       const hasActive = options.some((item) => item.isCorrect === true)
-
       if (!hasActive) {
-        toast.error('An option should have a correct value')
+        toast.error('Please select a correct answer')
+        setIsSubmitting(false)
         return
       }
     }
@@ -163,28 +180,56 @@ const AddQuestion = () => {
   }
 
   const setActiveIndex = (index: number) => {
-    // Use map to create a new array with the updated active property
     const updatedItems = options.map((item, i) => ({
       ...item,
       isCorrect: i === index,
     }))
-
-    // Update the state with the new array
     setOptions(updatedItems)
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] // Add null check for e.target.files
-
-    const reader = new FileReader()
-
-    reader.onloadend = () => {
-      setImg(reader.result?.toString() || '')
-    }
+    const file = e.target.files?.[0]
 
     if (file) {
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image size must be less than 5MB')
+        return
+      }
+      
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please select a valid image file')
+        return
+      }
+
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImg(reader.result?.toString() || '')
+      }
       reader.readAsDataURL(file)
     }
+  }
+
+  const addOption = () => {
+    if (options.length < 4) {
+      setOptions([...options, { option: '', isCorrect: false }])
+    }
+  }
+
+  const removeOption = (index: number) => {
+    if (options.length > 1) {
+      const newOptions = options.filter((_, i) => i !== index)
+      setOptions(newOptions)
+    }
+  }
+
+  const getQuestionTypeColor = () => {
+    return isObjective ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-purple-100 text-purple-800 border-purple-200'
+  }
+
+  const getQuestionTypeIcon = () => {
+    return isObjective ? '📝' : '✍️'
   }
 
   useEffect(() => {
@@ -192,206 +237,447 @@ const AddQuestion = () => {
       getQuestion()
     }
   }, [getQuestion, question])
+
   return (
     <AdminLayout>
-      <div>
-        <div className="flex justify-between">
-          <button
-            onClick={() => path.back()}
-            className="mb-6 flex items-center gap-1 text-left text-black"
-          >
-            <IoIosArrowBack /> <div>Back</div>
-          </button>
-          <div>
-            <button
-              onClick={(e) => handleSubmit(e)}
-              className="rounded-md bg-indigo-600 p-3 text-white"
-            >
-              {page !== null ? (loading ? 'loading...' : 'Create') : 'Update'}
-            </button>
-            <input
-              value={'Preview'}
-              onClick={() => setOpen(true)}
-              className="ml-4 rounded-md bg-indigo-600 p-3 text-white"
-              type="button"
-            />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        {/* Header */}
+        <div className="bg-white shadow-sm border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => path.back()}
+                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100"
+                >
+                  <IoIosArrowBack className="w-5 h-5" />
+                  <span className="font-medium">Back</span>
+                </button>
+                <div className="h-6 w-px bg-gray-300"></div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
+                  <span className="text-sm text-gray-500">
+                    {page !== null ? 'Add Question' : 'Edit Question'}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => setOpen(true)}
+                  className="flex items-center gap-2 px-4 py-2 text-indigo-600 hover:text-indigo-700 font-medium transition-colors duration-200"
+                >
+                  <EyeIcon className="w-4 h-4" />
+                  Preview
+                </button>
+                <button
+                  onClick={(e) => handleSubmit(e)}
+                  disabled={isSubmitting || loading}
+                  className="flex items-center gap-2 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting || loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckIcon className="w-4 h-4" />
+                      <span>{page !== null ? 'Create Question' : 'Update Question'}</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div>
-          <label htmlFor="explanation">
-            Explanation <span className="text-red-500">*</span>{' '}
-          </label>
-          <textarea
-            value={explanation}
-            onChange={(e) => setExplanation(e.target.value)}
-            className="my-2 h-32 w-[100%]  rounded-md border-2 px-4"
-            id="explanation"
-          ></textarea>
-        </div>
-        <div className="flex w-full flex-col items-start  gap-y-1">
-          <label htmlFor="">
-            Objective? <span className="text-red-500">*</span>
-          </label>
-          <div>
-            {/* <span>{isObjective ? 'Active' : 'Inactive'}</span> */}
-            <label className="switch">
-              <input
-                type="checkbox"
-                checked={isObjective}
-                onChange={(e) => setIsObjective(e.target.checked)}
-              />
-              <span className="slider round"></span>
-            </label>
-          </div>
-          {/* <input id='title' onChange={e => setIsObjective(e.target.checked)} type="checkbox" className="" /> */}
-        </div>
-        <div className='mt-4'>
-          <p className='font-bold text-lg'>Add More</p>
-        </div>
-        <div className="flex justify-between">
-          <div className="flex w-full flex-col items-start gap-y-1">
-            <label htmlFor="body">
-              Description <span className="text-red-500">*</span>{' '}
-            </label>
-            <input
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              id="body"
-              type="text"
-              className="my-2 h-12 w-[100%] max-w-[400px] rounded-md border-2 px-4 lg:w-[100rem]"
-            />
-          </div>
-
-          <div className="flex w-full flex-col items-start gap-y-1">
-            <label htmlFor={`img`} className="w-full">
-              Description image
-            </label>
-            {img === '' ? (
-              <input
-                value={'Upload Image'}
-                className="my-2 cursor-pointer rounded-md bg-blue-500 p-1 px-6 text-xs text-white"
-                type="button"
-                onClick={() => uploadRef.current?.click()}
-              />
-            ) : (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={img}
-                onClick={() => uploadRef.current?.click()}
-                className="w-44 "
-                alt=""
-              />
-            )}
-            <input
-              id={`img`}
-              type="file"
-              onChange={(e) => handleFileChange(e)}
-              ref={uploadRef}
-              className="my-2 hidden w-[100%] max-w-[400px] lg:w-[100rem]"
-            />
-          </div>
-        </div>
-        {isObjective ? (
-          <>
-            <p className="my-4">
-              Options <span className="text-red-500">*</span>
-            </p>
-            <div>
-              {options.map((option, index) => (
-                <div key={index} className="flex">
-                  <div className="flex w-full flex-col items-start gap-y-1">
-                    <label className="text-sm" htmlFor="">
-                      Option {index + 1}
-                    </label>
-                    <input
-                      onChange={(e) =>
-                        handleBodyItemChange(index, 'option', e.target.value)
-                      }
-                      value={option.option}
-                      className="my-2 h-12 w-full rounded-md border-2 px-4 "
-                      type="text"
-                    />
+        {/* Main Content */}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+            {/* Header */}
+            <div className="border-b border-gray-200 px-8 py-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                    <QuestionMarkCircleIcon className="w-5 h-5 text-indigo-600" />
                   </div>
-                  <div className="my-auto">
-                    <button
-                      onClick={() => setActiveIndex(index)}
-                      className={
-                        option.isCorrect
-                          ? 'my-auto ml-20 h-16 rounded-md bg-green-500 p-3 text-white'
-                          : 'my-auto ml-20 h-16 cursor-pointer rounded-md p-3 hover:bg-gray-300'
-                      }
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="size-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m4.5 12.75 6 6 9-13.5"
-                        />
-                      </svg>
-                    </button>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      {page !== null ? 'Add New Question' : 'Edit Question'}
+                    </h2>
+                    <p className="text-sm text-gray-500">Create or update question content and settings</p>
                   </div>
                 </div>
-              ))}
+                <div className="flex items-center space-x-2">
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getQuestionTypeColor()}`}>
+                    <span className="mr-1">{getQuestionTypeIcon()}</span>
+                    {isObjective ? 'Objective' : 'Subjective'}
+                  </span>
+                </div>
+              </div>
             </div>
-            {options.length === 4 ? null : (
-              <button
-                onClick={() => setOptions([...options, option])}
-                className="rounded-md bg-indigo-600 p-3 text-white"
-              >
-                Add
-              </button>
-            )}
-          </>
-        ) : null}
+
+            {/* Tabs */}
+            <div className="border-b border-gray-200 px-8">
+              <nav className="flex space-x-8">
+                {[
+                  { id: 'basic', name: 'Basic Info', icon: DocumentTextIcon },
+                  { id: 'content', name: 'Question Content', icon: AcademicCapIcon },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                      activeTab === tab.id
+                        ? 'border-indigo-500 text-indigo-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    <tab.icon className="w-4 h-4" />
+                    <span>{tab.name}</span>
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            {/* Content */}
+            <div className="px-8 py-6">
+              {activeTab === 'basic' && (
+                <div className="space-y-6">
+                  {/* Question Type Toggle */}
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-medium text-gray-900">Question Type</h3>
+                        <p className="text-sm text-gray-500">
+                          Choose between objective (multiple choice) or subjective (open-ended) questions
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-4">
+                        <span className={`text-sm font-medium ${!isObjective ? 'text-gray-900' : 'text-gray-500'}`}>
+                          Subjective
+                        </span>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={isObjective}
+                            onChange={(e) => setIsObjective(e.target.checked)}
+                            className="sr-only peer"
+                          />
+                          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        </label>
+                        <span className={`text-sm font-medium ${isObjective ? 'text-gray-900' : 'text-gray-500'}`}>
+                          Objective
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Explanation */}
+                  <div>
+                    <label htmlFor="explanation" className="block text-sm font-medium text-gray-700 mb-2">
+                      Question Explanation <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                      value={explanation}
+                      onChange={(e) => setExplanation(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors min-h-[120px] resize-y"
+                      placeholder="Provide a detailed explanation for this question..."
+                    />
+                  </div>
+
+                  {/* Preview */}
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">Preview</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <span className="text-sm font-medium text-gray-500">Question Type:</span>
+                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-2 ${getQuestionTypeColor()}`}>
+                          {getQuestionTypeIcon()} {isObjective ? 'Objective' : 'Subjective'}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-500">Explanation:</span>
+                        <p className="text-gray-900 mt-1">{explanation || 'Not provided'}</p>
+                      </div>
+                      {isObjective && (
+                        <div>
+                          <span className="text-sm font-medium text-gray-500">Options:</span>
+                          <p className="text-gray-900">{options.length}/4</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'content' && (
+                <div className="space-y-6">
+                  {/* Question Content */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Question Content <span className="text-red-500">*</span>
+                    </label>
+                    <div className="border border-gray-300 rounded-lg">
+                      <ReactQuill
+                        value={description}
+                        onChange={(content, delta, source, editor) => setDescription(editor.getHTML())}
+                        className="min-h-[200px]"
+                        modules={{
+                          toolbar: [
+                            [{ 'header': [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            [{ 'color': [] }, { 'background': [] }],
+                            ['link', 'image'],
+                            ['clean']
+                          ]
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Question Image */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Question Image
+                    </label>
+                    <div className="space-y-3">
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-400 transition-colors">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileChange}
+                          className="hidden"
+                          ref={uploadRef}
+                        />
+                        <button
+                          onClick={() => uploadRef.current?.click()}
+                          className="cursor-pointer"
+                        >
+                          <PhotoIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                          <p className="text-sm text-gray-600">
+                            {img ? 'Click to change image' : 'Click to upload image'}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-1">PNG, JPG up to 5MB</p>
+                        </button>
+                      </div>
+                      
+                      {img && (
+                        <div className="relative">
+                          <img
+                            src={img}
+                            alt="Question preview"
+                            className="w-full max-w-md h-48 object-cover rounded-lg border border-gray-300"
+                          />
+                          <button
+                            onClick={() => setImg('')}
+                            className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                          >
+                            <XMarkIcon className="w-3 h-3" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Objective Options */}
+                  {isObjective && (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-medium text-gray-900">Multiple Choice Options</h3>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm text-gray-500">
+                            {options.length}/4 options
+                          </span>
+                          {options.length < 4 && (
+                            <button
+                              onClick={addOption}
+                              className="flex items-center gap-1 px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors text-sm"
+                            >
+                              <PlusIcon className="w-3 h-3" />
+                              Add Option
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        {options.map((option, index) => (
+                          <div key={index} className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                            <div className="flex-1">
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Option {index + 1}
+                              </label>
+                              <input
+                                value={option.option}
+                                onChange={(e) => handleBodyItemChange(index, 'option', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                                placeholder={`Enter option ${index + 1}...`}
+                              />
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() => setActiveIndex(index)}
+                                className={`p-2 rounded-md transition-colors ${
+                                  option.isCorrect
+                                    ? 'bg-green-500 text-white hover:bg-green-600'
+                                    : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                                }`}
+                                title={option.isCorrect ? 'Correct answer' : 'Mark as correct'}
+                              >
+                                <CheckIcon className="w-5 h-5" />
+                              </button>
+                              {options.length > 1 && (
+                                <button
+                                  onClick={() => removeOption(index)}
+                                  className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-colors"
+                                  title="Remove option"
+                                >
+                                  <XMarkIcon className="w-5 h-5" />
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {options.length === 0 && (
+                        <div className="text-center py-8">
+                          <AcademicCapIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                          <h3 className="text-lg font-medium text-gray-900 mb-2">No Options Added</h3>
+                          <p className="text-gray-500 mb-4">Add multiple choice options for this question</p>
+                          <button
+                            onClick={addOption}
+                            className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors mx-auto"
+                          >
+                            <PlusIcon className="w-4 h-4" />
+                            <span>Add First Option</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="border-t border-gray-200 px-8 py-6 bg-gray-50 rounded-b-xl">
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-gray-500">
+                  {isObjective ? `${options.length} option${options.length !== 1 ? 's' : ''}` : 'Subjective question'}
+                </div>
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={() => setOpen(true)}
+                    className="flex items-center gap-2 px-4 py-2 text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
+                  >
+                    <EyeIcon className="w-4 h-4" />
+                    Preview
+                  </button>
+                  <button
+                    onClick={(e) => handleSubmit(e)}
+                    disabled={isSubmitting || loading}
+                    className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {isSubmitting || loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <span>Saving...</span>
+                      </>
+                    ) : (
+                      <>
+                        <CheckIcon className="w-4 h-4" />
+                        <span>{page !== null ? 'Create Question' : 'Update Question'}</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Preview Modal */}
         <ModalAuth
           isOpen={open}
           XIcon={true}
           onClose={() => setOpen(false)}
-          styling={'w-[1000px] m-auto'}
+          styling={'w-[800px] m-auto'}
         >
-          <div className=" text-center">
-            <h1 className="mb-4 w-full text-2xl font-semibold uppercase leading-6 text-gray-900">
-              {title}
-            </h1>
-            {img ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={img}
-                alt="image"
-                className="mx-auto h-full max-h-[400px] w-1/2"
-              />
-            ) : null}
-            <div className="">
-              <p className="my-2">
-                Is Objective: {isObjective ? 'true' : 'false'}
-              </p>
-              <p className="my-2">Description: {description}</p>
-              <p className="my-2">Explanation: {explanation}</p>
+          <div className="bg-white rounded-xl p-8">
+            <div className="text-center mb-6">
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                Question Preview
+              </h1>
+              <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getQuestionTypeColor()}`}>
+                <span className="mr-1">{getQuestionTypeIcon()}</span>
+                {isObjective ? 'Objective Question' : 'Subjective Question'}
+              </span>
             </div>
-            <div className="my-2">
-              {options.length > 1
-                ? options.map((single, index) => (
-                  <div
-                    className="mx-auto flex w-1/2 justify-between"
-                    key={index}
-                  >
-                    {' '}
-                    <p>{single.option} </p>
-                    <p>{single.isCorrect ? 'Correct Option' : ''}</p>
+
+            <div className="space-y-6">
+              {img && (
+                <div className="text-center">
+                  <img
+                    src={img}
+                    alt="Question image"
+                    className="mx-auto max-h-64 rounded-lg border border-gray-300"
+                  />
+                </div>
+              )}
+
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Question Content</h3>
+                  <div 
+                    className="prose prose-sm max-w-none p-4 bg-gray-50 rounded-lg"
+                    dangerouslySetInnerHTML={{ __html: description || 'No content provided' }}
+                  />
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Explanation</h3>
+                  <p className="text-gray-700 p-4 bg-gray-50 rounded-lg">
+                    {explanation || 'No explanation provided'}
+                  </p>
+                </div>
+
+                {isObjective && options.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">Options</h3>
+                    <div className="space-y-2">
+                      {options.map((option, index) => (
+                        <div
+                          key={index}
+                          className={`flex items-center justify-between p-3 rounded-lg border ${
+                            option.isCorrect 
+                              ? 'bg-green-50 border-green-200' 
+                              : 'bg-gray-50 border-gray-200'
+                          }`}
+                        >
+                          <span className="text-gray-700">
+                            {String.fromCharCode(65 + index)}. {option.option || 'Empty option'}
+                          </span>
+                          {option.isCorrect && (
+                            <span className="text-green-600 font-medium flex items-center gap-1">
+                              <CheckIcon className="w-4 h-4" />
+                              Correct
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))
-                : null}
+                )}
+              </div>
             </div>
           </div>
         </ModalAuth>
+
+        <ToastContainer />
       </div>
     </AdminLayout>
   )

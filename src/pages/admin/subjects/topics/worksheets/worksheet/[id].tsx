@@ -5,7 +5,7 @@ import { GET_QUESTIONS, WORKSHEET_BY_ID } from '@/apollo/queries/admin'
 import { IWorksheet, IWorksheet2 } from '../../../../../../../types'
 import AdminLayout from '@/layout/AdminLayout'
 import ModalAuth from '@/components/ModalComp'
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import { ExclamationTriangleIcon, EyeIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { showToast } from '@/utils/toast'
 import { DELETE_QUESTION, DELETE_WORKSHEET } from '@/apollo/mutations/admin'
 import EditWorksheet from '@/components/dashbord/EditWorksheet'
@@ -132,178 +132,292 @@ const Topics: React.FC<WorksheetProps> = () => {
         HARD: 3,
       }[difficulty as 'EASY' | 'MEDIUM' | 'HARD'] || 0
 
+    const difficultyColors = {
+      EASY: 'bg-green-500',
+      MEDIUM: 'bg-yellow-500',
+      HARD: 'bg-red-500'
+    }
+
     return (
-      <div className="flex">
-        {[...Array(3)].map((_, index) => (
-          <div
-            key={index}
-            className={`m-1 h-[20px] w-[28px] rounded-[2.86px] ${index < boxCount ? 'bg-[#23BDBD]]' : 'bg-gray-200'}`}
-          ></div>
-        ))}
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium text-gray-600">Difficulty:</span>
+        <div className="flex gap-1">
+          {[...Array(3)].map((_, index) => (
+            <div
+              key={index}
+              className={`h-3 w-6 rounded-sm transition-all duration-200 ${
+                index < boxCount 
+                  ? difficultyColors[difficulty as keyof typeof difficultyColors] || 'bg-gray-400'
+                  : 'bg-gray-200'
+              }`}
+            />
+          ))}
+        </div>
+        <span className="text-sm font-medium text-gray-700 capitalize">
+          {difficulty.toLowerCase()}
+        </span>
       </div>
     )
   }
+  
   function isDifficultyLevel(
     difficulty: string,
   ): difficulty is DifficultyLevel {
     return ['EASY', 'MEDIUM', 'HARD'].includes(difficulty)
   }
+  
   const difficulty: string = worksheet.difficulty
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600"></div>
+        </div>
+      </AdminLayout>
+    )
+  }
+
+  if (error) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="text-red-600 text-6xl mb-4">⚠️</div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Worksheet</h2>
+            <p className="text-gray-600">Unable to load the worksheet. Please try again.</p>
+          </div>
+        </div>
+      </AdminLayout>
+    )
+  }
+
   return (
     <AdminLayout>
-      <div className="space-y-2 px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 flex justify-between">
-          <button
-            onClick={() => path.back()}
-            className="mb-6 flex items-center gap-1 text-left text-black"
-          >
-            <IoIosArrowBack /> <div>Back</div>
-          </button>
-          <div className="flex w-52 justify-between">
-            <a
-              href="#"
-              className="my-auto text-indigo-600 hover:text-indigo-900"
-              onClick={() => handleEdit(worksheet._id)}
-            >
-              Edit
-            </a>
-            <Link
-              href={`/admin/subjects/topics/worksheets/add_question?worksheet=${id}`}
-            >
-              <button className="rounded-md bg-indigo-600 p-2 px-4 font-bold text-white">
-                Add Question
-              </button>
-            </Link>
-          </div>
-        </div>
-        <h1 className="text-center text-4xl font-bold text-gray-800">
-          {worksheet.title}
-        </h1>
-        {/* <div className="text-center w-1/2 mx-auto">
-          <div className=" justifiy-start flex items-center gap-2 text-base text-gray-700">
-            <div>Difficulty:</div>
-            {isDifficultyLevel(difficulty) && (
-              <DifficultyIndicator difficulty={difficulty} />
-            )}
-          </div>
-        </div> */}
-
-        <div className='flex justify-between flex-wrap'>
-          {worksheet.body.map((item, index) => (
-            <div key={index} className="my-6 lg:w-[32%] bg-gray-100 p-3 rounded-md text-center">
-              <div className="flex w-full justify-center">
-                {item.img && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={item.img}
-                    alt="image"
-                    className="h-full max-h-[400px]"
-                  />
-                )}
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        {/* Header Section */}
+        <div className="bg-white shadow-sm border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => path.back()}
+                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100"
+                >
+                  <IoIosArrowBack className="w-5 h-5" />
+                  <span className="font-medium">Back</span>
+                </button>
+                <div className="h-6 w-px bg-gray-300"></div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
+                  <span className="text-sm text-gray-500">Worksheet Details</span>
+                </div>
               </div>
-              <div
-                className="w-full font-bold text-lg"
-                dangerouslySetInnerHTML={{ __html: item.text }}
-              />
+              
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => handleEdit(worksheet._id)}
+                  className="flex items-center gap-2 px-4 py-2 text-indigo-600 hover:text-indigo-700 font-medium transition-colors duration-200"
+                >
+                  <PencilIcon className="w-4 h-4" />
+                  Edit Worksheet
+                </button>
+                <Link
+                  href={`/admin/subjects/topics/worksheets/add_question?worksheet=${id}`}
+                >
+                  <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 shadow-sm">
+                    <PlusIcon className="w-4 h-4" />
+                    Add Question
+                  </button>
+                </Link>
+              </div>
             </div>
-          ))}
+          </div>
         </div>
-      </div>
-      {questions.length >= 1 && (
-        <div>
-          <h1 className="my-4 text-3xl">Questions</h1>
-          <div className="mt-8 flow-root">
-            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                <table className="min-w-full divide-y divide-gray-300">
-                  <thead>
-                    <tr>
-                      <th
-                        scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
-                      >
-                        Title
-                      </th>
-                      <th
-                        scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
-                      >
-                        Explanation
-                      </th>
-                      {/* <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                    Title
-                  </th> */}
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Is Objective
-                      </th>
 
-                      {/* <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Status
-                    </th> */}
-                      <th
-                        scope="col"
-                        className="relative py-3.5 pl-3 pr-4 sm:pr-3"
-                      >
-                        <span className="sr-only">Edit</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  {data && (
-                    <tbody className="bg-white">
-                      {questions.map((question: any) => (
-                        <tr key={question._id} className="even:bg-gray-50">
-                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                            {question.title}
-                          </td>
-                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                            {question.explanation}
-                          </td>
-                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                            {question.isObjective ? 'true' : 'false'}
-                          </td>
+        {/* Main Content */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Worksheet Header Card */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
+            <div className="text-center mb-6">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                {worksheet.title}
+              </h1>
+              {isDifficultyLevel(difficulty) && (
+                <div className="flex justify-center">
+                  <DifficultyIndicator difficulty={difficulty} />
+                </div>
+              )}
+            </div>
+            
+            {/* Worksheet Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 text-center">
+                <div className="text-3xl font-bold text-indigo-600 mb-2">
+                  {worksheet.body.length}
+                </div>
+                <div className="text-sm text-gray-600">Content Sections</div>
+              </div>
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 text-center">
+                <div className="text-3xl font-bold text-emerald-600 mb-2">
+                  {questions.length}
+                </div>
+                <div className="text-sm text-gray-600">Questions</div>
+              </div>
+              <div className="bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg p-6 text-center">
+                <div className="text-3xl font-bold text-violet-600 mb-2">
+                  {worksheet.vidLink ? 'Yes' : 'No'}
+                </div>
+                <div className="text-sm text-gray-600">Video Content</div>
+              </div>
+            </div>
+          </div>
 
-                          <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
-                            <a
-                              href="#"
-                              className="text-indigo-600 hover:text-indigo-900"
-                              onClick={() =>
-                                router.push(
-                                  `/admin/subjects/topics/worksheets/add_question?question=${question._id}`,
-                                )
-                              }
-                            >
-                              Edit
-                            </a>
+          {/* Worksheet Content */}
+          {worksheet.body.length > 0 && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                  <EyeIcon className="w-4 h-4 text-indigo-600" />
+                </div>
+                Worksheet Content
+              </h2>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                {worksheet.body.map((item, index) => (
+                  <div 
+                    key={index} 
+                    className="bg-gray-50 rounded-lg p-6 border border-gray-200 hover:shadow-md transition-shadow duration-200"
+                  >
+                    <div className="mb-4">
+                      <div className="text-sm font-medium text-gray-500 mb-2">
+                        Section {index + 1}
+                      </div>
+                      {item.img && (
+                        <div className="mb-4">
+                          <img
+                            src={item.img}
+                            alt={`Section ${index + 1} image`}
+                            className="w-full h-48 object-cover rounded-lg shadow-sm"
+                          />
+                        </div>
+                      )}
+                      <div
+                        className="prose prose-sm max-w-none"
+                        dangerouslySetInnerHTML={{ __html: item.text }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Video Content */}
+          {worksheet.vidLink && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                  </svg>
+                </div>
+                Video Content
+              </h2>
+              <div className="aspect-video rounded-lg overflow-hidden bg-gray-100">
+                <div dangerouslySetInnerHTML={{ __html: worksheet.vidLink }} />
+              </div>
+            </div>
+          )}
+
+          {/* Questions Section */}
+          {questions.length >= 1 && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                Questions ({questions.length})
+              </h2>
+              
+              <div className="overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Question Title
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Explanation
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Type
+                        </th>
+                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {questions.map((question: any, index: number) => (
+                        <tr key={question._id} className="hover:bg-gray-50 transition-colors duration-150">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-gray-900">
+                              {question.title}
+                            </div>
                           </td>
-                          <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
-                            <a
-                              href="#"
-                              className="text-red-600 hover:text-red-900"
-                              onClick={() => {
-                                setDeleteQuestion(true), setItemId(question._id)
-                              }}
-                            >
-                              Delete
-                            </a>
+                          <td className="px-6 py-4">
+                            <div className="text-sm text-gray-600 max-w-xs truncate">
+                              {question.explanation}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              question.isObjective 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-blue-100 text-blue-800'
+                            }`}>
+                              {question.isObjective ? 'Objective' : 'Subjective'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div className="flex items-center justify-end space-x-3">
+                              <button
+                                onClick={() =>
+                                  router.push(
+                                    `/admin/subjects/topics/worksheets/add_question?question=${question._id}`,
+                                  )
+                                }
+                                className="text-indigo-600 hover:text-indigo-900 transition-colors duration-200"
+                              >
+                                <PencilIcon className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setDeleteQuestion(true)
+                                  setItemId(question._id)
+                                }}
+                                className="text-red-600 hover:text-red-900 transition-colors duration-200"
+                              >
+                                <TrashIcon className="w-4 h-4" />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
                     </tbody>
-                  )}
-                </table>
+                  </table>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
-      )}
-      {worksheet.vidLink && <div className='mx-auto w-1/2' dangerouslySetInnerHTML={{ __html: worksheet.vidLink }} />}
+      </div>
 
+      {/* Edit Modal */}
       <ModalAuth
         isOpen={open}
         XIcon={true}
@@ -358,6 +472,8 @@ const Topics: React.FC<WorksheetProps> = () => {
           </>
         )}
       </ModalAuth>
+
+      {/* Delete Question Modal */}
       <ModalAuth
         isOpen={deleteQuestion}
         XIcon={true}
