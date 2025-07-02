@@ -40,6 +40,12 @@ const AddQuestion = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [activeTab, setActiveTab] = useState('basic')
   
+  // Add missing required fields
+  const [questionType, setQuestionType] = useState('MULTIPLE_CHOICE')
+  const [difficulty, setDifficulty] = useState('MEDIUM')
+  const [points, setPoints] = useState(1)
+  const [tags, setTags] = useState<string[]>([])
+  
   let option = {
     option: '',
     isCorrect: false,
@@ -68,14 +74,19 @@ const AddQuestion = () => {
 
   const [createQuestion, { loading }] = useMutation(CREATE_QUESTION, {
     variables: {
+      title,
+      questionType,
       isObjective,
       options,
       explanation,
-      body: {
+      body: [{
         img,
         text: description,
-      },
+      }],
       worksheetId: page,
+      difficulty,
+      points,
+      tags,
     },
     onCompleted: (data) => {
       console.log(data)
@@ -95,14 +106,19 @@ const AddQuestion = () => {
     variables: {
       id: question,
       input: {
+        title,
+        questionType,
         isObjective,
         options,
         explanation,
-        body: {
+        body: [{
           img,
           text: description,
-        },
+        }],
         worksheetId,
+        difficulty,
+        points,
+        tags,
       },
     },
     onCompleted: (data) => {
@@ -387,6 +403,53 @@ const AddQuestion = () => {
                     />
                   </div>
 
+                  {/* Difficulty */}
+                  <div>
+                    <label htmlFor="difficulty" className="block text-sm font-medium text-gray-700 mb-2">
+                      Difficulty Level <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={difficulty}
+                      onChange={(e) => setDifficulty(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    >
+                      <option value="EASY">Easy</option>
+                      <option value="MEDIUM">Medium</option>
+                      <option value="HARD">Hard</option>
+                    </select>
+                  </div>
+
+                  {/* Points */}
+                  <div>
+                    <label htmlFor="points" className="block text-sm font-medium text-gray-700 mb-2">
+                      Points <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="100"
+                      value={points}
+                      onChange={(e) => setPoints(parseInt(e.target.value) || 1)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                      placeholder="Enter points for this question..."
+                    />
+                  </div>
+
+                  {/* Tags */}
+                  <div>
+                    <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-2">
+                      Tags
+                    </label>
+                    <input
+                      type="text"
+                      value={tags.join(', ')}
+                      onChange={(e) => setTags(e.target.value.split(',').map(tag => tag.trim()).filter(tag => tag))}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                      placeholder="Enter tags separated by commas (e.g., math, algebra, equations)..."
+                    />
+                    <p className="text-sm text-gray-500 mt-1">Tags help categorize and search for questions</p>
+                  </div>
+
                   {/* Preview */}
                   <div className="bg-gray-50 rounded-lg p-6">
                     <h3 className="text-lg font-medium text-gray-900 mb-4">Preview</h3>
@@ -398,9 +461,33 @@ const AddQuestion = () => {
                         </span>
                       </div>
                       <div>
+                        <span className="text-sm font-medium text-gray-500">Difficulty:</span>
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-2 bg-gray-100 text-gray-800">
+                          {difficulty}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-500">Points:</span>
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-2 bg-green-100 text-green-800">
+                          {points} point{points !== 1 ? 's' : ''}
+                        </span>
+                      </div>
+                      <div>
                         <span className="text-sm font-medium text-gray-500">Explanation:</span>
                         <p className="text-gray-900 mt-1">{explanation || 'Not provided'}</p>
                       </div>
+                      {tags.length > 0 && (
+                        <div>
+                          <span className="text-sm font-medium text-gray-500">Tags:</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {tags.map((tag, index) => (
+                              <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                       {isObjective && (
                         <div>
                           <span className="text-sm font-medium text-gray-500">Options:</span>

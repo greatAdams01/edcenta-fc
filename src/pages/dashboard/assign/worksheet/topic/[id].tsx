@@ -35,7 +35,7 @@ const TopicPage = () => {
 
   const topic = data?.topic || {}
 
-  const students = studentsData?.students.data || []
+  const students = studentsData?.students?.data || []
   const [openSubtables, setOpenSubtables] = useState<boolean[]>(
     Array(students.length).fill(false),
   )

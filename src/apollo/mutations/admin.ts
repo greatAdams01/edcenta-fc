@@ -202,19 +202,27 @@ export const CREATE_QUESTION = gql`
   mutation createQuestion(
     $title: String!
     $body: [BodyInput!]!
+    $questionType: QuestionType!
     $isObjective: Boolean!
     $worksheetId: ID!
     $explanation: String!
     $options: [QuestionOptionInput!]!
+    $difficulty: Difficulty!
+    $points: Int!
+    $tags: [String!]
   ) {
     createQuestion(
       input: {
         title: $title
         body: $body
+        questionType: $questionType
         isObjective: $isObjective
         worksheetId: $worksheetId
         explanation: $explanation
         options: $options
+        difficulty: $difficulty
+        points: $points
+        tags: $tags
       }
     ) {
       _id
@@ -227,6 +235,9 @@ export const CREATE_QUESTION = gql`
       createdAt
       explanation
       isObjective
+      questionType
+      difficulty
+      points
     }
   }
 `

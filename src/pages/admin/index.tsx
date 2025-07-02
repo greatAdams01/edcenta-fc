@@ -25,33 +25,20 @@ function classNames(...classes: string[]) {
 
 const AdminPage = () => {
   const router = useRouter()
-  const { data: userData } = useQuery(USER)
-  const { data: studentsData } = useQuery(STUDENTS)
+  const { data: userData, loading: userLoading, error: userError } = useQuery(USER)
+  const { data: studentsData, loading: studentsLoading, error: studentsError } = useQuery(STUDENTS)
   const user = userData?.user || []
-  const students = studentsData?.students.data || []
+  const students = studentsData?.students?.data || []
+  
+  // All hooks must be at the top, before any conditional logic
   const [isClient, setIsClient] = useState(false)
-
-  const groupedStudents = students.reduce((groups: any, student: any) => {
-    const groupKey = student.grade
-    if (!groups[groupKey]) {
-      groups[groupKey] = []
-    }
-    groups[groupKey].push(student)
-    return groups
-  }, {})
-
-  const [openSubtables, setOpenSubtables] = useState<Array<boolean>>(Array(students.length).fill(false))
+  const [openSubtables, setOpenSubtables] = useState<Array<boolean>>([])
   const [accountType, setAccountType] = useState("" as string)
-
-  const toggleDropdown = (index: number) => {
-    const newOpenSubtables = [...openSubtables]
-    newOpenSubtables[index] = !newOpenSubtables[index]
-    setOpenSubtables(newOpenSubtables)
-  }
 
   // Get Authdata from Cookies
   const authData: any = getCookie("Authdata")
 
+  // All useEffect hooks must also be at the top
   useEffect(() => {
     setIsClient(true)
   }, [])
@@ -66,6 +53,55 @@ const AdminPage = () => {
     console.log(JSON.parse(authData).accountType)
     setAccountType(JSON.parse(authData).accountType)
   }, [isClient, authData, router])
+
+  // Update openSubtables when students data changes
+  useEffect(() => {
+    setOpenSubtables(Array(students.length).fill(false))
+  }, [students.length])
+
+  // Show loading state while queries are in progress
+  if (userLoading || studentsLoading) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading dashboard data...</p>
+          </div>
+        </div>
+      </AdminLayout>
+    )
+  }
+
+  // Show error state if queries fail
+  if (userError || studentsError) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <p className="text-red-600">Error loading dashboard data. Please try again.</p>
+            {userError && <p className="text-sm text-gray-500 mt-2">{userError.message}</p>}
+            {studentsError && <p className="text-sm text-gray-500 mt-2">{studentsError.message}</p>}
+          </div>
+        </div>
+      </AdminLayout>
+    )
+  }
+
+  const groupedStudents = students.reduce((groups: any, student: any) => {
+    const groupKey = student.grade
+    if (!groups[groupKey]) {
+      groups[groupKey] = []
+    }
+    groups[groupKey].push(student)
+    return groups
+  }, {})
+
+  const toggleDropdown = (index: number) => {
+    const newOpenSubtables = [...openSubtables]
+    newOpenSubtables[index] = !newOpenSubtables[index]
+    setOpenSubtables(newOpenSubtables)
+  }
 
   return (
     <AdminLayout>

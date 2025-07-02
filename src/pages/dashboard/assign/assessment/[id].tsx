@@ -80,7 +80,7 @@ const Assessment: React.FC<AssessmentProps> = () => {
   const { data: userData } = useQuery(USER)
   const { data: studentsData } = useQuery(STUDENTS)
   const user = userData?.user || []
-  const students = studentsData?.students.data || []
+  const students = studentsData?.students?.data || []
 
   const [openSubtables, setOpenSubtables] = useState<Array<boolean>>(
     Array(students.length).fill(false),
