@@ -12,8 +12,6 @@ import { getCookie } from 'cookies-next';
 import { useMutation } from '@apollo/client';
 import { Eye, EyeOff } from 'lucide-react';
 
-import '@/styles/tailwind.css'
-
 import { LOGIN, STUDENT_LOGIN } from '@/apollo/mutations/auth';
 
 export default function Login() {

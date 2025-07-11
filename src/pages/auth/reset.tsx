@@ -9,8 +9,6 @@ import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { Eye, EyeOff } from 'lucide-react';
 
-import '@/styles/tailwind.css'
-
 import { RESET } from '@/apollo/mutations/auth';
 import Sucess from '@/components/ui/resetSucess'
 

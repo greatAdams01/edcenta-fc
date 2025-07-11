@@ -1,6 +1,6 @@
 import { BuildingOffice2Icon, EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline'
 
-export default function contact() {
+export default function Contact() {
   return (
     <div className="relative isolate bg-white">
       <div className="mx-auto grid max-w-7xl grid-cols-1 lg:grid-cols-2">
@@ -159,4 +159,4 @@ export default function contact() {
       </div>
     </div>
   )
-}
+} 

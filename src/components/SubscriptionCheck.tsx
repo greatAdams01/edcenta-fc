@@ -4,7 +4,6 @@ import { GET_SUBSCRIPTION } from "@/apollo/queries/dashboard"
 import ModalAuth from "./ModalComp"
 import Link from "next/link"
 import { 
-  CrownIcon, 
   CheckCircleIcon, 
   StarIcon, 
   AcademicCapIcon,
@@ -47,7 +46,7 @@ const SubscriptionCheck = ({ children }: SubscriptionCheckProps) => {
               className="text-center"
             >
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm mb-4">
-                <CrownIcon className="h-8 w-8 text-white" />
+                {/* <CrownIcon className="h-8 w-8 text-white" /> */}
               </div>
               <h2 className={`${manrope.className} text-3xl font-bold text-white mb-2`}>
                 Upgrade to Premium
@@ -70,7 +69,7 @@ const SubscriptionCheck = ({ children }: SubscriptionCheckProps) => {
               >
                 <div>
                   <h3 className={`${manrope.className} text-xl font-semibold text-gray-900 mb-4`}>
-                    What you'll get with Premium
+                    What you&apos;ll get with Premium
                   </h3>
                   <div className="space-y-4">
                     <div className="flex items-start space-x-3">
@@ -225,7 +224,7 @@ const SubscriptionCheck = ({ children }: SubscriptionCheckProps) => {
                       </div>
                       <div>
                         <p className={`${manrope.className} text-sm text-gray-700`}>
-                          "The analytics have completely transformed how I track student progress."
+                          &ldquo;The analytics have completely transformed how I track student progress.&rdquo;
                         </p>
                         <p className={`${manrope.className} text-xs text-gray-500 mt-1`}>
                           - Sarah M., Math Teacher
@@ -238,7 +237,7 @@ const SubscriptionCheck = ({ children }: SubscriptionCheckProps) => {
                       </div>
                       <div>
                         <p className={`${manrope.className} text-sm text-gray-700`}>
-                          "Unlimited worksheets mean I can create exactly what my students need."
+                          &ldquo;Unlimited worksheets mean I can create exactly what my students need.&rdquo;
                         </p>
                         <p className={`${manrope.className} text-xs text-gray-500 mt-1`}>
                           - Michael R., Science Teacher

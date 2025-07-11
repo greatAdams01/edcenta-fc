@@ -113,7 +113,7 @@ export default function TutorStats({ className = '' }: TutorStatsProps) {
             transition={{ delay: 0.2 }}
             className="text-lg text-gray-600"
           >
-            Here's an overview of your teaching dashboard
+            Here&apos;s an overview of your teaching dashboard
           </motion.p>
         </div>
 

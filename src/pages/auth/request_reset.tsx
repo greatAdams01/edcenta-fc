@@ -8,8 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 
-import '@/styles/tailwind.css'
-
 import { REQUEST_RESET_PASSWORD } from '@/apollo/mutations/auth';
 import OTP from '@/components/ui/otp';
 

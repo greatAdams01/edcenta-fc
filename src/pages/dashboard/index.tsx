@@ -10,7 +10,6 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   StarIcon,
-  TrendingUpIcon,
   CalendarIcon,
   MagnifyingGlassIcon,
   FunnelIcon,
@@ -224,7 +223,7 @@ export default function Dashboard() {
             <div>
               <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
               <p className="text-indigo-100">
-                Welcome back, {user.firstName}! Here's an overview of your students and their progress.
+                Welcome back, {user.firstName}! Here&apos;s an overview of your students and their progress.
               </p>
             </div>
             <div className="mt-4 lg:mt-0 flex items-center space-x-4">

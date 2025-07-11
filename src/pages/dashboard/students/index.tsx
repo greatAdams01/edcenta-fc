@@ -349,7 +349,7 @@ export default function ManageStudents() {
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="all">All Grades</option>
-                {uniqueGrades.map((grade) => (
+                {uniqueGrades.map((grade: any) => (
                   <option key={grade} value={grade}>{grade}</option>
                 ))}
               </select>

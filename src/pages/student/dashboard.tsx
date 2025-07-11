@@ -14,7 +14,6 @@ import {
   PlayIcon,
   AcademicCapIcon,
   FireIcon,
-  TrendingUpIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
@@ -251,7 +250,7 @@ export default function StudentDashboard() {
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
             <div className="flex items-center">
               <div className="p-2 bg-orange-100 rounded-lg">
-                <TrendingUpIcon className="h-6 w-6 text-orange-600" />
+                {/* <TrendingUpIcon className="h-6 w-6 text-orange-600" /> */}
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Study Streak</p>

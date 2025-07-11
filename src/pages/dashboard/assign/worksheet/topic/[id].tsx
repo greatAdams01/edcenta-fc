@@ -444,7 +444,7 @@ const TopicPage = () => {
                         <div className="text-center py-12">
                           <DocumentTextIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                           <h3 className={`${manrope.className} text-lg font-medium text-gray-900 mb-2`}>No questions available</h3>
-                          <p className={`${manrope.className} text-gray-600`}>This worksheet doesn't have any questions yet.</p>
+                          <p className={`${manrope.className} text-gray-600`}>This worksheet doesn&apos;t have any questions yet.</p>
                         </div>
                       )}
                     </div>
@@ -493,7 +493,7 @@ const TopicPage = () => {
                                 Assign Worksheet
                               </Dialog.Title>
                               <p className={`${manrope.className} text-purple-100 mt-1`}>
-                                Select students to assign "{topic.name}"
+                                Select students to assign &ldquo;{topic.name}&rdquo;
                               </p>
                             </div>
                           </div>

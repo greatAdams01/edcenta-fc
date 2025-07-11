@@ -250,7 +250,9 @@ const Assessment: React.FC<AssessmentProps> = () => {
           return a.title.localeCompare(b.title)
         case 'difficulty':
           const difficultyOrder = { EASY: 1, MEDIUM: 2, HARD: 3 }
-          return difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty]
+          const aDifficulty = a.difficulty as keyof typeof difficultyOrder
+          const bDifficulty = b.difficulty as keyof typeof difficultyOrder
+          return difficultyOrder[aDifficulty] - difficultyOrder[bDifficulty]
         default:
           return 0
       }

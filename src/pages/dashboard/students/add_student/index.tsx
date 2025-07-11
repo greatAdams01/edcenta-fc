@@ -320,7 +320,7 @@ export default function CreateStudent() {
               >
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
-                  <p className="text-sm text-gray-600 mb-6">Enter the student's basic details</p>
+                  <p className="text-sm text-gray-600 mb-6">Enter the student&apos;s basic details</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -328,7 +328,7 @@ export default function CreateStudent() {
                     label="Student Name"
                     field="name"
                     icon={UserIcon}
-                    placeholder="Enter student's full name"
+                    placeholder="Enter student&apos;s full name"
                     required
                   />
                   <InputField
@@ -345,7 +345,7 @@ export default function CreateStudent() {
                     type="email"
                     field="email"
                     icon={EnvelopeIcon}
-                    placeholder="Enter guardian's email address"
+                    placeholder="Enter guardian&apos;s email address"
                     required
                   />
                 </div>
@@ -361,7 +361,7 @@ export default function CreateStudent() {
               >
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900 mb-4">Account Details</h2>
-                  <p className="text-sm text-gray-600 mb-6">Set up the student's account credentials</p>
+                  <p className="text-sm text-gray-600 mb-6">Set up the student&apos;s account credentials</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -386,7 +386,7 @@ export default function CreateStudent() {
                     type="number"
                     field="age"
                     icon={CalendarIcon}
-                    placeholder="Enter student's age"
+                    placeholder="Enter student&apos;s age"
                     required
                   />
                   <SelectField

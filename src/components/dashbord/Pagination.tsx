@@ -1,6 +1,6 @@
 import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid'
 
-export default function Pagination({ page, count, handlePageChange }: { page: number; count: number, handlePageChange: (pageNum: number) => {}}) {
+export default function Pagination({ page, count, handlePageChange }: { page: number; count: number, handlePageChange: (pageNum: number) => void }) {
   const pages = Array.from({length: count}, (_, i) => i + 1);
   const handlePreviousPage = () => {};
   const handleNextPage = () => {};

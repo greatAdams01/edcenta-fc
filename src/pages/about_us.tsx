@@ -6,7 +6,7 @@ const stats = [
   { label: 'Tutors', value: '2K' },
 ]
 
-export default function Example() {
+export default function AboutUs() {
   return (
     <div className="bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -46,8 +46,8 @@ export default function Example() {
                 </svg>
                 <blockquote className="mt-6 text-xl font-semibold leading-8 text-white">
                   <p>
-                    “Amet amet eget scelerisque tellus sit neque faucibus non eleifend. Integer eu praesent at a. Ornare
-                    arcu gravida natoque erat et cursus tortor.”
+                    &ldquo;Amet amet eget scelerisque tellus sit neque faucibus non eleifend. Integer eu praesent at a. Ornare
+                    arcu gravida natoque erat et cursus tortor.&rdquo;
                   </p>
                 </blockquote>
                 <figcaption className="mt-6 text-sm leading-6 text-gray-300">
@@ -99,4 +99,4 @@ export default function Example() {
       </div>
     </div>
   )
-}
+} 
