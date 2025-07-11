@@ -29,7 +29,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
   const [isClient, setIsClient] = useState(false)
 
   const { data } = useQuery(STAGES)
-  const stages = data?.schoolGrades || []
+  const stages = data?.schoolGrades?.data || []
 
   const [accountType, setAccountType] = useState("")
 
@@ -106,7 +106,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
           {stages.map((stage: any) => (
             <motion.div key={stage._id} whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
               <Link
-                href={stage.stage}
+                href={`/${stage.stage}`}
                 className="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:text-purple-700 hover:bg-purple-50"
               >
                 <span className="truncate">{stage.year}</span>

@@ -1,21 +1,16 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-
 import { Dialog, Transition } from '@headlessui/react'
-import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'
-
+import { XMarkIcon, PlusIcon, MagnifyingGlassIcon, FunnelIcon, UserGroupIcon, ClockIcon, CheckCircleIcon, EyeIcon, PlayIcon, StarIcon } from '@heroicons/react/24/outline'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { manrope } from '@/utils/font'
-
+import { motion, AnimatePresence } from 'framer-motion'
 import { TOPICS, USER, STUDENTS, SUBJECT } from '@/apollo/queries/dashboard'
 import AppLayout from '../../../../layout/AppLayout'
 import { ASSIGN_WORKSHEET } from '@/apollo/mutations/dashboard'
 import { useQuery, useMutation } from '@apollo/client'
 import Pagination from '@/components/dashbord/Pagination'
-import { Tractor } from 'lucide-react'
-import { TracingChannel } from 'diagnostics_channel'
 import SubscriptionCheck from '@/components/SubscriptionCheck'
 
 type WorksheetProps = {
@@ -31,6 +26,10 @@ const Worksheet: React.FC<WorksheetProps> = () => {
   const [page, setPage] = useState(1)
   const [showClass, setShowClass] = useState(false)
   const [worksheet, setWorksheet] = useState('private')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filterType, setFilterType] = useState<'all' | 'PRIVATE' | 'NATIONAL' | 'ASSESSMENT'>('all')
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+
   const { data } = useQuery(TOPICS, {
     variables: {
       page,
@@ -40,6 +39,7 @@ const Worksheet: React.FC<WorksheetProps> = () => {
       subjectId: id,
     },
   })
+
   const {
     data: subjectData,
     loading,
@@ -50,21 +50,14 @@ const Worksheet: React.FC<WorksheetProps> = () => {
 
   const handlePageChange = (pageNum: number) => {
     setPage(pageNum)
-    data({
-      variables: {
-        page: pageNum,
-        limit: 10,
-        filter: '',
-        levelId: '',
-        subjectId: id,
-      },
-    })
+    // Refetch data with new page
+    // Note: You might need to implement proper refetching here
+    return {}
   }
 
   const [assignWorksheet] = useMutation(ASSIGN_WORKSHEET)
 
   const schoolGrades = data?.topics.data || []
-  console.log(schoolGrades)
   const { data: userData } = useQuery(USER)
   const { data: studentsData } = useQuery(STUDENTS)
   const user = userData?.user || []
@@ -138,306 +131,382 @@ const Worksheet: React.FC<WorksheetProps> = () => {
     console.log(selectedStudent, selectedSubjects)
   }
 
+  // Filter topics based on search and type
+  const filteredTopics = schoolGrades.filter((topic: any) => {
+    const matchesSearch = topic.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesType = filterType === 'all' || topic.type === filterType
+    return matchesSearch && matchesType
+  })
+
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'PRIVATE':
+        return 'bg-blue-100 text-blue-800'
+      case 'NATIONAL':
+        return 'bg-green-100 text-green-800'
+      case 'ASSESSMENT':
+        return 'bg-purple-100 text-purple-800'
+      default:
+        return 'bg-gray-100 text-gray-800'
+    }
+  }
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'PRIVATE':
+        return '📝'
+      case 'NATIONAL':
+        return '📚'
+      case 'ASSESSMENT':
+        return '📊'
+      default:
+        return '📄'
+    }
+  }
+
   return (
     <SubscriptionCheck>
       <AppLayout>
-        <div className="p-4">
-          <form onSubmit={handleSubmit}>
-            <div className="flex w-full items-center">
-              <div className="ml-4 flex w-full bg-[#00AE9A] bg-opacity-70 px-3 py-3.5 font-bold text-white lg:ml-0">
-                {subjectData?.subject.name}
-              </div>
-              <div className="ml-6 sm:ml-16 sm:mt-0 sm:flex-none">
-                <Link
-                  href={'/dashboard/assign'}
-                  type="button"
-                  className="mr-4 flex items-center justify-center rounded-md bg-red-600 px-3 py-3.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                >
-                  Cancel
-                </Link>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-purple-600 to-pink-600">
+            <div className="px-6 py-8 lg:px-8">
+              <div className="mx-auto max-w-7xl">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                  <div className="flex-1">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center mb-4"
+                    >
+                      <Link
+                        href="/dashboard/assign"
+                        className="mr-4 p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors"
+                      >
+                        <XMarkIcon className="h-5 w-5 text-white" />
+                      </Link>
+                      <h1 className="text-3xl font-bold text-white">
+                        {subjectData?.subject?.name || 'Subject'} - Worksheets
+                      </h1>
+                    </motion.div>
+                    <motion.p
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 }}
+                      className="text-purple-100 text-lg"
+                    >
+                      Browse and assign worksheets to your students
+                    </motion.p>
+                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="mt-6 lg:mt-0"
+                  >
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                      <div className="flex items-center space-x-4">
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-white">{filteredTopics.length}</div>
+                          <div className="text-sm text-purple-100">Available</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-white">{students.length}</div>
+                          <div className="text-sm text-purple-100">Students</div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
               </div>
             </div>
-            <div className="flex justify-start gap-1 pt-3.5">
-              <button
-                onClick={() => setWorksheet('private')}
-                className={`ml-4 flex w-full ${worksheet == 'private' ? 'bg-[#00AE9A] bg-opacity-70 text-white hover:bg-opacity-100' : 'bg-[#EEEEEE] text-black'} px-3 py-3.5 font-bold lg:ml-0`}
-              >
-                Topics
-              </button>
-              <button
-                onClick={() => setWorksheet('curriculum')}
-                className={`ml-4 flex w-full ${worksheet == 'curriculum' ? 'bg-[#00AE9A] bg-opacity-70 text-white hover:bg-opacity-100' : 'bg-[#EEEEEE] text-black'} px-3 py-3.5 font-bold lg:ml-0`}
-              >
-                National Curriculum
-              </button>
-              <button
-                onClick={() => setWorksheet('assessment')}
-                className={`ml-4 flex w-full ${worksheet == 'assessment' ? 'bg-[#00AE9A] bg-opacity-70 text-white hover:bg-opacity-100' : 'bg-[#EEEEEE] text-black'} px-3 py-3.5 font-bold lg:ml-0`}
-              >
-                Assessment
-              </button>
-            </div>
-            <div className="">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead className="ml-4">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-bold text-gray-900"
+          </div>
+
+          {/* Controls */}
+          <div className="px-6 py-8 lg:px-8">
+            <div className="mx-auto max-w-7xl">
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Worksheet Library</h2>
+                    <p className="text-gray-600">Filter and search through available worksheets</p>
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    {/* Search */}
+                    <div className="relative">
+                      <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search worksheets..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full sm:w-64"
+                      />
+                    </div>
+
+                    {/* Type Filter */}
+                    <select
+                      value={filterType}
+                      onChange={(e) => setFilterType(e.target.value as 'all' | 'PRIVATE' | 'NATIONAL' | 'ASSESSMENT')}
+                      className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     >
-                      Title
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-center text-sm font-bold text-gray-900"
+                      <option value="all">All Types</option>
+                      <option value="PRIVATE">Private</option>
+                      <option value="NATIONAL">National Curriculum</option>
+                      <option value="ASSESSMENT">Assessment</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Type Toggle */}
+                <div className="mt-6">
+                  <div className="flex bg-gray-100 rounded-xl p-1 w-fit">
+                    <button
+                      onClick={() => setFilterType('PRIVATE')}
+                      className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center ${
+                        filterType === 'PRIVATE'
+                          ? 'bg-white text-purple-600 shadow-sm'
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
                     >
-                      Worksheet
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {schoolGrades && schoolGrades.length > 0 ? (
-                    schoolGrades.filter((topic: any) => {
-                      if (worksheet === 'private') {
-                        return topic.type === 'PRIVATE'
-                      } else if (worksheet === 'curriculum') {
-                        return topic.type === 'NATIONAL'
-                      } else if (worksheet === 'assessment') {
-                        return topic.type === 'ASSESSMENT'
-                      } else {
-                        return false
-                      }
-                    }).length > 0 ? (
-                      schoolGrades
-                        .filter((topic: any) => {
-                          if (worksheet === 'private') {
-                            return topic.type === 'PRIVATE'
-                          } else if (worksheet === 'curriculum') {
-                            return topic.type === 'NATIONAL'
-                          } else if (worksheet === 'assessment') {
-                            return topic.type === 'ASSESSMENT'
-                          } else {
-                            return false
-                          }
-                        })
-                        .map((topic: any) => (
-                          <tr key={topic._id}>
-                            <td className="cursor-pointer px-3 py-3.5 text-left text-sm text-gray-900 hover:text-green-500 hover:underline">
-                              <a
+                      📝 Private
+                    </button>
+                    <button
+                      onClick={() => setFilterType('NATIONAL')}
+                      className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center ${
+                        filterType === 'NATIONAL'
+                          ? 'bg-white text-purple-600 shadow-sm'
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      📚 National Curriculum
+                    </button>
+                    <button
+                      onClick={() => setFilterType('ASSESSMENT')}
+                      className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center ${
+                        filterType === 'ASSESSMENT'
+                          ? 'bg-white text-purple-600 shadow-sm'
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      📊 Assessment
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Worksheets Grid */}
+              <div className="space-y-6">
+                {loading ? (
+                  <div className="text-center py-16">
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mx-auto"></div>
+                    <p className="mt-6 text-gray-600 text-lg">Loading worksheets...</p>
+                  </div>
+                ) : filteredTopics.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredTopics.map((topic: any) => (
+                      <motion.div
+                        key={topic._id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300"
+                      >
+                        <div className="p-6">
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="flex-1">
+                              <h3 className="text-lg font-bold text-gray-900 mb-2">{topic.name}</h3>
+                              <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(topic.type)}`}>
+                                <span className="mr-2">{getTypeIcon(topic.type)}</span>
+                                {topic.type}
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between text-sm text-gray-600">
+                              <span>Created</span>
+                              <span>{new Date(topic.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            
+                            <div className="flex space-x-2">
+                              <Link
                                 href={`/dashboard/assign/worksheet/topic/${topic._id}`}
+                                className="flex-1 bg-purple-100 text-purple-700 hover:bg-purple-200 text-center py-2 px-4 rounded-lg font-medium transition-colors"
                               >
-                                {topic.name}
-                              </a>
-                            </td>
-                            <td className="px-3 py-3.5 text-center text-sm text-gray-900">
-                              {/* {topic.worksheet.length} */}
-                            </td>
-                            <td>
+                                <EyeIcon className="h-4 w-4 inline mr-2" />
+                                Preview
+                              </Link>
                               <button
                                 onClick={() => {
                                   setSelectedSubjects(topic._id)
                                   setShowClass(true)
                                 }}
-                                className="my-2 ml-4 rounded-md bg-[#00AE9A] bg-opacity-20 px-3 py-3 text-left text-sm font-bold text-gray-900 hover:bg-opacity-50"
+                                className="flex-1 bg-purple-600 text-white hover:bg-purple-700 py-2 px-4 rounded-lg font-medium transition-colors"
                               >
-                                Assign it
+                                <PlusIcon className="h-4 w-4 inline mr-2" />
+                                Assign
                               </button>
-                            </td>
-                          </tr>
-                        ))
-                    ) : (
-                      <tr>
-                        <td colSpan={3}>
-                          <div className="flex h-96 items-center justify-center">
-                            <div className="text-center">
-                              <h1 className="text-lg font-semibold sm:text-2xl">
-                                No {worksheet} available
-                              </h1>
-                              <p className="text-gray-500">
-                                No {worksheet} available for this grade
-                              </p>
                             </div>
                           </div>
-                        </td>
-                      </tr>
-                    )
-                  ) : null}
-                </tbody>
-              </table>
-            </div>
-
-            <Pagination
-              page={page}
-              count={data?.users?.totalPage}
-              handlePageChange={async (e) => handlePageChange(e)}
-            />
-            {showClass && (
-              <div>
-                <Transition.Root show={showClass} as={Fragment}>
-                  <Dialog
-                    as="div"
-                    className="relative z-10"
-                    onClose={setShowClass}
-                  >
-                    <Transition.Child
-                      as={Fragment}
-                      enter="ease-out duration-300"
-                      enterFrom="opacity-0"
-                      enterTo="opacity-100"
-                      leave="ease-in duration-200"
-                      leaveFrom="opacity-100"
-                      leaveTo="opacity-0"
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-20">
+                    <div className="bg-gray-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                      <MagnifyingGlassIcon className="h-10 w-10 text-gray-400" />
+                    </div>
+                    <h3 className="text-xl font-medium text-gray-900 mb-2">No worksheets found</h3>
+                    <p className="text-gray-600 mb-6">Try adjusting your search or filter criteria.</p>
+                    <button
+                      onClick={() => {
+                        setSearchTerm('')
+                        setFilterType('all')
+                      }}
+                      className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                     >
-                      <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-                    </Transition.Child>
+                      Clear Filters
+                    </button>
+                  </div>
+                )}
+              </div>
 
-                    <div className="fixed inset-0 z-10 w-screen overflow-y-scroll">
-                      <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                        <Transition.Child
-                          as={Fragment}
-                          enter="ease-out duration-300"
-                          enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                          enterTo="opacity-100 translate-y-0 sm:scale-100"
-                          leave="ease-in duration-200"
-                          leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                          leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              {/* Pagination */}
+              {filteredTopics.length > 0 && (
+                <div className="mt-8">
+                  <Pagination
+                    page={page}
+                    count={10} // You'll need to get this from your API
+                    handlePageChange={handlePageChange}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Assignment Modal */}
+          <Transition.Root show={showClass} as={Fragment}>
+            <Dialog as="div" className="relative z-50" onClose={setShowClass}>
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+              </Transition.Child>
+
+              <div className="fixed inset-0 z-10 overflow-y-auto">
+                <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                  <Transition.Child
+                    as={Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                    enterTo="opacity-100 translate-y-0 sm:scale-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                    leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                  >
+                    <Dialog.Panel className="relative transform overflow-hidden rounded-2xl bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6">
+                      <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
+                        <button
+                          type="button"
+                          className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                          onClick={() => setShowClass(false)}
                         >
-                          <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                            <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
-                              <button
-                                type="button"
-                                className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                onClick={() => setShowClass(false)}
-                              >
-                                <span className="sr-only">Close</span>
-                                <XMarkIcon
-                                  className="h-6 w-6"
-                                  aria-hidden="true"
-                                />
-                              </button>
-                            </div>
-                            <div className="w-full sm:flex sm:items-start">
-                              <div className="mt-3 w-full text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                <Dialog.Title
-                                  as="h3"
-                                  className={`${manrope.className} flex text-base font-semibold leading-6 text-gray-900`}
+                          <span className="sr-only">Close</span>
+                          <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                        </button>
+                      </div>
+                      
+                      <div className="sm:flex sm:items-start">
+                        <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-purple-100 sm:mx-0 sm:h-10 sm:w-10">
+                          <UserGroupIcon className="h-6 w-6 text-purple-600" aria-hidden="true" />
+                        </div>
+                        <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+                          <Dialog.Title as="h3" className="text-2xl font-bold leading-6 text-gray-900 mb-4">
+                            Assign Worksheet to Students
+                          </Dialog.Title>
+                          
+                          <div className="mt-4 space-y-6">
+                            {/* Student Selection */}
+                            <div>
+                              <h4 className="text-lg font-medium text-gray-900 mb-4">Select Students</h4>
+                              <div className="flex gap-4 mb-4">
+                                <button
+                                  type="button"
+                                  onClick={checkAllStudent}
+                                  className="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors"
                                 >
-                                  Assign {}
-                                </Dialog.Title>
-                                <div className={`${manrope.className} mt-2`}>
-                                  <p className="text-sm text-gray-500">
-                                    Select class or students below to assign
-                                    Worksheet
-                                  </p>
-                                  {Object.keys(groupedStudents).map(
-                                    (grade, index) => (
-                                      <Fragment key={grade}>
-                                        <section className="my-4 flex w-full justify-between rounded-md border border-purple-500 bg-gray-200 px-4 py-6">
-                                          <div className="flex font-bold">
-                                            <div className="mr-2 flex w-5 items-center justify-center text-green-500">
-                                              <PlusIcon
-                                                onClick={() =>
-                                                  toggleDropdown(index)
-                                                }
-                                              />
-                                            </div>
-                                            {grade} (
-                                            {groupedStudents[grade].length}{' '}
-                                            {groupedStudents[grade].length === 1
-                                              ? 'student'
-                                              : 'students'}
-                                            )
-                                          </div>
-                                          <div className="flex items-center">
-                                            <input
-                                              type="checkbox"
-                                              onClick={
-                                                !checkStudent
-                                                  ? uncheckAllStudent
-                                                  : checkAllStudent
-                                              }
-                                              className="mr-2"
-                                            />{' '}
-                                            Assign to all
-                                          </div>
-                                        </section>
-                                        {openSubtables[index] && (
-                                          <section className="shadow-opacity-50 truncate bg-gray-200 text-sm font-medium leading-6 shadow-sm shadow-black">
-                                            <form>
-                                              <table className="w-full border-collapse border-gray-300">
-                                                <thead className="w-full bg-purple-500 bg-opacity-50">
-                                                  <tr
-                                                    className={`${manrope.className} w-full`}
-                                                  >
-                                                    <th className="px-4 py-4">
-                                                      Name
-                                                    </th>
-                                                    <th>Best Score</th>
-                                                    <th>Assigned</th>
-                                                    <th>Check</th>
-                                                  </tr>
-                                                </thead>
-                                                <tbody className="border-b border-white/10 font-bold">
-                                                  {groupedStudents[grade].map(
-                                                    (student: any) => (
-                                                      <tr
-                                                        key={student._id}
-                                                        className={`${manrope.className}`}
-                                                      >
-                                                        <td className="px-4 py-4">
-                                                          {student.name}
-                                                        </td>
-                                                        <td className="text-center">
-                                                          20
-                                                        </td>
-                                                        <td className="text-center">
-                                                          1
-                                                        </td>
-                                                        <td className="border px-4 py-2 text-center">
-                                                          <input
-                                                            type="checkbox"
-                                                            data-type="student"
-                                                            checked={selectedStudent.includes(
-                                                              student._id,
-                                                            )}
-                                                            value={student._id}
-                                                            onChange={
-                                                              checkBoxHandler
-                                                            }
-                                                          />
-                                                        </td>
-                                                      </tr>
-                                                    ),
-                                                  )}
-                                                </tbody>
-                                              </table>
-                                            </form>
-                                          </section>
-                                        )}
-                                      </Fragment>
-                                    ),
-                                  )}
-                                </div>
+                                  Select All
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={uncheckAllStudent}
+                                  className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
+                                >
+                                  Unselect All
+                                </button>
+                              </div>
+                              
+                              <div className="max-h-96 overflow-y-auto border border-gray-200 rounded-xl">
+                                {Object.entries(groupedStudents).map(([grade, gradeStudents]: [string, any]) => (
+                                  <div key={grade} className="border-b border-gray-200 last:border-b-0">
+                                    <div className="bg-gray-50 px-4 py-3">
+                                      <h5 className="font-medium text-gray-900">{grade} - {gradeStudents.length} students</h5>
+                                    </div>
+                                    <div className="p-4 space-y-2">
+                                      {gradeStudents.map((student: any, index: number) => (
+                                        <label key={student._id} className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg">
+                                          <input
+                                            type="checkbox"
+                                            value={student._id}
+                                            data-type="student"
+                                            checked={selectedStudent.includes(student._id)}
+                                            onChange={checkBoxHandler}
+                                            className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                                          />
+                                          <span className="text-sm text-gray-900">{student.name}</span>
+                                        </label>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
                               </div>
                             </div>
-                            <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                              <button
-                                type="button"
-                                className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:ml-3 sm:w-auto"
-                                onClick={handleAssignWorksheet}
-                              >
-                                Confirm
-                              </button>
-                            </div>
-                          </Dialog.Panel>
-                        </Transition.Child>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </Dialog>
-                </Transition.Root>
+                      
+                      <div className="mt-8 flex justify-end space-x-3">
+                        <button
+                          type="button"
+                          className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                          onClick={() => setShowClass(false)}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleAssignWorksheet}
+                          disabled={selectedStudent.length === 0}
+                          className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                          Assign to {selectedStudent.length} Student{selectedStudent.length !== 1 ? 's' : ''}
+                        </button>
+                      </div>
+                    </Dialog.Panel>
+                  </Transition.Child>
+                </div>
               </div>
-            )}
-          </form>
+            </Dialog>
+          </Transition.Root>
+
           <ToastContainer />
         </div>
       </AppLayout>

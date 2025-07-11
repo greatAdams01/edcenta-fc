@@ -1,7 +1,22 @@
 import React, { useState, useEffect, Fragment } from 'react'
 
 import { Dialog, Transition } from '@headlessui/react'
-import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'
+import { 
+  XMarkIcon, 
+  PlusIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  AcademicCapIcon,
+  ClockIcon,
+  UserGroupIcon,
+  CheckCircleIcon,
+  DocumentTextIcon,
+  QuestionMarkCircleIcon,
+  PlayIcon,
+  EyeIcon,
+  BookOpenIcon,
+  ChartBarIcon
+} from '@heroicons/react/24/outline'
 
 import { manrope } from '@/utils/font'
 import { useMutation, useQuery } from '@apollo/client'
@@ -36,7 +51,7 @@ const QuestionPage = () => {
   const [selectedStudent, setSelectedStudent] = useState<string[]>([])
   const [page, setPage] = useState(1)
   const [showClass, setShowClass] = useState(false)
-  const [showQuestions, setShowQuestions] = useState(false)
+  const [activeTab, setActiveTab] = useState<'overview' | 'questions'>('overview')
   const [worksheet, setWorksheet] = useState<IWorksheet2>({
     title: '',
     body: [],
@@ -133,6 +148,7 @@ const QuestionPage = () => {
     groups[groupKey].push(student)
     return groups
   }, {})
+
   const handleAssignWorksheet = async () => {
     try {
       await assignWorksheet({
@@ -141,14 +157,15 @@ const QuestionPage = () => {
           worksheetId: selectedSubjects,
         },
       })
-      toast.success('Worksheet Assigned successfully')
+      toast.success('Assessment Assigned successfully')
       setShowClass(false)
     } catch (error) {
-      toast.error('Error assigning worksheet ' + error)
+      toast.error('Error assigning assessment ' + error)
       console.log(error)
     }
     console.log(selectedStudent, selectedSubjects)
   }
+
   const DifficultyIndicator: React.FC<DifficultyIndicatorProps> = ({
     difficulty,
   }) => {
@@ -159,292 +176,529 @@ const QuestionPage = () => {
         HARD: 3,
       }[difficulty as 'EASY' | 'MEDIUM' | 'HARD'] || 0
 
+    const difficultyColors = {
+      EASY: 'bg-green-500',
+      MEDIUM: 'bg-yellow-500',
+      HARD: 'bg-red-500',
+    }
+
+    const difficultyLabels = {
+      EASY: 'Easy',
+      MEDIUM: 'Medium',
+      HARD: 'Hard',
+    }
+
     return (
-      <div className="flex">
-        {[...Array(3)].map((_, index) => (
-          <div
-            key={index}
-            className={`m-1 h-[20px] w-[28px] rounded-[2.86px] ${index < boxCount ? 'bg-[#23BDBD]' : 'bg-gray-200'}`}
-          ></div>
-        ))}
+      <div className="flex items-center gap-2">
+        <div className="flex">
+          {[...Array(3)].map((_, index) => (
+            <div
+              key={index}
+              className={`m-0.5 h-2 w-2 rounded-full ${index < boxCount ? difficultyColors[difficulty] : 'bg-gray-200'}`}
+            />
+          ))}
+        </div>
+        <span className={`text-sm font-medium ${
+          difficulty === 'EASY' ? 'text-green-600' :
+          difficulty === 'MEDIUM' ? 'text-yellow-600' : 'text-red-600'
+        }`}>
+          {difficultyLabels[difficulty]}
+        </span>
       </div>
     )
   }
+
   function isDifficultyLevel(
     difficulty: string,
   ): difficulty is DifficultyLevel {
     return ['EASY', 'MEDIUM', 'HARD'].includes(difficulty)
   }
+
   const difficulty: string = worksheet.difficulty
+
   return (
     <SubscriptionCheck>
       <AppLayout>
-        <Fragment>
-          <button
-            onClick={() => path.back()}
-            className="mb-6 flex items-center gap-1 text-left text-black"
-          >
-            <IoIosArrowBack /> <div>Back</div>
-          </button>
-
-          <div className="mb-4 flex w-full justify-end">
-            <button
-              onClick={() => setShowClass(true)}
-              className="rounded-md bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-400 "
-            >
-              Assign it
-            </button>
-          </div>
-          <div>
-            <h1 className="mb-4 w-full text-center text-xl font-semibold uppercase leading-6 text-gray-900 sm:text-2xl">
-              {worksheet.title}
-            </h1>
-            <div className="mb-6 text-left">
-              <div className=" justifiy-start flex items-center gap-2 text-base text-gray-700">
-                <div>Difficulty:</div>
-                {isDifficultyLevel(difficulty) && (
-                  <DifficultyIndicator difficulty={difficulty} />
-                )}
-              </div>
-            </div>
-            {worksheet.body.map((item, index) => (
-              <div key={index} className="my-4 text-left">
-                <div
-                  className="w-full text-lg"
-                  dangerouslySetInnerHTML={{ __html: item.text }}
-                />
-                <div className="flex w-full justify-center">
-                  {item.img && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={item.img}
-                      alt="image"
-                      className="h-full max-h-[400px] w-auto"
-                    />
-                  )}
+        <div className={`${manrope.className} min-h-screen bg-gray-50`}>
+          {/* Hero Header */}
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-8 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl">
+              <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => path.back()}
+                      className={`${manrope.className} flex items-center gap-2 text-blue-100 hover:text-white transition-colors`}
+                    >
+                      <IoIosArrowBack className="h-5 w-5" />
+                      <span className="text-sm font-medium">Back to Assessments</span>
+                    </button>
+                  </div>
+                  <h1 className={`${manrope.className} mt-4 text-3xl font-bold text-white sm:text-4xl`}>
+                    {worksheet.title || 'Assessment Preview'}
+                  </h1>
+                  <p className={`${manrope.className} mt-2 text-blue-100`}>
+                    Review assessment content and questions before assigning to students
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="hidden sm:flex items-center gap-4 text-blue-100">
+                    <div className="flex items-center gap-2">
+                      <QuestionMarkCircleIcon className="h-5 w-5" />
+                      <span className={`${manrope.className} text-sm`}>{questions.length} Questions</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <ClockIcon className="h-5 w-5" />
+                      <span className={`${manrope.className} text-sm`}>~{Math.ceil(questions.length * 2)} min</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowClass(true)}
+                    className={`${manrope.className} inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm hover:bg-gray-50 transition-colors`}
+                  >
+                    <PlayIcon className="h-4 w-4" />
+                    Assign Assessment
+                  </button>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
-          <div>
-            <button
-              onClick={() => setShowQuestions(!showQuestions)}
-              className="mb-4 inline-flex items-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
-            >
-              {showQuestions ? 'Hide Questions' : 'Show Questions'}
-            </button>
 
-            {showQuestions && (
-              <div>
-                {questions.length > 0 ? (
-                  <table className="min-w-full divide-y divide-gray-300">
-                    <thead className="ml-4">
-                      <tr>
-                        <th
-                          scope="col"
-                          className="w-4/12 px-3 py-3.5 text-left text-sm font-bold text-gray-900"
-                        >
-                          Questions{' '}
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-bold text-gray-900"
-                        >
-                          Explanation
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {questions.map((question: any, index: number) => (
-                        <Fragment key={question._id}>
-                          <tr>
-                            <td className="cursor-pointer px-3 py-3.5 text-left text-sm text-gray-900">
-                              {question.title}
-                            </td>
-                            <td className="px-3 py-3.5 text-left text-sm text-gray-900">
-                              {question.explanation}
-                            </td>
-                          </tr>
-                        </Fragment>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <div className="flex h-20 items-center justify-center">
-                    <div className="text-center">
-                      <h1 className="text-lg font-semibold text-gray-500 sm:text-xl">
-                        No questions available for this worksheet.
-                      </h1>
+          {/* Main Content */}
+          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            {/* Quick Stats */}
+            <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div className="rounded-lg bg-white p-4 shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-lg bg-blue-100 p-2">
+                    <QuestionMarkCircleIcon className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className={`${manrope.className} text-sm font-medium text-gray-500`}>Total Questions</p>
+                    <p className={`${manrope.className} text-2xl font-bold text-gray-900`}>{questions.length}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="rounded-lg bg-white p-4 shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-lg bg-green-100 p-2">
+                    <ChartBarIcon className="h-5 w-5 text-green-600" />
+                  </div>
+                  <div>
+                    <p className={`${manrope.className} text-sm font-medium text-gray-500`}>Difficulty</p>
+                    <div className="flex items-center gap-2">
+                      {isDifficultyLevel(difficulty) && (
+                        <DifficultyIndicator difficulty={difficulty} />
+                      )}
                     </div>
+                  </div>
+                </div>
+              </div>
+              <div className="rounded-lg bg-white p-4 shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-lg bg-purple-100 p-2">
+                    <UserGroupIcon className="h-5 w-5 text-purple-600" />
+                  </div>
+                  <div>
+                    <p className={`${manrope.className} text-sm font-medium text-gray-500`}>Available Students</p>
+                    <p className={`${manrope.className} text-2xl font-bold text-gray-900`}>{students.length}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Content Tabs */}
+            <div className="mb-6">
+              <div className="border-b border-gray-200">
+                <nav className="-mb-px flex space-x-8">
+                  <button
+                    onClick={() => setActiveTab('overview')}
+                    className={`${manrope.className} whitespace-nowrap border-b-2 py-2 px-1 text-sm font-medium transition-colors ${
+                      activeTab === 'overview'
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <BookOpenIcon className="h-4 w-4" />
+                      Overview
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('questions')}
+                    className={`${manrope.className} whitespace-nowrap border-b-2 py-2 px-1 text-sm font-medium transition-colors ${
+                      activeTab === 'questions'
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <QuestionMarkCircleIcon className="h-4 w-4" />
+                      Questions ({questions.length})
+                    </div>
+                  </button>
+                </nav>
+              </div>
+            </div>
+
+            {/* Tab Content */}
+            {activeTab === 'overview' ? (
+              <div className="rounded-lg bg-white p-6 shadow-sm">
+                <div className="mb-6">
+                  <h2 className={`${manrope.className} text-xl font-semibold text-gray-900 mb-4`}>Assessment Content</h2>
+                  {worksheet.body && worksheet.body.length > 0 ? (
+                    <div className="space-y-6">
+                      {worksheet.body.map((item, index) => (
+                        <div key={index} className="border-l-4 border-blue-500 pl-4">
+                          <div
+                            className={`${manrope.className} prose prose-sm max-w-none text-gray-700`}
+                            dangerouslySetInnerHTML={{ __html: item.text }}
+                          />
+                          {item.img && (
+                            <div className="mt-4 flex justify-center">
+                              <img
+                                src={item.img}
+                                alt="Assessment content"
+                                className="max-h-96 w-auto rounded-lg shadow-sm"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
+                      <h3 className={`${manrope.className} mt-4 text-lg font-medium text-gray-900`}>No content available</h3>
+                      <p className={`${manrope.className} mt-2 text-gray-500`}>This assessment doesn't have any content sections.</p>
+                    </div>
+                  )}
+                </div>
+
+                {worksheet.vidLink && (
+                  <div className="mt-6 border-t pt-6">
+                    <h3 className={`${manrope.className} text-lg font-semibold text-gray-900 mb-4`}>Video Content</h3>
+                    <div className="aspect-video rounded-lg bg-gray-100 flex items-center justify-center">
+                      <div className="text-center">
+                        <PlayIcon className="mx-auto h-12 w-12 text-gray-400" />
+                        <p className={`${manrope.className} mt-2 text-sm text-gray-500`}>Video content available</p>
+                        <a
+                          href={worksheet.vidLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`${manrope.className} mt-2 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors`}
+                        >
+                          <PlayIcon className="h-4 w-4" />
+                          Watch Video
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="rounded-lg bg-white shadow-sm">
+                {questions.length > 0 ? (
+                  <div className="divide-y divide-gray-200">
+                    {questions.map((question: any, index: number) => (
+                      <div key={question._id} className="p-6 hover:bg-gray-50 transition-colors">
+                        <div className="flex items-start gap-4">
+                          <div className="flex-shrink-0">
+                            <div className={`${manrope.className} flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-sm font-medium text-blue-700`}>
+                              {index + 1}
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className={`${manrope.className} text-lg font-medium text-gray-900 mb-2`}>
+                              {question.title}
+                            </h3>
+                            {question.explanation && (
+                              <div className="mt-3 rounded-lg bg-gray-50 p-4">
+                                <h4 className={`${manrope.className} text-sm font-medium text-gray-700 mb-2`}>Explanation</h4>
+                                <p className={`${manrope.className} text-sm text-gray-600`}>{question.explanation}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-12 text-center">
+                    <QuestionMarkCircleIcon className="mx-auto h-12 w-12 text-gray-400" />
+                    <h3 className={`${manrope.className} mt-4 text-lg font-medium text-gray-900`}>No questions available</h3>
+                    <p className={`${manrope.className} mt-2 text-gray-500`}>This assessment doesn't have any questions yet.</p>
                   </div>
                 )}
               </div>
             )}
-          </div>
-          <Pagination
-            page={page}
-            count={data?.users?.totalPage}
-            handlePageChange={async (e) => handlePageChange(e)}
-          />
-          {showClass && (
-            <div>
-              <Transition.Root show={showClass} as={Fragment}>
-                <Dialog as="div" className="relative z-10" onClose={setShowClass}>
-                  <Transition.Child
-                    as={Fragment}
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="ease-in duration-200"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-                  </Transition.Child>
 
-                  <div className="fixed inset-0 z-10 w-screen overflow-y-scroll">
-                    <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                      <Transition.Child
-                        as={Fragment}
-                        enter="ease-out duration-300"
-                        enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                        enterTo="opacity-100 translate-y-0 sm:scale-100"
-                        leave="ease-in duration-200"
-                        leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                        leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                      >
-                        <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                          <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
+            {/* Pagination */}
+            {data?.questions?.totalPage > 1 && (
+              <div className="mt-8">
+                <Pagination
+                  page={page}
+                  count={data?.questions?.totalPage}
+                  handlePageChange={handlePageChange}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Assignment Modal */}
+          {showClass && (
+            <Transition.Root show={showClass} as={Fragment}>
+              <Dialog
+                as="div"
+                className="relative z-50"
+                onClose={setShowClass}
+              >
+                <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0"
+                  enterTo="opacity-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+                >
+                  <div className="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" />
+                </Transition.Child>
+
+                <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                  <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                    <Transition.Child
+                      as={Fragment}
+                      enter="ease-out duration-300"
+                      enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                      enterTo="opacity-100 translate-y-0 sm:scale-100"
+                      leave="ease-in duration-200"
+                      leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                      leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                    >
+                      <Dialog.Panel className="relative transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-3xl">
+                        {/* Modal Header */}
+                        <div className="relative bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-6 sm:px-8">
+                          <div className="absolute right-4 top-4">
                             <button
                               type="button"
-                              className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                              className="rounded-full bg-white/10 p-2 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 transition-colors"
                               onClick={() => setShowClass(false)}
                             >
                               <span className="sr-only">Close</span>
-                              <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
                             </button>
                           </div>
-                          <div className="w-full sm:flex sm:items-start">
-                            <div className="mt-3 w-full text-center sm:ml-4 sm:mt-0 sm:text-left">
+                          
+                          <div className="flex items-center gap-4">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+                              <AcademicCapIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                            </div>
+                            <div className="flex-1">
                               <Dialog.Title
                                 as="h3"
-                                className={`${manrope.className} flex text-base font-semibold leading-6 text-gray-900`}
+                                className={`${manrope.className} text-xl font-bold text-white`}
                               >
-                                Assign {}
+                                Assign Assessment
                               </Dialog.Title>
-                              <div className={`${manrope.className} mt-2`}>
-                                <p className="text-sm text-gray-500">
-                                  Select class or students below to assign
-                                  Worksheet
-                                </p>
-                                {Object.keys(groupedStudents).map(
-                                  (grade, index) => (
-                                    <Fragment key={grade}>
-                                      <section className="my-4 flex w-full justify-between rounded-md border border-purple-500 bg-gray-200 px-4 py-6">
-                                        <div className="flex font-bold">
-                                          <div className="mr-2 flex w-5 items-center justify-center text-green-500">
-                                            <PlusIcon
-                                              onClick={() =>
-                                                toggleDropdown(index)
-                                              }
-                                            />
-                                          </div>
-                                          {grade} ({groupedStudents[grade].length}{' '}
-                                          {groupedStudents[grade].length === 1
-                                            ? 'student'
-                                            : 'students'}
-                                          )
-                                        </div>
-                                        <div className="flex items-center">
-                                          <input
-                                            type="checkbox"
-                                            onClick={
-                                              !checkStudent
-                                                ? uncheckAllStudent
-                                                : checkAllStudent
-                                            }
-                                            className="mr-2"
-                                          />{' '}
-                                          Assign to all
-                                        </div>
-                                      </section>
-                                      {openSubtables[index] && (
-                                        <section className="shadow-opacity-50 truncate bg-gray-200 text-sm font-medium leading-6 shadow-sm shadow-black">
-                                          <form>
-                                            <table className="w-full border-collapse border-gray-300">
-                                              <thead className="w-full bg-purple-500 bg-opacity-50">
-                                                <tr
-                                                  className={`${manrope.className} w-full`}
-                                                >
-                                                  <th className="px-4 py-4">
-                                                    Name
-                                                  </th>
-                                                  <th>Best Score</th>
-                                                  <th>Assigned</th>
-                                                  <th>Check</th>
-                                                </tr>
-                                              </thead>
-                                              <tbody className="border-b border-white/10 font-bold">
-                                                {groupedStudents[grade].map(
-                                                  (student: any) => (
-                                                    <tr
-                                                      key={student._id}
-                                                      className={`${manrope.className}`}
-                                                    >
-                                                      <td className="px-4 py-4">
-                                                        {student.name}
-                                                      </td>
-                                                      <td className="text-center">
-                                                        20
-                                                      </td>
-                                                      <td className="text-center">
-                                                        1
-                                                      </td>
-                                                      <td className="border px-4 py-2 text-center">
-                                                        <input
-                                                          type="checkbox"
-                                                          data-type="student"
-                                                          checked={selectedStudent.includes(
-                                                            student._id,
-                                                          )}
-                                                          value={student._id}
-                                                          onChange={
-                                                            checkBoxHandler
-                                                          }
-                                                        />
-                                                      </td>
-                                                    </tr>
-                                                  ),
-                                                )}
-                                              </tbody>
-                                            </table>
-                                          </form>
-                                        </section>
-                                      )}
-                                    </Fragment>
-                                  ),
+                              <p className={`${manrope.className} mt-1 text-blue-100`}>
+                                "{worksheet.title}"
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Modal Content */}
+                        <div className="px-6 py-6 sm:px-8">
+                          {/* Assessment Summary */}
+                          <div className="mb-6 rounded-xl bg-gradient-to-r from-gray-50 to-blue-50 p-4 border border-blue-100">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-4">
+                                <div className="flex items-center gap-2">
+                                  <QuestionMarkCircleIcon className="h-5 w-5 text-blue-600" />
+                                  <span className={`${manrope.className} text-sm font-medium text-gray-700`}>{questions.length} Questions</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <ClockIcon className="h-5 w-5 text-blue-600" />
+                                  <span className={`${manrope.className} text-sm font-medium text-gray-700`}>~{Math.ceil(questions.length * 2)} min</span>
+                                </div>
+                                {isDifficultyLevel(difficulty) && (
+                                  <div className="flex items-center gap-2">
+                                    <ChartBarIcon className="h-5 w-5 text-blue-600" />
+                                    <DifficultyIndicator difficulty={difficulty} />
+                                  </div>
                                 )}
+                              </div>
+                              <div className="text-right">
+                                <p className={`${manrope.className} text-sm text-gray-500`}>Selected Students</p>
+                                <p className={`${manrope.className} text-lg font-bold text-blue-600`}>{selectedStudent.length}</p>
                               </div>
                             </div>
                           </div>
-                          <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+
+                          {/* Student Selection */}
+                          <div className="space-y-4 max-h-96 overflow-y-auto">
+                            {Object.keys(groupedStudents).map((grade, index) => (
+                              <div key={grade} className="rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                                {/* Grade Header */}
+                                <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-4 py-3 border-b border-gray-200">
+                                  <div className="flex items-center justify-between">
+                                    <button
+                                      onClick={() => toggleDropdown(index)}
+                                      className={`${manrope.className} flex items-center gap-3 text-left hover:text-blue-600 transition-colors group`}
+                                    >
+                                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 group-hover:bg-blue-200 transition-colors">
+                                        {openSubtables[index] ? (
+                                          <ChevronUpIcon className="h-4 w-4 text-blue-600" />
+                                        ) : (
+                                          <ChevronDownIcon className="h-4 w-4 text-blue-600" />
+                                        )}
+                                      </div>
+                                      <div>
+                                        <h4 className={`${manrope.className} font-semibold text-gray-900`}>{grade}</h4>
+                                        <p className={`${manrope.className} text-sm text-gray-500`}>
+                                          {groupedStudents[grade].length} student{groupedStudents[grade].length !== 1 ? 's' : ''}
+                                        </p>
+                                      </div>
+                                    </button>
+                                    
+                                    <div className="flex items-center gap-3">
+                                      <div className="text-right">
+                                        <p className={`${manrope.className} text-xs text-gray-500`}>Selected</p>
+                                        <p className={`${manrope.className} text-sm font-medium text-blue-600`}>
+                                          {groupedStudents[grade].filter((student: any) => 
+                                            selectedStudent.includes(student._id)
+                                          ).length}/{groupedStudents[grade].length}
+                                        </p>
+                                      </div>
+                                      <label className={`${manrope.className} flex items-center gap-2 cursor-pointer`}>
+                                        <input
+                                          type="checkbox"
+                                          checked={groupedStudents[grade].every((student: any) => 
+                                            selectedStudent.includes(student._id)
+                                          )}
+                                          onChange={() => {
+                                            const allSelected = groupedStudents[grade].every((student: any) => 
+                                              selectedStudent.includes(student._id)
+                                            )
+                                            if (allSelected) {
+                                              const newSelected = selectedStudent.filter(id => 
+                                                !groupedStudents[grade].some((student: any) => student._id === id)
+                                              )
+                                              setSelectedStudent(newSelected)
+                                            } else {
+                                              const gradeStudentIds = groupedStudents[grade].map((student: any) => student._id)
+                                              const newSelected = [...new Set([...selectedStudent, ...gradeStudentIds])]
+                                              setSelectedStudent(newSelected)
+                                            }
+                                          }}
+                                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-offset-0"
+                                        />
+                                        <span className={`${manrope.className} text-sm font-medium text-gray-700`}>Select All</span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                {/* Students List */}
+                                {openSubtables[index] && (
+                                  <div className="bg-white">
+                                    <div className="divide-y divide-gray-100">
+                                      {groupedStudents[grade].map((student: any) => (
+                                        <div key={student._id} className="px-4 py-3 hover:bg-gray-50 transition-colors">
+                                          <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                              <div className="relative">
+                                                <div className={`${manrope.className} h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm`}>
+                                                  <span className="text-sm font-bold text-white">
+                                                    {student.name.charAt(0).toUpperCase()}
+                                                  </span>
+                                                </div>
+                                                {selectedStudent.includes(student._id) && (
+                                                  <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-green-500 flex items-center justify-center">
+                                                    <CheckCircleIcon className="h-3 w-3 text-white" />
+                                                  </div>
+                                                )}
+                                              </div>
+                                              <div className="flex-1">
+                                                <p className={`${manrope.className} font-medium text-gray-900`}>{student.name}</p>
+                                                <div className="flex items-center gap-4 mt-1">
+                                                  <div className="flex items-center gap-1">
+                                                    <ChartBarIcon className="h-3 w-3 text-gray-400" />
+                                                    <span className={`${manrope.className} text-xs text-gray-500`}>Best: 85%</span>
+                                                  </div>
+                                                  <div className="flex items-center gap-1">
+                                                    <AcademicCapIcon className="h-3 w-3 text-gray-400" />
+                                                    <span className={`${manrope.className} text-xs text-gray-500`}>Assigned: 3</span>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <label className="flex items-center">
+                                              <input
+                                                type="checkbox"
+                                                data-type="student"
+                                                checked={selectedStudent.includes(student._id)}
+                                                value={student._id}
+                                                onChange={checkBoxHandler}
+                                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-offset-0 h-5 w-5"
+                                              />
+                                            </label>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Empty State */}
+                          {Object.keys(groupedStudents).length === 0 && (
+                            <div className="text-center py-8">
+                              <UserGroupIcon className="mx-auto h-12 w-12 text-gray-400" />
+                              <h3 className={`${manrope.className} mt-4 text-lg font-medium text-gray-900`}>No students available</h3>
+                              <p className={`${manrope.className} mt-2 text-gray-500`}>There are no students in your classes yet.</p>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Modal Footer */}
+                        <div className="bg-gray-50 px-6 py-4 sm:px-8 border-t border-gray-200">
+                          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end sm:gap-3">
                             <button
                               type="button"
-                              className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:ml-3 sm:w-auto"
-                              onClick={handleAssignWorksheet}
+                              className={`${manrope.className} inline-flex w-full justify-center items-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-colors sm:w-auto`}
+                              onClick={() => setShowClass(false)}
                             >
-                              Confirm
+                              Cancel
+                            </button>
+                            <button
+                              type="button"
+                              className={`${manrope.className} inline-flex w-full justify-center items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold shadow-sm transition-all sm:w-auto ${
+                                selectedStudent.length === 0
+                                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                  : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                              }`}
+                              onClick={handleAssignWorksheet}
+                              disabled={selectedStudent.length === 0}
+                            >
+                              <PlayIcon className="h-4 w-4" />
+                              Assign to {selectedStudent.length} Student{selectedStudent.length !== 1 ? 's' : ''}
                             </button>
                           </div>
-                        </Dialog.Panel>
-                      </Transition.Child>
-                    </div>
+                        </div>
+                      </Dialog.Panel>
+                    </Transition.Child>
                   </div>
-                </Dialog>
-              </Transition.Root>
-            </div>
+                </div>
+              </Dialog>
+            </Transition.Root>
           )}
-        </Fragment>
+          
+          <ToastContainer />
+        </div>
       </AppLayout>
     </SubscriptionCheck>
   )
